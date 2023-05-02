@@ -1,0 +1,147 @@
+@charset "utf-8";
+
+:root {
+    --global-width : 100rem;
+}
+
+.global-nav,
+.local-nav {
+    border-bottom: 1px solid #ddd;
+    padding: 0 1rem;
+}
+.global-nav .global-nav-links {
+    max-width: var(--global-width);
+    height: 5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.6rem;
+    margin: 0 auto;
+}
+
+
+.local-nav .local-nav-links {
+    max-width: var(--global-width);
+    height: 10rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    font-size: 1.6rem;
+}
+
+.scroll-section {
+    padding-top: 50vh;
+}
+
+#scroll-section-0 h1 {
+    font-size: 4rem;
+    text-align: center;
+}
+.main-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3em;
+    font-size: 2.5rem;
+    margin: 0.5rem 0;
+    /* background-color: rgba(0,0,0,0.3); */
+}
+.main-message p {
+    font-weight: bold;
+    line-height: 1.2;
+    text-align: center;
+}
+.main-message small {
+    display: block;
+    margin-bottom: 0.5em;
+    font-size: 1.2rem;
+}
+#scroll-section-2 .main-message {
+    font-size: 3.5rem;
+}
+.description {
+    font-size: 1.2rem;
+    color: #888;
+    max-width: 100rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+.description strong {
+    font-size: 3rem;
+    margin-right: 0.2em;
+    color: #000;
+    float:left;
+}
+
+.desc-message {
+    width: 50%;
+    font-weight: bold;
+}
+.pin {
+    width: 1px;
+    height: 100px;
+    background-color: #000;
+}
+
+.mid-message {
+    font-size: 2rem;
+    color: #888;
+    padding: 0 1rem;
+    max-width: 100rem;
+    margin: 0 auto;
+}
+
+.mid-message strong {
+    color: #000;
+}
+
+.canvas-caption {
+    color: #888;
+    font-size: 1.2rem;
+    padding: 0 1rem;
+    text-align: center;
+    max-width: 100rem;
+    margin: 0 auto;
+}
+
+.footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 7rem;
+    background-color: #f00;
+    color: #fff;
+}
+
+@media (min-width :1024px) {
+    #scroll-section-0 h1 {
+        font-size: 9vw;
+    }
+    .main-message {
+        font-size: 4vw;
+    }
+    .description {
+        font-size: 2rem;
+    }
+    .description  strong{
+        font-size: 6rem;
+    }
+
+    
+    #scroll-section-2 .main-message {
+        font-size: 6vw;
+    }
+    .main-message small {
+        font-size: 1.5vw;
+    }
+    .desc-message {
+        width: 20%;
+    }
+    .mid-message {
+        font-size: 4vw;
+    }
+    .canvas-caption {
+        font-size: 2rem;
+    }
+}

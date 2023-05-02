@@ -1,0 +1,33 @@
+html {font-size: 10px;}
+html,body{width:100%;height:100%}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,form,fieldset,legend,textarea,p,th,td,address,blockquote{margin:0;padding:0}
+body {font-family: "Noto Sans KR", "Montserrat", sans-serif;line-height:1;color: #222;font-weight:normal;}
+h1, h2, h3, h4, h5, h6 {margin:0;padding:0;font-weight:normal}
+img,fieldset,iframe{border:0 none;}
+li,ol{list-style:none}
+input,select,button,textarea{font-family: "Noto Sans KR", "Montserrat", sans-serif;color:#222;vertical-align:middle}
+img{vertical-align:top}
+sup{font-size:90%}
+address,cite,dfn{font-style:normal}
+table{border-collapse:collapse;border-spacing:0;empty-cells:show}
+hr{display:none}
+legend,caption{width:0;height:0;overflow:hidden;visibility:hidden;font-size:0;line-height:0;text-indent:-999px;} /* For Screen Reader */
+button{border:0;padding:0;margin:0;background:none; cursor:pointer;*overflow:visible;}
+button::-moz-focus-inner{margin:-1px;padding:0;}
+
+/* HTML5 display-role reset for older browsers */
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}
+
+/* for IE haslayout */
+* html div,* html h1,* html h2,* html h3,* html h4,* html h5,* html h6,* html ul,* html ol,* html dl,* html dt,* html dd,* html table,* html th,* html td,* html form,* html fieldset,* html legend{zoom:1}
+
+/* hacks setting */
+.clearfix{zoom:1} /* ie6,ie7 */
+.clearfix:after{content:"";display:block;clear:both}
+.hidden{visibility:hidden;overflow:hidden;width:0;height:0;font-size:0;line-height:0;margin:0;padding:0;}
+.blind{position:absolute;left:-9999px;top:0;width:1px;height:1px;font-size:0;line-height:0;overflow:hidden}
+
+a:link		{ color:#000; text-decoration:none; }
+a:visited	{ color:#000; text-decoration:none; }
+a:active	{ color:#333; text-decoration:none; }
+a:hover		{ color:#f33; text-decoration:none; }
