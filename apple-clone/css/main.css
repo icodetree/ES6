@@ -114,6 +114,31 @@
     color: #fff;
 }
 
+
+/* 
+    1. 중간에 고정되는 문구들은 position:fixed
+    2. 기본적으로 안보이게 처리
+
+*/
+.sticky-elem {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+/* 
+    3. 기존 지정되어있는 영역별 클래스를 
+    body에 동적으로 붙는 id를 만들어 block시켜준다.
+*/
+#show-scene-0 #scroll-section-0 .sticky-elem, 
+#show-scene-0 #scroll-section-1 .sticky-elem, 
+#show-scene-0 #scroll-section-2 .sticky-elem, 
+#show-scene-0 #scroll-section-3 .sticky-elem {
+    display: block;
+}
+
 @media (min-width :1024px) {
     #scroll-section-0 h1 {
         font-size: 9vw;
@@ -128,7 +153,7 @@
         font-size: 6rem;
     }
 
-    
+
     #scroll-section-2 .main-message {
         font-size: 6vw;
     }
