@@ -3,7 +3,12 @@
 :root {
     --global-width : 100rem;
 }
-
+.header {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
 .global-nav,
 .local-nav {
     border-bottom: 1px solid #ddd;
@@ -32,6 +37,7 @@
 
 .scroll-section {
     padding-top: 50vh;
+    border: 5px solid #f00;
 }
 
 #scroll-section-0 h1 {
