@@ -27,9 +27,11 @@
                 // 28. { start : 0.1, end : 0.2 } 특정위치에서 애니매이션이 작동도록 설정하는 값
                 messageA_opacity_in : [0, 1, { start : 0.1, end : 0.2 }],
                 messageB_opacity_in : [0, 1, { start : 0.3, end : 0.4 }],
+                messageA_translateY_in : [20, 0, { start : 0.1, end : 0.2 }],
                 // 32. 사라지는 애니메이션 객체 추가 
-                messageA_opacity_out : [0, 1, { start : 0.25, end : 0.3 }],
-                messageB_opacity_out : [0, 1, { start : 0.3, end : 0.4 }],
+                messageA_opacity_out : [1, 0, { start : 0.25, end : 0.3 }],
+                messageB_opacity_out : [1, 0, { start : 0.3, end : 0.4 }],
+                messageA_translateY_out : [0, -20, { start : 0.25, end : 0.3  }],
             }
         },
         {
@@ -128,13 +130,31 @@
         // 21. 현재신에서 얼마나 스크롤됬는지 알기위해 전체스크롤에서 이전 스크롤높이값을 빼준다.
         const currentYOffset  = yOffset - prevScrollHeight;
 
+        // 33. 현재씬의 스크롤 높이값
+        const scrollHeight =  sceneInfo[currentScene].scrollHeight;
+
+        // 34. 애니메이션이 나타나고 사라지는 구간 사이의 비율을 구한다.
+        const scrollRatio = currentYOffset / scrollHeight;
+
 
         switch (currentScene) {
             case 0:
                 // console.log('0 play');
-                let messageA_opacity_in = calcValues(values.messageA_opacity_in, currentYOffset) ;
-                objs.messageA.style.opacity = messageA_opacity_in;
+                const messageA_opacity_in = calcValues(values.messageA_opacity_in, currentYOffset) ;
+                const messageA_opacity_out= calcValues(values.messageA_opacity_out, currentYOffset) ;
+                const messageA_translateY_in = calcValues(values.messageA_translateY_in, currentYOffset) ;
+                const messageA_translateY_out= calcValues(values.messageA_translateY_out, currentYOffset) ;
 
+                // 35. 애니메이션 구간 중간지점을 설정해 분기
+                if (scrollRatio <= 0.22) {
+                    // in
+                    objs.messageA.style.opacity = messageA_opacity_in;
+                    objs.messageA.style.transform = `translateY(${messageA_translateY_in}%)`;
+                } else {
+                    // out
+                    objs.messageA.style.opacity = messageA_opacity_out;
+                    objs.messageA.style.transform = `translateY(${messageA_translateY_out}%)`;
+                }
                 console.log( messageA_opacity_in );
                 break;
             case 1:
