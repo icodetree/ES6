@@ -49,8 +49,10 @@
     align-items: center;
     justify-content: center;
     height: 3em;
+    top: 45vh;
     font-size: 2.5rem;
     margin: 0.5rem 0;
+    opacity: 0;
     /* background-color: rgba(0,0,0,0.3); */
 }
 .main-message p {
@@ -129,7 +131,7 @@
 .sticky-elem {
     display: none; 
     position: fixed;
-    top: 0;
+    /* top: 0; */
     left: 0;
     width: 100%;
 }
