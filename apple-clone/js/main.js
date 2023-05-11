@@ -237,9 +237,7 @@
                 }
 
                 break;
-            case 1:
-                // console.log('1 play');
-                break;
+
             case 2:
                 // console.log('2 play');
                 if (scrollRatio <= 0.32) {
