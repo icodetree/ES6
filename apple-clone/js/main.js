@@ -70,6 +70,7 @@
 
             },
             values : {
+                // 컷별로 작성
                 messageA_translateY_in : [20, 0, { start : 0.15, end : 0.2 }],
                 messageB_translateY_in : [30, 0, { start : 0.5, end : 0.55 }],
                 messageC_translateY_in : [30, 0, { start : 0.72, end : 0.77 }],
