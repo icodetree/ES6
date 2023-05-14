@@ -6,6 +6,7 @@
     let prevScrollHeight = 0; // 7. 현재 스크롤위치(yOffset)보다 이전에 위치한 스크롤 섹션들의 스크롤 높이값의 합
     let currentScene = 0; // 8. 현재 보여지는 화면(씬)의 번호
     let enterNewScene = false; // 25. 새로운 씬이 시작된 순간 -1 버그를 없애는 boolean 값
+    
 
     // 2. 섹션별 배열을 생성해준다.
     const sceneInfo = [
