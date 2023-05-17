@@ -22,8 +22,16 @@
                 messageB : document.querySelector('#scroll-section-0 .main-message.b'),
                 messageC : document.querySelector('#scroll-section-0 .main-message.c'),
                 messageD : document.querySelector('#scroll-section-0 .main-message.d'),
+
+                // 37. canvas추가
+                canvas : document.querySelector('#video-canvas-0'),
+                context : document.querySelector('#video-canvas-0').getContext('2d'),
+                videoImages : []
             },
             values : {
+                // 38. 비디오관련 배열추가
+                videoImageCount : 300,
+                imageSequence : [0, 299],
                 // 16. 효과에따른 시작점과 끝점값을 배열로 넣어준다.
                 // 28. { start : 0.1, end : 0.2 } 특정위치에서 애니매이션이 작동도록 설정하는 값
                 messageA_opacity_in : [0, 1, { start : 0.1, end : 0.2 }],
@@ -108,6 +116,17 @@
             }
         },
     ];
+
+    // 39. 캔버스관련 함수 생성
+    function setCanvasImages() {
+        let imgElem;
+        for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
+            imgElem = new Image();
+            imgElem.src = `./video/001/IMG_${6726 + i}.jpg`;
+            sceneInfo[0].objs.videoImages.push(imgElem);
+            
+        }
+    }
 
     // 3. 각 섹션의 스크롤 높이를 세팅해준다.
     function setLayout () {

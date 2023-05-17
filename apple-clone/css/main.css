@@ -8,6 +8,7 @@
     left: 0;
     top: 0;
     width: 100%;
+    z-index: 1;
 }
 .global-nav,
 .local-nav {
@@ -155,6 +156,11 @@
 #show-scene-2 #scroll-section-2 .sticky-elem, 
 #show-scene-3 #scroll-section-3 .sticky-elem {
     display: block;
+}
+
+.sticky-elem-canvas {
+    top: 0;
+    background-color: #ccc;
 }
 
 @media (min-width :1024px) {
