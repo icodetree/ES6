@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Four-Screen Mobile Scroll Interaction</title>
+    <style>
+      /* First screen */
+      #bg-image {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('./images/bg-gallery.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        z-index: -1;
+      }
+
+      #logo {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        height: auto;
+        opacity: 1;
+        z-index: 1;
+      }
+
+      /* Second screen */
+      #image-container {
+        position: relative;
+        width: 300vw;
+        height: 100%;
+      }
+
+      .image {
+        display: inline-block;
+        width: 33.33%;
+        height: 100%;
+        background-image: url('./images/slide_01.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      /* Third screen */
+      #text-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+      }
+
+      #text-container p {
+        opacity: 0.3;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #text-container p:nth-child(2),
+      #text-container p:nth-child(3) {
+        opacity: 1;
+      }
+
+      /* Fourth screen */
+      #logo-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #logo-container img {
+        width: 12.5%;
+        height: auto;
+        margin: 10px;
+        transition: transform 0.5s ease-in-out;
+      }
+
+      #logo-container img:hover {
+        transform: scale(1.2);
+      }
+
+      #logo-container img:nth-child(8n+1),
+      #logo-container img:nth-child(8n+2),
+      #logo-container img:nth-child(8n+3),
+      #logo-container img:nth-child(8n+4) {
+        animation: move-left 5s linear infinite;
+      }
+
+      #logo-container img:nth-child(8n+5),
+      #logo-container img:nth-child(8n+6),
+      #logo-container img:nth-child(8n+7),
+      #logo-container img:nth-child(8n+8) {
+        animation: move-right 5s linear infinite;
+      }
+
+      @keyframes move-left {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-100%);
+        }
+      }
+
+      @keyframes move-right {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(100%);
+        }
+      }
+
+      #logo-container.blur {
+        filter: blur(10px);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- First screen -->
+    <div id="bg-image"></div>
+    <img id="logo" src="./images/logo.png" alt="Logo">
+
+    <!-- Second screen -->
+    <div id="image-container">
+      <div class="image"></div>
+      <div class="image"></div>
+      <div class="image"></div>
+    </div>
+
+    <!-- Third screen -->
+    <div id="text-container">
+      <p>Previous text</p>
+      <p>Current text</p>
+      <p>Current text</p>
+      <p>Next text</p>
+    </div>
+
+    <!-- Fourth screen -->
+    <div id="logo-container">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+      </div>
+    </div>
+
+    <script>
+        // Get all the elements
+        const bgImage = document.getElementById('bg-image');
+        const logo = document.getElementById('logo');
+        const images = document.querySelectorAll('.image');
+        const textContainer = document.getElementById('text-container');
+        const text = textContainer.querySelectorAll('p');
+        const logoContainer = document.getElementById('logo-container');
+        const logoImages = logoContainer.querySelectorAll('img');
+
+        // Set the initial opacity of the elements
+        bgImage.style.opacity = 1;
+        logo.style.opacity = 1;
+
+        // Set up the scroll event
+        window.addEventListener('scroll', () => {
+        const scrollPosition = window.pageYOffset;
+
+        // First screen
+        bgImage.style.transform = `translateY(${scrollPosition * 0.5}px)`;
+        logo.style.transform = `translateY(${scrollPosition * 0.75}px)`;
+
+        // Second screen
+        images.forEach((image) => {
+            const offset = image.offsetLeft - window.innerWidth;
+            image.style.transform = `translateX(${scrollPosition * 0.5 - offset}px)`;
+        });
+
+        // Third screen
+        text[1].style.opacity = 1 - scrollPosition / (textContainer.offsetHeight / 2);
+        text[2].style.opacity = scrollPosition / (textContainer.offsetHeight / 2);
+
+        // Fourth screen
+        if (scrollPosition > logoContainer.offsetTop - window.innerHeight / 2) {
+            logoContainer.style.opacity = 1;
+            logoImages.forEach((image) => {
+            image.style.animationPlayState = 'running';
+            });
+        } else {
+            logoContainer.style.opacity = 0;
+            logoImages.forEach((image) => {
+            image.style.animationPlayState = 'paused';
+            });
+        }
+        });
+
+        // Set up the resize event
+        window.addEventListener('resize', () => {
+        images.forEach((image) => {
+            const offset = image.offsetLeft - window.innerWidth;
+            image.style.transform = `translateX(${window.pageYOffset * 0.5 - offset}px)`;
+        });
+        });
+
+    </script>
+</body>
+</html>
+

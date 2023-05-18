@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Scroll-based Mobile Screen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      /* First screen */
+      .first-screen {
+        height: 100vh;
+        background-image: url('./images/bg-gallery.png');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .logo {
+        width: 50%;
+        max-width: 300px;
+        margin-bottom: 50px;
+        opacity: 1;
+        transition: all 0.5s ease-out;
+      }
+
+      .logo.hidden {
+        opacity: 0;
+      }
+
+      /* Second screen */
+      .second-screen {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .image-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 800px;
+      }
+
+      .image {
+        width: 30%;
+        max-width: 200px;
+        margin-right: 20px;
+        opacity: 1;
+        transition: all 0.5s ease-out;
+      }
+
+      .image.hidden {
+        opacity: 0;
+      }
+
+      /* Third screen */
+      .third-screen {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .text-container {
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 50px;
+        text-align: center;
+      }
+
+      .text {
+        opacity: 0.3;
+        transition: all 0.5s ease-out;
+      }
+
+      .text.center {
+        opacity: 1;
+      }
+
+      /* Fourth screen */
+      .fourth-screen {
+        height: 100vh;
+        background-image: url('./images/bg-gallery.png');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      }
+
+      .blur {
+        filter: blur(10px);
+        transition: all 0.5s ease-out;
+      }
+
+      .logo-container {
+        position: absolute;
+        bottom: 50%;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 800px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .logo-image {
+        width: 12.5%;
+        max-width: 100px;
+        margin-right: 10px;
+        opacity: 1;
+        transition: all 0.5s ease-out;
+      }
+
+      .logo-image.hidden {
+        opacity: 0.3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="first-screen">
+      <img class="logo" src="./images/logo.png">
+    </div>
+    <div class="second-screen">
+      <div class="image-container">
+        <img class="image" src="./images/slide_01.png">
+        <img class="image" src="./images/slide_02.png">
+        <img class="image" src="./images/slide_03.png">
+      </div>
+    </div>
+    <div class="third-screen">
+      <div class="text-container">
+        <p class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <p class="text">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p class="text center">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p class="text">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        <p class="text">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      </div>
+    </div>
+    <div class="fourth-screen">
+      <div class="blur"></div>
+      <div class="logo-container">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+        <img class="logo-image" src="./images/logo.png">
+      </div>
+    </div>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
+
