@@ -4,219 +4,288 @@
     <meta charset="UTF-8">
     <title>Four-Screen Mobile Scroll Interaction</title>
     <style>
-      /* First screen */
-      #bg-image {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url('./images/bg-gallery.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        z-index: -1;
-      }
+      .first-screen {
+    height: 100vh;
+    position: relative;
+    }
 
-      #logo {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 50%;
-        height: auto;
-        opacity: 1;
-        z-index: 1;
-      }
+    .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(./images/bg-gallery.png);
+    background-size: cover;
+    background-position: center;
+    opacity: 1;
+    transition: opacity 0.5s, transform 0.5s;
+    }
 
-      /* Second screen */
-      #image-container {
-        position: relative;
-        width: 300vw;
-        height: 100%;
-      }
+    .logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    opacity: 1;
+    transition: opacity 0.5s, transform 0.5s;
+    }
 
-      .image {
-        display: inline-block;
-        width: 33.33%;
-        height: 100%;
-        background-image: url('./images/slide_01.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-      }
+    .scroll {
+    height: 100vh;
+    overflow-y: scroll;
+    }
 
-      /* Third screen */
-      #text-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 1;
-      }
+    .scroll .background {
+    opacity: 0;
+    transform: scale(1.2);
+    }
 
-      #text-container p {
-        opacity: 0.3;
-        transition: opacity 0.5s ease-in-out;
-      }
+    .scroll .logo {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.2);
+    }
 
-      #text-container p:nth-child(2),
-      #text-container p:nth-child(3) {
-        opacity: 1;
-      }
+    .second-screen {
+  height: 100vh;
+  position: relative;
+}
 
-      /* Fourth screen */
-      #logo-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        z-index: 1;
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-      }
+.slider {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  overflow: hidden;
+}
 
-      #logo-container img {
-        width: 12.5%;
-        height: auto;
-        margin: 10px;
-        transition: transform 0.5s ease-in-out;
-      }
+.slider img {
+  display: inline-block;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
 
-      #logo-container img:hover {
-        transform: scale(1.2);
-      }
+.scroll .slider img {
+  transform: translateX(-33.33%);
+}
 
-      #logo-container img:nth-child(8n+1),
-      #logo-container img:nth-child(8n+2),
-      #logo-container img:nth-child(8n+3),
-      #logo-container img:nth-child(8n+4) {
-        animation: move-left 5s linear infinite;
-      }
+.third-screen {
+  height: 100vh;
+  position: relative;
+}
 
-      #logo-container img:nth-child(8n+5),
-      #logo-container img:nth-child(8n+6),
-      #logo-container img:nth-child(8n+7),
-      #logo-container img:nth-child(8n+8) {
-        animation: move-right 5s linear infinite;
-      }
+.text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
 
-      @keyframes move-left {
-        from {
-          transform: translateX(0);
-        }
-        to {
-          transform: translateX(-100%);
-        }
-      }
+.line {
+  font-size: 24px;
+  line-height: 1.5;
+  text-align: center;
+  opacity: 0.3;
+  transition: opacity 0.5s;
+}
 
-      @keyframes move-right {
-        from {
-          transform: translateX(0);
-        }
-        to {
-          transform: translateX(100%);
-        }
-      }
+.line.active {
+  opacity: 1;
+}
+.fourth-screen {
+  height: 100vh;
+  position: relative;
+}
 
-      #logo-container.blur {
-        filter: blur(10px);
-      }
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(./images/bg-gallery.png);
+  background-size: cover;
+  background-position: center;
+  filter: blur(0);
+  transition: filter 0.5s;
+}
+
+.logos {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.logos img {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  opacity: 0;
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.scroll.background {
+  filter: blur(10px);
+}
+
+.scroll.logos {
+  opacity: 1;
+}
+
+.scroll.logos img {
+  opacity: 1;
+  transform: translateX(100%);
+}
+
+.scroll.logos img:nth-child(8n+1) {
+  transition-delay: 0s;
+}
+
+.scroll.logos img:nth-child(8n+2) {
+  transition-delay: 0.1s;
+}
+
+.scroll.logos img:nth-child(8n+3) {
+  transition-delay: 0.2s;
+}
+
+.scroll.logos img:nth-child(8n+4) {
+  transition-delay: 0.3s;
+}
+
+.scroll.logos img:nth-child(8n+5) {
+  transition-delay: 0.4s;
+}
+.scroll.logos img:nth-child(8n+6) {
+transition-delay: 0.5s;
+}
+
+.scroll.logos img:nth-child(8n+7) {
+  transition-delay: 0.6s;
+}
+
+.scroll.logos img:nth-child(8n+8) {
+  transition-delay: 0.7s;
+}
+
+.scroll.logos img.active {
+  transform: translateX(0);
+  opacity: 1;
+}
     </style>
   </head>
   <body>
-    <!-- First screen -->
-    <div id="bg-image"></div>
-    <img id="logo" src="./images/logo.png" alt="Logo">
-
-    <!-- Second screen -->
-    <div id="image-container">
-      <div class="image"></div>
-      <div class="image"></div>
-      <div class="image"></div>
-    </div>
-
-    <!-- Third screen -->
-    <div id="text-container">
-      <p>Previous text</p>
-      <p>Current text</p>
-      <p>Current text</p>
-      <p>Next text</p>
-    </div>
-
-    <!-- Fourth screen -->
-    <div id="logo-container">
-        <img class="logo-image" src="./images/logo.png">
-        <img class="logo-image" src="./images/logo.png">
-        <img class="logo-image" src="./images/logo.png">
-        <img class="logo-image" src="./images/logo.png">
-        <img class="logo-image" src="./images/logo.png">
-        <img class="logo-image" src="./images/logo.png">
-        <img class="logo-image" src="./images/logo.png">
-        <img class="logo-image" src="./images/logo.png">
+    <div class="first-screen">
+        <div class="background"></div>
+        <img class="logo" src="./images/logo.png">
       </div>
-    </div>
+      <div class="second-screen">
+        <div class="slider">
+          <img src="./images/slide_01.png">
+          <img src="./images/slide_02.png">
+          <img src="./images/slide_03.png">
+        </div>
+      </div>
+
+      <div class="third-screen">
+        <div class="text">
+          <div class="line">Lorem ipsum dolor sit amet</div>
+          <div class="line">consectetur adipiscing elit</div>
+          <div class="line">sed do eiusmod tempor incididunt</div>
+          <div class="line">ut labore et dolore magna aliqua</div>
+        </div>
+      </div>
+
+      <div class="fourth-screen">
+        <div class="background"></div>
+        <div class="logos">
+          <img src="./images/logo.png">
+          <img src="./images/logo.png">
+          <img src="./images/logo.png">
+          <img src="./images/logo.png">
+          <img src="./images/logo.png">
+          <img src="./images/logo.png">
+          <img src="./images/logo.png">
+          <img src="./images/logo.png">
+        </div>
+      </div>
 
     <script>
-        // Get all the elements
-        const bgImage = document.getElementById('bg-image');
-        const logo = document.getElementById('logo');
-        const images = document.querySelectorAll('.image');
-        const textContainer = document.getElementById('text-container');
-        const text = textContainer.querySelectorAll('p');
-        const logoContainer = document.getElementById('logo-container');
-        const logoImages = logoContainer.querySelectorAll('img');
+        window.addEventListener('scroll', function() {
+            var scroll = window.scrollY;
+            var height = window.innerHeight;
+            var ratio = scroll / height;
+            
+            var background = document.querySelector('.background');
+            var logo = document.querySelector('.logo');
+            
+            // 1
+            background.style.opacity = 1 - ratio;
+            background.style.transform = 'scale(' + (1 + ratio) + ')';
+            
+            logo.style.opacity = 1 - ratio;
+            logo.style.transform = 'translate(-50%, -50%) scale(' + (1 + ratio) + ')';
 
-        // Set the initial opacity of the elements
-        bgImage.style.opacity = 1;
-        logo.style.opacity = 1;
+            // 2
+            var slider = document.querySelector('.slider');
+            slider.style.transform = 'translateX(' + (-33.33 * ratio) + '%)';
 
-        // Set up the scroll event
-        window.addEventListener('scroll', () => {
-        const scrollPosition = window.pageYOffset;
 
-        // First screen
-        bgImage.style.transform = `translateY(${scrollPosition * 0.5}px)`;
-        logo.style.transform = `translateY(${scrollPosition * 0.75}px)`;
-
-        // Second screen
-        images.forEach((image) => {
-            const offset = image.offsetLeft - window.innerWidth;
-            image.style.transform = `translateX(${scrollPosition * 0.5 - offset}px)`;
-        });
-
-        // Third screen
-        text[1].style.opacity = 1 - scrollPosition / (textContainer.offsetHeight / 2);
-        text[2].style.opacity = scrollPosition / (textContainer.offsetHeight / 2);
-
-        // Fourth screen
-        if (scrollPosition > logoContainer.offsetTop - window.innerHeight / 2) {
-            logoContainer.style.opacity = 1;
-            logoImages.forEach((image) => {
-            image.style.animationPlayState = 'running';
+            // 3
+            var text = document.querySelector('.text');
+            var lines = document.querySelectorAll('.line');
+            
+            text.style.opacity = ratio;
+            
+            lines.forEach(function(line, index) {
+                if (index <= ratio * 3) {
+                line.classList.add('active');
+                } else {
+                line.classList.remove('active');
+                }
             });
-        } else {
-            logoContainer.style.opacity = 0;
-            logoImages.forEach((image) => {
-            image.style.animationPlayState = 'paused';
-            });
-        }
-        });
 
-        // Set up the resize event
-        window.addEventListener('resize', () => {
-        images.forEach((image) => {
-            const offset = image.offsetLeft - window.innerWidth;
-            image.style.transform = `translateX(${window.pageYOffset * 0.5 - offset}px)`;
-        });
+            //4
+            var background = document.querySelector('.background');
+            var logos = document.querySelector('.logos');
+            var logoImages = document.querySelectorAll('.logos img');
+            
+            if (ratio >= 1) {
+                background.classList.add('scroll');
+                logos.classList.add('scroll');
+                
+                logoImages.forEach(function(image, index) {
+                setTimeout(function() {
+                    image.classList.add('active');
+                }, index * 100);
+                });
+            } else {
+                background.classList.remove('scroll');
+                logos.classList.remove('scroll');
+                
+                logoImages.forEach(function(image) {
+                image.classList.remove('active');
+                });
+            }
         });
 
     </script>
