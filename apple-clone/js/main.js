@@ -197,8 +197,6 @@
         return rv;
     }
 
-
-    
     // 18. 해당씬에서만 애니메이션이 일어나야하므로 각 신별로 체크해준다.
     function playAnimation () {
         const objs = sceneInfo[currentScene].objs;
