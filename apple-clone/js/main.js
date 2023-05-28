@@ -1,6 +1,6 @@
 
-// 40번 차례
-// 공부는 언제하누.....
+// 52번 차례
+// 거의 다왔다.
 
 
 
@@ -19,6 +19,7 @@
     // 2. 섹션별 배열을 생성해준다.
     const sceneInfo = [
         {
+            // 0
             type : "sticky", // "sticky" 유무를 타입으로 지정해준다.
             heightNum : 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight : 0,
@@ -39,7 +40,10 @@
             values : {
                 // 38. 비디오관련 배열추가
                 videoImageCount : 300,
-                imageSequence : [0, 299],
+                imageSequence : [0, 299], // 이미지 순서
+                canvas_opacity : [1, 0, { start : 0.9, end : 1 }],
+
+
                 // 16. 효과에따른 시작점과 끝점값을 배열로 넣어준다.
                 // 28. { start : 0.1, end : 0.2 } 특정위치에서 애니매이션이 작동도록 설정하는 값
                 messageA_opacity_in : [0, 1, { start : 0.1, end : 0.2 }],
@@ -65,6 +69,7 @@
             }
         },
         {
+            // 1
             type : "normal",
             // heightNum : 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight : 0,
@@ -73,6 +78,7 @@
             }
         },
         {
+            // 2
             type : "sticky",
             heightNum : 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight : 0,
@@ -85,8 +91,20 @@
                 pinB : document.querySelector('#scroll-section-2 .b .pin'),
                 pinC : document.querySelector('#scroll-section-2 .c .pin'),
 
+                // 46. 두번째 캔버스 추가
+                canvas : document.querySelector('#video-canvas-1'),
+                context : document.querySelector('#video-canvas-1').getContext('2d'),
+                videoImages : []
+
             },
             values : {
+                // 47. 비디오관련 배열추가
+                videoImageCount : 960,
+                imageSequence : [0, 959], // 이미지 순서
+                canvas_opacity_in : [0, 1, { start : 0, end : 0.1 }],
+                canvas_opacity_out : [1, 0, { start : 0.95, end : 1 }],
+                
+
                 // 컷별로 작성
                 messageA_translateY_in : [20, 0, { start : 0.15, end : 0.2 }],
                 messageB_translateY_in : [30, 0, { start : 0.5, end : 0.55 }],
@@ -116,6 +134,7 @@
             }
         },
         { 
+            // 3
             type : "sticky",
             heightNum : 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight : 0,
@@ -132,9 +151,17 @@
             imgElem = new Image();
             imgElem.src = `./video/001/IMG_${6726 + i}.jpg`;
             sceneInfo[0].objs.videoImages.push(imgElem);
-            
+        }
+
+        // 50. 두번째 캔버스 이미지를 세팅
+        let imgElem2;
+        for (let i = 0; i < sceneInfo[2].values.videoImageCount; i++) {
+            imgElem2 = new Image();
+            imgElem2.src = `./video/002/IMG_${7027 + i}.jpg`;
+            sceneInfo[2].objs.videoImages.push(imgElem2);
         }
     }
+    setCanvasImages();
 
     // 3. 각 섹션의 스크롤 높이를 세팅해준다.
     function setLayout () {
@@ -164,6 +191,15 @@
         }
         // 13. 10번과 동일 > 바디에 css에서 미리 지정해둔 씬의 내용이 보이도록 설정해준다.
         document.body.setAttribute('id', `show-scene-${currentScene}`);
+
+
+        // 42.캔버스를 모든 디바이스에 맞추기위해 높이값을 브라우저에 맞추고 가운데 정렬해준다.
+        // 43. 윈도우 높이값인 1080기준으로하는 높이의 비율값을 변수로 선언해준다.
+        const heightRatio = window.innerHeight / 1080
+        sceneInfo[0].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
+
+        // 48. 두번째 캔버스 추가
+        sceneInfo[2].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
     }
 
     // 19. 애니메이션 > 투명도 값을 조절하는 함수
@@ -224,6 +260,14 @@
             case 0:
                 // console.log('0 play');
 
+                // 40. 이미지 시퀀스를 실행하는 로직을 만들어준다.
+                let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));  // 정수처리
+                // 41. 캔버스에 그려준다. 크기가 같기때문에 가로세로는 0,0
+                objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+
+                // 45. 캔버스가 사라질때 투명도를 제어
+                objs.canvas.style.opacity = calcValues(values.canvas_opacity, currentYOffset);
+
                 // 35. 애니메이션 구간 중간지점을 설정해 분기
                 if (scrollRatio <= 0.22) {
                     // in
@@ -269,6 +313,21 @@
 
             case 2:
                 // console.log('2 play');
+
+                // 49. 두번째 캔버스에 그려준다. 크기가 같기때문에 가로세로는 0,0
+                let sequence2 = Math.round(calcValues(values.imageSequence, currentYOffset));  // 정수처리
+                objs.context.drawImage(objs.videoImages[sequence2], 0, 0);
+
+
+                // 51. 시작투명도와 끝나는 시점 투명도를 위해 비율구간을 설정해준다.
+                if (scrollRatio <= 0.5) {
+                    // in
+                    objs.canvas.style.opacity = calcValues(values.canvas_opacity_in, currentYOffset);
+                } else {
+                    // out
+                    objs.canvas.style.opacity = calcValues(values.canvas_opacity_out, currentYOffset);
+                }
+
                 if (scrollRatio <= 0.32) {
                     // in
                     objs.messageA.style.opacity = calcValues(values.messageA_opacity_in, currentYOffset);
@@ -361,7 +420,13 @@
     });
 
     // 4. 리사이즈시에도 높이값이 변경하도록 설정해준다.
-    window.addEventListener("resize" , setLayout);
+    // window.addEventListener("resize" , setLayout);
+
+    // 44. 캔버스가 최초 실햏시에도 보여야하기때문에 로직을 수정해준다.
+    window.addEventListener("resize" , () => {
+        setLayout();
+        sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+    });
 
     // 11. 로드시에도 씬의 내용이 보여져야하기 때문에 이벤트 리스너에 넣어준다.
     window.addEventListener("load" , setLayout);
