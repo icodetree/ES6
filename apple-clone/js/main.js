@@ -150,8 +150,8 @@
                 ],
                 images : []
             },
+            // 61. 흰색박스 시점 초기화, 창크기에 따라 달라지기 때문에 초기값을 알수없다.
             values : {
-                // 61. 흰색박스 시점 초기화, 창크기에 따라 달라지기 때문에 초기값을 알수없다.
                 rect1X : [0, 0, { start : 0, end : 0 }],
                 rect2X : [0, 0, { start : 0, end : 0 }],
             }
@@ -387,12 +387,14 @@
                 break;
             case 3:
                 // console.log('3 play');
+
                 // 53. 애니메이션중에 인터렉션이 일어나야하기때문에 이곳에서 세팅, 가로세로 꽉차게 계산이 필요함
                 const widthRatio = window.innerWidth / objs.canvas.width;
                 const heightRatio = window.innerHeight / objs.canvas.height;
 
                 // 54. 캔버스 가로세로비율을 브라우저 크기가 변함에 따라 맞춰주기 위해서 세팅
                 let canvasScaleRatio;
+
                 if (widthRatio <= heightRatio) {
                     // 55. 캔버스보다 브라우저 창이 홀쭉한 경우
                     canvasScaleRatio = heightRatio;
@@ -412,11 +414,13 @@
                 const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
                 const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
 
+                console.log(recalculatedInnerWidth, recalculatedInnerHeight);
+
                 // 60. 흰색배경 비율을 계산
                 const whiteRectWidth = recalculatedInnerWidth * 0.15;
 
                 // 62. 흰색박스 그리기
-                values.rect1X[0] = (objs.canvas.width = recalculatedInnerWidth) / 2;
+                values.rect1X[0] = (objs.canvas.width - recalculatedInnerWidth) / 2;
                 values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
                 values.rect2X[0] = values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
                 values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
