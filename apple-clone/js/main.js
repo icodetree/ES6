@@ -139,7 +139,21 @@
             heightNum : 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight : 0,
             objs : {
-                container : document.querySelector("#scroll-section-3")
+                container : document.querySelector("#scroll-section-3"),
+                // 52. 세번째 캔버스 추가
+                canvasCaption : document.querySelector('.canvas-caption'),
+                canvas : document.querySelector('.image-blend-canvas'),
+                context : document.querySelector('.image-blend-canvas').getContext('2d'),
+                imagesPath : [
+                    './images/blend-image-1.jpg',
+                    './images/blend-image-2.jpg',
+                ],
+                images : []
+            },
+            values : {
+                // 61. 흰색박스 시점 초기화, 창크기에 따라 달라지기 때문에 초기값을 알수없다.
+                rect1X : [0, 0, { start : 0, end : 0 }],
+                rect2X : [0, 0, { start : 0, end : 0 }],
             }
         },
     ];
@@ -159,6 +173,14 @@
             imgElem2 = new Image();
             imgElem2.src = `./video/002/IMG_${7027 + i}.jpg`;
             sceneInfo[2].objs.videoImages.push(imgElem2);
+        }
+
+        // 57. 마지막신 캔버스 이미지를 세팅
+        let imgElem3;
+        for (let i = 0; i < sceneInfo[3].objs.imagesPath.length; i++) {
+            imgElem3 = new Image();
+            imgElem3.src = sceneInfo[3].objs.imagesPath[i];
+            sceneInfo[3].objs.images.push(imgElem3);
         }
     }
     setCanvasImages();
@@ -365,6 +387,44 @@
                 break;
             case 3:
                 // console.log('3 play');
+                // 53. 애니메이션중에 인터렉션이 일어나야하기때문에 이곳에서 세팅, 가로세로 꽉차게 계산이 필요함
+                const widthRatio = window.innerWidth / objs.canvas.width;
+                const heightRatio = window.innerHeight / objs.canvas.height;
+
+                // 54. 캔버스 가로세로비율을 브라우저 크기가 변함에 따라 맞춰주기 위해서 세팅
+                let canvasScaleRatio;
+                if (widthRatio <= heightRatio) {
+                    // 55. 캔버스보다 브라우저 창이 홀쭉한 경우
+                    canvasScaleRatio = heightRatio;
+                    console.log( "heightRatio 로 결정");
+                } else {
+                    // 56. 캔버스보다 브라우저 창이 납작한 경우
+                    canvasScaleRatio = widthRatio;
+                    console.log( "widthRatio 로 결정");
+                }
+
+                objs.canvas.style.transform = `scale(${ canvasScaleRatio })`;
+
+                // 58. 마지막신 캔버스 이미지를 세팅
+                objs.context.drawImage(objs.images[0], 0, 0);
+
+                // 59. 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+                const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
+                const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+
+                // 60. 흰색배경 비율을 계산
+                const whiteRectWidth = recalculatedInnerWidth * 0.15;
+
+                // 62. 흰색박스 그리기
+                values.rect1X[0] = (objs.canvas.width = recalculatedInnerWidth) / 2;
+                values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
+                values.rect2X[0] = values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
+                values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+
+                // 63. 좌우 흰색박스 그리기
+                objs.context.fillRect(values.rect1X[0], 0, parseInt(whiteRectWidth), objs.canvas.height);
+                objs.context.fillRect(values.rect2X[0], 0, parseInt(whiteRectWidth), objs.canvas.height);
+
                 break;
         
             default:
