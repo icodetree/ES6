@@ -154,6 +154,7 @@
             values : {
                 rect1X : [0, 0, { start : 0, end : 0 }],
                 rect2X : [0, 0, { start : 0, end : 0 }],
+                rectStartY : 0, // 64. 초기값이 기준이 되어야한다.
             }
         },
     ];
