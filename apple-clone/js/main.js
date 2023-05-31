@@ -399,11 +399,11 @@
                 if (widthRatio <= heightRatio) {
                     // 55. 캔버스보다 브라우저 창이 홀쭉한 경우
                     canvasScaleRatio = heightRatio;
-                    console.log( "heightRatio 로 결정");
+                    // console.log( "heightRatio 로 결정");
                 } else {
                     // 56. 캔버스보다 브라우저 창이 납작한 경우
                     canvasScaleRatio = widthRatio;
-                    console.log( "widthRatio 로 결정");
+                    // console.log( "widthRatio 로 결정");
                 }
 
                 objs.canvas.style.transform = `scale(${ canvasScaleRatio })`;
@@ -412,11 +412,18 @@
                 objs.context.drawImage(objs.images[0], 0, 0);
 
                 // 59. 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
-                const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
+                // 67. document.body.offsetWidth 스크롤바를 제외한 너비값
+                const recalculatedInnerWidth = document.body.offsetWidth / canvasScaleRatio;
                 const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
 
-                console.log(recalculatedInnerWidth, recalculatedInnerHeight);
-
+                // 65. 기준점 구하기
+                if (!values.rectStartY) {
+                    values.rectStartY = objs.canvas.getBoundingClientRect().top;
+                    values.rect1X[2].end = values.rectStartY / scrollHeight;
+                    values.rect2X[2].end = values.rectStartY / scrollHeight;
+                    console.log(values.rectStartY);
+                }
+                
                 // 60. 흰색배경 비율을 계산
                 const whiteRectWidth = recalculatedInnerWidth * 0.15;
 
@@ -427,8 +434,23 @@
                 values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
 
                 // 63. 좌우 흰색박스 그리기
-                objs.context.fillRect(values.rect1X[0], 0, parseInt(whiteRectWidth), objs.canvas.height);
-                objs.context.fillRect(values.rect2X[0], 0, parseInt(whiteRectWidth), objs.canvas.height);
+                // objs.context.fillRect(values.rect1X[0], 0, parseInt(whiteRectWidth), objs.canvas.height);
+                // objs.context.fillRect(values.rect2X[0], 0, parseInt(whiteRectWidth), objs.canvas.height);
+                
+                
+                // 66. 좌우 흰색박스 동적
+                objs.context.fillRect(
+                    parseInt(calcValues(values.rect1X, currentYOffset)),
+                    0, 
+                    parseInt(whiteRectWidth), 
+                    objs.canvas.height
+                );
+                objs.context.fillRect(
+                    parseInt(calcValues(values.rect2X, currentYOffset)),
+                    0, 
+                    parseInt(whiteRectWidth), 
+                    objs.canvas.height
+                );
 
                 break;
         
