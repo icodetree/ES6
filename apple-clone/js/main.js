@@ -152,7 +152,12 @@
             values : {
                 rect1X : [0, 0, { start : 0, end : 0 }],
                 rect2X : [0, 0, { start : 0, end : 0 }],
-                rectStartY : 0, // 64. 초기값이 기준이 되어야한다.
+
+                // 81. 이미지 블렌드 Y값 초기화
+                imageBlendY :[0, 0, { start : 0, end : 0 }],
+
+                // 64. 초기값이 기준이 되어야한다.
+                rectStartY : 0, 
             }
         },
     ];
@@ -383,9 +388,62 @@
                     objs.pinC.style.transform = `scaleY(${calcValues(values.pinC_scaleY, currentYOffset)})`;
                 }
 
+
+                // 71. currentScene 3에서 사용하는 캔버스를 미리 그려주기 시작, 
+                // 72. 3번씬의 캔버스가 갑자기 나오는 현상때문에 미리 준비해준다.
+                // 73. 90%비율에서 미리 그리기 시작함
+                if(scrollRatio > 0.9) {
+
+                    // 74. 3번신의 지역변수를 만들어준다.
+                    const objs = sceneInfo[3].objs;
+                    const values = sceneInfo[3].values;
+
+                    const widthRatio = window.innerWidth / objs.canvas.width;
+                    const heightRatio = window.innerHeight / objs.canvas.height;
+    
+                    let canvasScaleRatio;
+    
+                    if (widthRatio <= heightRatio) {
+                        canvasScaleRatio = heightRatio;
+                    } else {
+                        canvasScaleRatio = widthRatio;
+                    }
+    
+                    objs.canvas.style.transform = `scale(${ canvasScaleRatio })`;    
+                    objs.context.fillStyle = 'white';
+                    objs.context.drawImage(objs.images[0], 0, 0);
+    
+                    const recalculatedInnerWidth = document.body.offsetWidth / canvasScaleRatio;
+                    const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+                    
+                    const whiteRectWidth = recalculatedInnerWidth * 0.15;
+    
+                    values.rect1X[0] = (objs.canvas.width - recalculatedInnerWidth) / 2;
+                    values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
+                    values.rect2X[0] = values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
+                    values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+                    
+                    objs.context.fillRect(
+                        parseInt(values.rect1X[0]),
+                        0, 
+                        parseInt(whiteRectWidth), 
+                        objs.canvas.height
+                    );
+                    objs.context.fillRect(
+                        parseInt(values.rect2X[0]),
+                        0, 
+                        parseInt(whiteRectWidth), 
+                        objs.canvas.height
+                    );
+    
+                }
+
                 break;
             case 3:
                 // console.log('3 play');
+
+                // 75. 마지막신 스탭변수 선언
+                let step = 0;
 
                 // 53. 애니메이션중에 인터렉션이 일어나야하기때문에 이곳에서 세팅, 가로세로 꽉차게 계산이 필요함
                 const widthRatio = window.innerWidth / objs.canvas.width;
@@ -406,6 +464,9 @@
 
                 objs.canvas.style.transform = `scale(${ canvasScaleRatio })`;
 
+                // 69. 캔버스 양옆 검은색을 흰색으로 채워준다.
+                objs.context.fillStyle = 'white';
+
                 // 58. 마지막신 캔버스 이미지를 세팅
                 objs.context.drawImage(objs.images[0], 0, 0);
 
@@ -416,7 +477,15 @@
 
                 // 65. 기준점 구하기
                 if (!values.rectStartY) {
-                    values.rectStartY = objs.canvas.getBoundingClientRect().top;
+                    // values.rectStartY = objs.canvas.getBoundingClientRect().top;
+
+                    // 68. offsetTop으로 사용하기 + 캔버스 스케일을 감안해서 여백값을 알아낸 다음 더해준다.
+                    values.rectStartY = objs.canvas.offsetTop + (objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2;
+
+                    // 70. 캔버스 시작점을 중간으로 설정하기 위해 설정해준다.
+                    values.rect1X[2].start = (window.innerHeight / 2) / scrollHeight;
+                    values.rect2X[2].start = (window.innerHeight / 2) / scrollHeight;
+
                     values.rect1X[2].end = values.rectStartY / scrollHeight;
                     values.rect2X[2].end = values.rectStartY / scrollHeight;
                     console.log(values.rectStartY);
@@ -449,6 +518,27 @@
                     parseInt(whiteRectWidth), 
                     objs.canvas.height
                 );
+
+
+                // 76. 캔버스가 브라우저 상단에 닿았는지 체크
+                if(scrollRatio < values.rect1X[2].end) {
+                    step = 1;
+                    // 77. 캔버스가 상단에 닿기 전
+                    objs.canvas.classList.remove("sticky");
+
+                } else {
+                    step = 2;
+
+                    // 82. 이미지 블렌드 좌표에 그리기
+                    objs.context.drawImage(objs.images[1], 0, 200);
+
+                    // 78. 캔버스가 상단에 닿기 후
+                    // 79. 이미지 블랜드
+                    objs.canvas.classList.add("sticky");
+
+                    // 80. 68번과 같이 캔버스 스케일에 따른 여백을 빼준다.
+                    objs.canvas.style.top = `${-(objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2}px`
+                }
 
                 break;
         
