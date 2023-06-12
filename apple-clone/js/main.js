@@ -154,7 +154,10 @@
                 rect2X : [0, 0, { start : 0, end : 0 }],
 
                 // 81. 이미지 블렌드 Y값 초기화
-                imageBlendY :[0, 0, { start : 0, end : 0 }],
+                blendHeight :[0, 0, { start : 0, end : 0 }],
+
+                // 87. 마지막 사진 스케일 초기화
+                canvas_scale : [0, 0, { start: 0, end: 0 }],
 
                 // 64. 초기값이 기준이 되어야한다.
                 rectStartY : 0, 
@@ -529,8 +532,26 @@
                 } else {
                     step = 2;
 
+                    // 83. 블랜드 높이값 계산식
+                    values.blendHeight[0] = 0;
+                    values.blendHeight[1] = objs.canvas.height;
+                    values.blendHeight[2].start = values.rect1X[2].end; // 3번째 씬 끝지점
+
+                    // 84. end지점을 정해준다. 크면 스크롤을 오래해야함 = 스크롤 속도를 의미
+                    values.blendHeight[2].end = values.blendHeight[2].start + 0.2; // 4번째 시작시점에서 더해준다.
+
+
                     // 82. 이미지 블렌드 좌표에 그리기
-                    objs.context.drawImage(objs.images[1], 0, 200);
+                    // objs.context.drawImage(objs.images[1], 0, 200);
+
+                    // 86. blendHeight 변수 선언
+                    const blendHeight = calcValues(values.blendHeight, currentYOffset);
+
+                    // 85. y좌표를 세팅
+                    objs.context.drawImage(objs.images[1], 
+                        0, objs.canvas.height - blendHeight, objs.canvas.width, blendHeight,
+                        0, objs.canvas.height - blendHeight, objs.canvas.width, blendHeight
+                    );
 
                     // 78. 캔버스가 상단에 닿기 후
                     // 79. 이미지 블랜드
@@ -538,6 +559,31 @@
 
                     // 80. 68번과 같이 캔버스 스케일에 따른 여백을 빼준다.
                     objs.canvas.style.top = `${-(objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2}px`
+
+                    // 88. 스케일 작동 시점
+                    if(scrollRatio > values.blendHeight[2].end) {
+                        values.canvas_scale[0] = canvasScaleRatio;
+                        values.canvas_scale[1] = document.body.offsetWidth / (1.5 * objs.canvas.width);
+                        values.canvas_scale[2].start = values.blendHeight[2].end;
+                        values.canvas_scale[2].end = values.canvas_scale[2].start + 0.2;
+
+                        // 89. 계산된 값을 transform으로 스케일을 줄여준다.
+                        objs.canvas.style.transform = `scale(${calcValues(values.canvas_scale, currentYOffset)})`;
+
+                        // 92. 일반 스크롤이 시작하기 전에 margin-top 을 초기화 시켜 준다.
+                        objs.canvas.style.marginTop = 0;
+
+                    }
+
+                    // 90. 스케일 끝나고 일반 스크롤로 돌아가는 시점
+                    if(scrollRatio > values.canvas_scale[2].end && values.canvas_scale[2].end > 0) {
+                        console.log("Scroll start!!");
+                        objs.canvas.classList.remove("sticky");
+
+                        // 91. 스케일의 margin-top을 준다.
+                        objs.canvas.style.marginTop = `${ scrollHeight * 0.4 }px`;
+
+                    }
                 }
 
                 break;
