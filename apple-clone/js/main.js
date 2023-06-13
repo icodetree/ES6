@@ -1,5 +1,5 @@
 
-// 68번 차례
+// 92번 차례
 // 거의 다왔다.
 
 
@@ -582,6 +582,8 @@
 
                         // 91. 스케일의 margin-top을 준다.
                         objs.canvas.style.marginTop = `${ scrollHeight * 0.4 }px`;
+
+
 
                     }
                 }
