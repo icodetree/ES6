@@ -1,7 +1,6 @@
 
-// 92번 차례
-// 거의 다왔다.
-
+// 94번 차례
+// 스크롤에 반응하는 메뉴 만들차례
 
 //1. 모든애니메이션에 대한 정보를 배열에 담아둔다.
 (() => {
@@ -157,6 +156,10 @@
 
                 // 87. 마지막 사진 스케일 초기화
                 canvas_scale : [0, 0, { start: 0, end: 0 }],
+
+                // 92. 마지막문단 애니메이션
+                canvasCaption_opacity : [0, 1, { start : 0, end : 0 }],
+                canvasCaption_translateY : [20, 0, { start : 0, end : 0 }],
 
                 // 64. 초기값이 기준이 되어야한다.
                 rectStartY : 0, 
@@ -582,7 +585,15 @@
                         // 91. 스케일의 margin-top을 준다.
                         objs.canvas.style.marginTop = `${ scrollHeight * 0.4 }px`;
 
+                        // 93. 마지막 문단의 애니메이션
+                        values.canvasCaption_opacity[2].start = values.canvas_scale[2].end;
+                        values.canvasCaption_opacity[2].end = values.canvasCaption_opacity[2].start + 0.1;
 
+                        values.canvasCaption_translateY[2].start = values.canvasCaption_opacity[2].start;
+                        values.canvasCaption_translateY[2].end = values.canvasCaption_opacity[2].end;
+
+                        objs.canvasCaption.style.opacity = calcValues(values.canvasCaption_opacity, currentYOffset);
+                        objs.canvasCaption.style.transform = `translate3d(0, ${calcValues(values.canvasCaption_translateY, currentYOffset)}%, 0)`
 
                     }
                 }
