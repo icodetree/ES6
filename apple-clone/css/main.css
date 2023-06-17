@@ -8,7 +8,7 @@
     left: 0;
     top: 0;
     width: 100%;
-    z-index: 1;
+    z-index: 6;
 }
 .global-nav,
 .local-nav {
@@ -34,6 +34,14 @@
     align-items: center;
     margin: 0 auto;
     font-size: 1.6rem;
+}
+
+.global-nav-sticky .global-nav {
+    position: fixed;
+    top: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: saturate(180%) blur(15px);
+    width: 100%;
 }
 
 .scroll-section {

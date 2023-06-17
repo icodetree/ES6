@@ -1,6 +1,6 @@
 
-// 94번 차례
-// 스크롤에 반응하는 메뉴 만들차례
+// 95번 차례
+
 
 //1. 모든애니메이션에 대한 정보를 배열에 담아둔다.
 (() => {
@@ -193,6 +193,16 @@
         }
     }
     setCanvasImages();
+
+
+    // 94. 상단 불투명메뉴 처리
+    function checkMenu () {
+        if(yOffset > 100) {
+            document.body.classList.add('global-nav-sticky');
+        } else {
+            document.body.classList.remove('global-nav-sticky');
+        }
+    }
 
     // 3. 각 섹션의 스크롤 높이를 세팅해준다.
     function setLayout () {
@@ -649,7 +659,8 @@
     // 5. 스크롤되고 있는 영역을 판별하기 위한 이벤트 핸들러와 함수를 만들어준다.
     window.addEventListener("scroll", () => {
         yOffset = window.pageYOffset;
-        scrollLoop();    
+        scrollLoop(); 
+        checkMenu();   
     });
 
     // 4. 리사이즈시에도 높이값이 변경하도록 설정해준다.
