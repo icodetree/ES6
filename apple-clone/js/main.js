@@ -12,7 +12,7 @@
     let enterNewScene = false; // 25. 새로운 씬이 시작된 순간 -1 버그를 없애는 boolean 값
     
 
-    // 2. 섹션별 배열을 생성해준다.
+    // 2. 섹션별 배열을 생성해준다. 
     const sceneInfo = [
         {
             // 0
