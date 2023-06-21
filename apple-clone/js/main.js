@@ -1,5 +1,6 @@
 
-// 95번 차례
+// 102 번 차례
+// 브라우저 리사이즈 대응 차례
 
 
 //1. 모든애니메이션에 대한 정보를 배열에 담아둔다.
@@ -363,8 +364,10 @@
                 // console.log('2 play');
 
                 // 49. 두번째 캔버스에 그려준다. 크기가 같기때문에 가로세로는 0,0
-                let sequence2 = Math.round(calcValues(values.imageSequence, currentYOffset));  // 정수처리
-                objs.context.drawImage(objs.videoImages[sequence2], 0, 0);
+								// 97. 하단이동
+                // let sequence2 = Math.round(calcValues(values.imageSequence, currentYOffset));  // 정수처리
+                // 97. 하단이동
+								// objs.context.drawImage(objs.videoImages[sequence2], 0, 0);
 
 
                 // 51. 시작투명도와 끝나는 시점 투명도를 위해 비율구간을 설정해준다.
@@ -631,8 +634,10 @@
             prevScrollHeight += sceneInfo[i].scrollHeight;            
         }
 
-        // //9. 현재화면 번호를 체크하기 위해 스크롤되는 yOffset과 이전 스크롤된 영역 + 현재씬의 높이값을 비교해준다.
-        if(yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+        // 9. 현재화면 번호를 체크하기 위해 스크롤되는 yOffset과 이전 스크롤된 영역 + 현재씬의 높이값을 비교해준다.
+
+				// 101. 2번씬에서 초반에 살짝등장하는 중간이미지를 없애기 위해 yOffset --> delayedYOffset으로 변경해준다.
+        if(delayedYOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
             // 26. 바뀌는 순간에 true로 변경해준다.
             enterNewScene = true; 
             currentScene++;
@@ -641,7 +646,7 @@
             document.body.setAttribute('id', `show-scene-${currentScene}`);            
         }
 
-        if(yOffset < prevScrollHeight) {
+        if(delayedYOffset < prevScrollHeight) {
             enterNewScene = true; 
 
             // IOS 브라우저 바운스 효과로 인해 마이너스가 되는것을 방지
@@ -670,7 +675,7 @@
         // 100. 깜밖거리는 버그 수정
         if(!enterNewScene) {
 					
-					if (currentScene == 0 ) {
+					if (currentScene == 0 || currentScene == 2) {
 						// 99. 변수 재선언
 						const currentYOffset  = delayedYOffset - prevScrollHeight;
 						const objs = sceneInfo[currentScene].objs;
@@ -685,6 +690,7 @@
                 }
             }
         }
+
         rafId = requestAnimationFrame(loop);
 
         if (Math.abs(yOffset - delayedYOffset) < 1) {
