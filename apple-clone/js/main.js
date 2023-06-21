@@ -11,6 +11,11 @@
     let currentScene = 0; // 8. 현재 보여지는 화면(씬)의 번호
     let enterNewScene = false; // 25. 새로운 씬이 시작된 순간 -1 버그를 없애는 boolean 값
     
+    // 95. 부드러운 감속을위한 변수 추가
+    let acc = 0.1;
+    let delayedYOffset = 0;
+    let rafId;
+    let rafState;
 
     // 2. 섹션별 배열을 생성해준다. 
     const sceneInfo = [
@@ -302,9 +307,11 @@
                 // console.log('0 play');
 
                 // 40. 이미지 시퀀스를 실행하는 로직을 만들어준다.
-                let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));  // 정수처리
+                // 97. 하단이동 
+                // let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));  // 정수처리
                 // 41. 캔버스에 그려준다. 크기가 같기때문에 가로세로는 0,0
-                objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+                // 97. 하단이동
+                // objs.context.drawImage(objs.videoImages[sequence], 0, 0);
 
                 // 45. 캔버스가 사라질때 투명도를 제어
                 objs.canvas.style.opacity = calcValues(values.canvas_opacity, currentYOffset);
@@ -655,12 +662,50 @@
         playAnimation();
     }
 
+    // 96. 부드러운 감속을 위해 함수 추가
+    function loop() {
+        delayedYOffset = delayedYOffset + (yOffset - delayedYOffset) * acc;
+
+
+        // 100. 깜밖거리는 버그 수정
+        if(!enterNewScene) {
+					
+					if (currentScene == 0 ) {
+						// 99. 변수 재선언
+						const currentYOffset  = delayedYOffset - prevScrollHeight;
+						const objs = sceneInfo[currentScene].objs;
+						const values = sceneInfo[currentScene].values;
+
+						// 98. 97 이동 > 조건식
+						console.log('loop');
+						let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));  // 정수처리
+
+                if(objs.videoImages[sequence]) {
+                    objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+                }
+            }
+        }
+        rafId = requestAnimationFrame(loop);
+
+        if (Math.abs(yOffset - delayedYOffset) < 1) {
+            cancelAnimationFrame(rafId);
+            rafState = false;
+        }
+    }
+
 
     // 5. 스크롤되고 있는 영역을 판별하기 위한 이벤트 핸들러와 함수를 만들어준다.
     window.addEventListener("scroll", () => {
         yOffset = window.pageYOffset;
         scrollLoop(); 
         checkMenu();   
+
+        // 95. 부드러운 감속을 위해 추가
+        if (!rafState) {
+            rafId = requestAnimationFrame(loop);
+            rafState = true;
+        }
+
     });
 
     // 4. 리사이즈시에도 높이값이 변경하도록 설정해준다.
