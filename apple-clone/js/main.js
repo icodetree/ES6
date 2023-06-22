@@ -198,7 +198,6 @@
             sceneInfo[3].objs.images.push(imgElem3);
         }
     }
-    setCanvasImages();
 
 
     // 94. 상단 불투명메뉴 처리
@@ -718,11 +717,26 @@
     // window.addEventListener("resize" , setLayout);
 
     // 44. 캔버스가 최초 실햏시에도 보여야하기때문에 로직을 수정해준다.
-    window.addEventListener("resize" , () => {
+    window.addEventListener("load" , () => {
         setLayout();
         sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
     });
 
+    // 102. 이벤트 추가
+    window.addEventListener("resize" , () => {
+        if(window.innerWidth > 600) {
+            setLayout();
+        }
+
+        // 103. 3번씬 리사이징 초기화 
+        sceneInfo[3].values.rectStartY = 0;
+    });
+
+    window.addEventListener('orientationchange', setLayout)
+
     // 11. 로드시에도 씬의 내용이 보여져야하기 때문에 이벤트 리스너에 넣어준다.
     window.addEventListener("load" , setLayout);
+
+    setCanvasImages();
+
 })()
