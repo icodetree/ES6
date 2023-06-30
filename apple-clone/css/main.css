@@ -1,7 +1,14 @@
 @charset "utf-8";
 
 :root {
-    --global-width : 100rem;
+    --global-width : 1000px;
+}
+body.before-load {
+    overflow: hidden;
+}
+.wrap {
+    /* 모바일 가로스크롤 */
+    overflow-x: hidden;
 }
 .header {
     position: absolute;
@@ -40,6 +47,8 @@
     position: fixed;
     top: 0;
     background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: saturate(180%) blur(15px);
+    -moz-backdrop-filter: saturate(180%) blur(15px);
     backdrop-filter: saturate(180%) blur(15px);
     width: 100%;
 }
@@ -134,7 +143,7 @@
     padding: 0 1rem;
     text-align: center;
     max-width: 100rem;
-    margin: -8em auto 0;
+    margin: -24rem auto 0;
     line-height: 1.5;
 }
 
@@ -170,6 +179,9 @@
 #show-scene-2 #scroll-section-2 .sticky-elem, 
 #show-scene-3 #scroll-section-3 .sticky-elem {
     display: block;
+
+    /* css애니메이션 퍼포먼스 향상 */
+    will-change: transform, opacity;
 }
 
 .sticky-elem-canvas {
@@ -282,5 +294,6 @@
     .canvas-caption {
         padding: 0;
         font-size: 2rem;
+        margin-top: -8rem;
     }
 }

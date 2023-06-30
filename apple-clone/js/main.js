@@ -680,7 +680,6 @@
 						const values = sceneInfo[currentScene].values;
 
 						// 98. 97 이동 > 조건식
-						console.log('loop');
 						let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));  // 정수처리
 
                 if(objs.videoImages[sequence]) {
@@ -698,43 +697,53 @@
     }
 
 
-    // 5. 스크롤되고 있는 영역을 판별하기 위한 이벤트 핸들러와 함수를 만들어준다.
-    window.addEventListener("scroll", () => {
-        yOffset = window.pageYOffset;
-        scrollLoop(); 
-        checkMenu();   
-
-        // 95. 부드러운 감속을 위해 추가
-        if (!rafState) {
-            rafId = requestAnimationFrame(loop);
-            rafState = true;
-        }
-
-    });
-
     // 4. 리사이즈시에도 높이값이 변경하도록 설정해준다.
     // window.addEventListener("resize" , setLayout);
 
     // 44. 캔버스가 최초 실햏시에도 보여야하기때문에 로직을 수정해준다.
     window.addEventListener("load" , () => {
+        // 105. 로딩적용
+        document.body.classList.remove('before-load');
         setLayout();
         sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+
+
+
+        // 5. 스크롤되고 있는 영역을 판별하기 위한 이벤트 핸들러와 함수를 만들어준다.
+        window.addEventListener("scroll", () => {
+            yOffset = window.pageYOffset;
+            scrollLoop(); 
+            checkMenu();   
+
+            // 95. 부드러운 감속을 위해 추가
+            if (!rafState) {
+                rafId = requestAnimationFrame(loop);
+                rafState = true;
+            }
+        });
+
+        // 102. 이벤트 추가
+        window.addEventListener("resize" , () => {
+            if(window.innerWidth > 900) {
+                setLayout();
+                // 103. 3번씬 리사이징 초기화 
+                sceneInfo[3].values.rectStartY = 0;
+            }
+    
+        });
+    
+        window.addEventListener('orientationchange', () => {
+            setTimeout(setLayout, 500);
+        })
+    
+        document.querySelector('.loading').addEventListener('transitionend', (e) => {
+            document.body.removeChild(e.currentTarget);
+        });
     });
 
-    // 102. 이벤트 추가
-    window.addEventListener("resize" , () => {
-        if(window.innerWidth > 600) {
-            setLayout();
-        }
-
-        // 103. 3번씬 리사이징 초기화 
-        sceneInfo[3].values.rectStartY = 0;
-    });
-
-    window.addEventListener('orientationchange', setLayout)
 
     // 11. 로드시에도 씬의 내용이 보여져야하기 때문에 이벤트 리스너에 넣어준다.
-    window.addEventListener("load" , setLayout);
+    // window.addEventListener("load" , setLayout);
 
     setCanvasImages();
 
