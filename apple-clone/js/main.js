@@ -631,13 +631,29 @@
 			prevScrollHeight += sceneInfo[i].scrollHeight;            
 		}
 
+		// 111. 마지막씬 외에는 제거
+		if(delayedYOffset < prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+			document.body.classList.remove(".scroll-effect-end");
+
+		}
+
+
 		// 9. 현재화면 번호를 체크하기 위해 스크롤되는 yOffset과 이전 스크롤된 영역 + 현재씬의 높이값을 비교해준다.
 
-				// 101. 2번씬에서 초반에 살짝등장하는 중간이미지를 없애기 위해 yOffset --> delayedYOffset으로 변경해준다.
+		// 101. 2번씬에서 초반에 살짝등장하는 중간이미지를 없애기 위해 yOffset --> delayedYOffset으로 변경해준다.
 		if(delayedYOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
 			// 26. 바뀌는 순간에 true로 변경해준다.
 			enterNewScene = true; 
-			currentScene++;
+
+			// 110. 마지막신 감지
+			if (currentScene === sceneInfo.length -1) {
+				document.body.classList.add(".scroll-effect-end");
+			}
+			// 109. 마지막 정적인 신을 제외하기 위해 조건삽입
+			if (currentScene < sceneInfo.length - 1) {
+				currentScene++;
+				
+			}
 
 			// 14. 10번 이동 > 바디에 css에서 미리 지정해둔 씬의 내용이 보이도록 설정해준다.
 			document.body.setAttribute('id', `show-scene-${currentScene}`);            
