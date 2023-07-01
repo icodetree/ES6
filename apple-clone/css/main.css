@@ -56,7 +56,6 @@ body.before-load {
 .scroll-section {
     position: relative;
     padding-top: 50vh;
-    border: 5px solid #f00;
 }
 
 #scroll-section-0 h1 {
@@ -220,6 +219,11 @@ body.before-load {
     opacity: 0;
     transition: 0.5s;
 } 
+
+/* 새로고침시 높이값이 계산되기전에 로드되어 제위치에 안보이는 현상 대응 */
+.before-load .wrap {
+    display: none;
+}
 
 .before-load .loading {
     opacity: 1;
