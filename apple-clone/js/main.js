@@ -634,7 +634,6 @@
 		// 111. 마지막씬 외에는 제거
 		if(delayedYOffset < prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
 			document.body.classList.remove(".scroll-effect-end");
-
 		}
 
 
