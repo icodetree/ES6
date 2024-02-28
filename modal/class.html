@@ -93,8 +93,17 @@
 
     <script>
       class Popup {
-        constructor(element) {
+        constructor(element, options = {}) {
           this.element = element
+          this.options = {
+            ...{
+              // Default options
+              onOpen: null,
+              onClose: null
+              // Other default options can be added here
+            },
+            ...options
+          }
           this.popupId = element.getAttribute('data-popup')
           this.popup = document.getElementById(`popup-${this.popupId}`)
           this.btnPopup = document.querySelector(
@@ -113,10 +122,10 @@
           this.closeBtn.addEventListener('click', () => {
             this.closePopup()
           })
+          console.log('test', this.popup)
 
           this.popup.addEventListener('click', e => {
-            console.log(e.target, e.currentTarget)
-            if (e.target.parent == e.currentTarget) {
+            if (e.target === this.popup) {
               this.closePopup()
             }
           })
@@ -128,19 +137,32 @@
             popup.classList.remove('active')
           })
 
+          if (this.options.onOpen) {
+            this.options.onOpen(this)
+          }
+
           document.body.classList.add('popup-open')
           this.popup.classList.add('active')
         }
 
         closePopup() {
+          if (this.options.onClose) {
+            this.options.onClose(this)
+          }
+
           document.body.classList.remove('popup-open')
           this.popup.classList.remove('active')
         }
       }
 
+      // Usage example with options
       const popups = document.querySelectorAll('.btn-popup')
       popups.forEach(popupBtn => {
-        new Popup(popupBtn)
+        new Popup(popupBtn, {
+          onOpen: popupInstance => console.log('Popup opened', popupInstance),
+          onClose: popupInstance => console.log('Popup closed', popupInstance)
+          // Additional custom options can be passed here
+        })
       })
     </script>
   </body>
