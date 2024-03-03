@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>three.js 예제</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      // 카메라 생성
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      )
+      camera.position.z = 5
+
+      // 캔버스 생성
+      const canvas = document.getElementById('canvas')
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+
+      // 웹GLRenderer 생성
+      const renderer = new THREE.WebGLRenderer({ canvas })
+      renderer.setSize(window.innerWidth, window.innerHeight)
+
+      // 카드 객체 생성
+      const card = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+      )
+      card.position.x = 0
+      card.position.y = 0
+      card.position.z = -1
+
+      // 장면에 카드 추가
+      const scene = new THREE.Scene()
+      scene.add(card)
+
+      // 마우스 움직임에 따라 카드 이동
+      function onDocumentMouseMove(event) {
+        event.preventDefault()
+        const { clientX, clientY } = event
+        const x = (clientX / window.innerWidth) * 2 - 1
+        const y = -(clientY / window.innerHeight) * 2 + 1
+        card.position.x = x * 2
+        card.position.y = y * 2
+      }
+
+      document.addEventListener('mousemove', onDocumentMouseMove)
+
+      // 애니메이션 루프
+      function animate() {
+        requestAnimationFrame(animate)
+        renderer.render(scene, camera)
+      }
+      animate()
+    </script>
+  </body>
+</html>

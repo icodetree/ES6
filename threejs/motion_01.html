@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>three.js 예제</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://raw.githubusercontent.com/mrdoob/three.js/r128/examples/js/loaders/GLTFLoader.js"></script>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      // 카메라 생성
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      )
+      camera.position.z = 5
+
+      // 캔버스 생성
+      const canvas = document.getElementById('canvas')
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+
+      // 웹GLRenderer 생성
+      const renderer = new THREE.WebGLRenderer({ canvas })
+      renderer.setSize(window.innerWidth, window.innerHeight)
+
+      // 피카츄 모델 불러오기
+      const loader = new THREE.GLTFLoader()
+      loader.load('./model/helmet.glb', gltf => {
+        const pikachu = gltf.scene.children[0]
+        pikachu.position.y = 1
+        pikachu.scale.set(0.5, 0.5, 0.5)
+
+        // 장면에 피카츄 추가
+        const scene = new THREE.Scene()
+        scene.add(pikachu)
+
+        // 마우스 움직임에 따라 피카츄 이동
+        function onDocumentMouseMove(event) {
+          event.preventDefault()
+          const { clientX, clientY } = event
+          const x = (clientX / window.innerWidth) * 2 - 1
+          const y = -(clientY / window.innerHeight) * 2 + 1
+          pikachu.position.x = x * 2
+          pikachu.position.y = y * 2
+        }
+
+        document.addEventListener('mousemove', onDocumentMouseMove)
+
+        // 애니메이션 루프
+        function animate() {
+          requestAnimationFrame(animate)
+          renderer.render(scene, camera)
+        }
+        animate()
+      })
+    </script>
+  </body>
+</html>
