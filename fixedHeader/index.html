@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const header = document.querySelector(".header");
+      const tabs = document.querySelector(".tabs");
+      const tables = document.querySelectorAll(".table");
+
+      const headerHeight = header.offsetHeight;
+      const tabHeight = tabs?.offsetHeight ?? 0;
+
+      const debounce = (fn, delay) => {
+        let timer;
+        return (...args) => {
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(() => {
+            fn(...args);
+            timer = null;
+          }, delay);
+        };
+      };
+
+      const handleScroll = debounce(() => {
+        const scrollTop = window.pageYOffset;
+
+        updateHeader(scrollTop);
+        updateTabs(scrollTop);
+        updateTables(scrollTop);
+      }, 100);
+
+      const updateHeader = (scrollTop) => {
+        if (scrollTop > headerHeight && isHeaderVisible) {
+          header.classList.add("fixed");
+          header.classList.remove("visible");
+          isHeaderVisible = false;
+        } else if (scrollTop <= headerHeight && !isHeaderVisible) {
+          header.classList.remove("fixed");
+          header.classList.add("visible");
+          isHeaderVisible = true;
+        }
+      };
+
+      const updateTabs = (scrollTop) => {
+        if (!tabs) return;
+
+        if (scrollTop > tabHeight && !isTabFixed) {
+          tabs.classList.add("fixed");
+          isTabFixed = true;
+        } else if (scrollTop <= tabHeight && isTabFixed) {
+          tabs.classList.remove("fixed");
+          isTabFixed = false;
+        }
+      };
+
+      const updateTables = (scrollTop) => {
+        if (!tables.length) return;
+
+        tables.forEach((table) => {
+          const thead = table.querySelector("thead");
+          const tableTop = table.offsetTop;
+          const theadHeight = thead.offsetHeight;
+
+          if (scrollTop > tableTop + theadHeight && !isTableTheadFixed) {
+            thead.classList.add("fixed");
+            isTableTheadFixed = true;
+          } else if (scrollTop <= tableTop + theadHeight && isTableTheadFixed) {
+            thead.classList.remove("fixed");
+            isTableTheadFixed = false;
+          }
+        });
+      };
+
+      window.addEventListener("scroll", handleScroll);
+    </script>
+  </body>
+</html>
