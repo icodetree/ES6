@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+
+      header {
+        background: #f5b335;
+        height: 80px;
+        position: fixed;
+        top: 0;
+        transition: top 0.2s ease-in-out;
+        width: 100%;
+      }
+
+      .nav-up {
+        top: -80px;
+      }
+
+      main {
+        height: 5000px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav-down">헤더입니다.</header>
+    <main>스크롤을 내릴때는 헤더가 사라지고 올릴때는 헤더가 생김.</main>
+    <footer>이곳은 푸터입니다.</footer>
+
+    <script>
+      const header = document.querySelector('header')
+      const navbarHeight = header.offsetHeight
+      let lastScrollTop = 0
+      let delta = 5 // 동작의 구현이 시작되는 위치
+
+      // 스크롤 감지
+      window.addEventListener('scroll', () => {
+        let st = window.pageYOffset
+        if (Math.abs(lastScrollTop - st) <= delta) {
+          return
+        }
+
+        // 스크롤 방향에 따른 헤더 클래스 변경
+        if (st > lastScrollTop && st > navbarHeight) {
+          header.classList.remove('nav-down')
+          header.classList.add('nav-up')
+        } else {
+          header.classList.remove('nav-up')
+          header.classList.add('nav-down')
+        }
+        lastScrollTop = st
+      })
+    </script>
+  </body>
+</html>

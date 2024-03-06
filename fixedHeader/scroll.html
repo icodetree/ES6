@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>스크롤 고정 예제</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="header nav-down">
+      <h1>고정 헤더</h1>
+    </header>
+    <div class="visual">visual</div>
+    <main>
+      <div class="tabs">
+        <h2>고정 탭</h2>
+      </div>
+      <div class="visual">visual</div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>고정 테이블 헤더</th>
+            <th>고정 테이블 헤더</th>
+            <th>고정 테이블 헤더</th>
+            <th>고정 테이블 헤더</th>
+            <th>고정 테이블 헤더</th>
+            <th>고정 테이블 헤더</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>테이블 내용 1</td>
+            <td>테이블 내용 1</td>
+            <td>테이블 내용 1</td>
+            <td>테이블 내용 1</td>
+            <td>테이블 내용 1</td>
+            <td>테이블 내용 1</td>
+          </tr>
+          <tr>
+            <td>테이블 내용 2</td>
+            <td>테이블 내용 2</td>
+            <td>테이블 내용 2</td>
+            <td>테이블 내용 2</td>
+            <td>테이블 내용 2</td>
+            <td>테이블 내용 2</td>
+          </tr>
+          <tr>
+            <td>테이블 내용 3</td>
+            <td>테이블 내용 3</td>
+            <td>테이블 내용 3</td>
+            <td>테이블 내용 3</td>
+            <td>테이블 내용 3</td>
+            <td>테이블 내용 3</td>
+          </tr>
+          <tr>
+            <td>테이블 내용 4</td>
+            <td>테이블 내용 4</td>
+            <td>테이블 내용 4</td>
+            <td>테이블 내용 4</td>
+            <td>테이블 내용 4</td>
+            <td>테이블 내용 4</td>
+          </tr>
+
+          <!-- 테이블 내용 추가 -->
+        </tbody>
+      </table>
+    </main>
+
+    <script>
+      const tabs = document.querySelector('.tabs')
+      const table = document.querySelector('.table')
+      const thead = table?.querySelector('thead')
+
+      let lastScrollTop = 0
+
+      const throttle = (fn, delay) => {
+        let lastCall = 0
+        return (...args) => {
+          const now = Date.now()
+          if (now - lastCall >= delay) {
+            lastCall = now
+            fn(...args)
+          }
+        }
+      }
+
+      const handleScroll = throttle(() => {
+        const scrollTop = window.pageYOffset
+        const newDirection = scrollTop > lastScrollTop ? 'down' : 'up'
+        document.body.setAttribute('data-scroll-direction', newDirection)
+
+        if (tabs) {
+          const isTabFixed =
+            scrollTop >= tabs.offsetTop && newDirection !== 'up'
+          tabs.classList.toggle('fixed', isTabFixed)
+        }
+
+        if (table && tabs) {
+          table.classList.toggle('fixed', tabs.classList.contains('fixed'))
+          if (thead) {
+            thead.style.transform = tabs.classList.contains('fixed')
+              ? `translate3d(0, ${tabs.offsetHeight}px, 0)`
+              : ''
+          }
+        } else if (table) {
+          const isTableFixed =
+            scrollTop >= table.offsetTop && newDirection !== 'up'
+          table.classList.toggle('fixed', isTableFixed)
+          if (thead) {
+            thead.style.transform = isTableFixed
+              ? `translate3d(0, ${thead.offsetHeight}px, 0)`
+              : ''
+          }
+        }
+        lastScrollTop = scrollTop
+      }, 50)
+
+      window.addEventListener('scroll', handleScroll)
+    </script>
+  </body>
+</html>
