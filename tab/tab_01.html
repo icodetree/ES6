@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .tabs {
+        display: flex;
+        margin: 0 auto;
+      }
+
+      .tab {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 5px;
+        cursor: pointer;
+      }
+
+      .tab.active {
+        background-color: #ddd;
+      }
+
+      .contents {
+        display: flex;
+        margin-top: 20px;
+      }
+
+      .tab-content {
+        display: none;
+        padding: 20px;
+        border: 1px solid #ccc;
+        margin: 5px;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .tab-content.active.fade-in {
+        animation: fade-in 0.5s ease-in-out;
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tabs">
+      <button class="tab active" data-content="tab1">탭 1</button>
+      <button class="tab" data-content="tab2">탭 2</button>
+      <button class="tab" data-content="tab3">탭 3</button>
+    </div>
+
+    <div class="contents">
+      <div class="tab-content active" id="tab1">탭 1 내용</div>
+      <div class="tab-content" id="tab2">탭 2 내용</div>
+      <div class="tab-content" id="tab3">탭 3 내용</div>
+    </div>
+
+    <script>
+      const tabs = document.querySelectorAll(".tab");
+      const contents = document.querySelectorAll(".tab-content");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          // 현재 활성화된 탭 비활성화
+          const currentActiveTab = document.querySelector(".tab.active");
+          currentActiveTab.classList.remove("active");
+
+          // 클릭된 탭 활성화
+          tab.classList.add("active");
+
+          // 현재 활성화된 컨텐츠 비활성화
+          const currentActiveContent = document.querySelector(
+            ".tab-content.active"
+          );
+          currentActiveContent.classList.remove("active");
+
+          // 클릭된 탭에 해당하는 컨텐츠 활성화 및 페이드인 효과 적용
+          const content = document.querySelector(`#${tab.dataset.content}`);
+          content.classList.add("active", "fade-in");
+        });
+      });
+    </script>
+  </body>
+</html>
