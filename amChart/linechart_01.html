@@ -10,9 +10,11 @@
         margin: 0;
       }
       #chartdiv {
-        width: 100%;
+        width: 90%;
         height: 600px;
         border: 1px solid #ccc;
+        padding: 0;
+        margin: 10px;
       }
     </style>
   </head>
@@ -30,24 +32,23 @@
       am4core.ready(function () {
         // Themes begin
         am4core.useTheme(am4themes_animated);
-        // Themes end
 
         // Create chart instance
-        var chart = am4core.create("chartdiv", am4charts.XYChart);
+        const chart = am4core.create("chartdiv", am4charts.XYChart);
 
         // Add data
-        chart.data = generatechartData();
-        function generatechartData() {
-          var chartData = [];
-          var firstDate = new Date();
+        chart.data = generateChartData();
+
+        function generateChartData() {
+          let chartData = [];
+          let firstDate = new Date();
           firstDate.setDate(firstDate.getDate() - 150);
-          var visits = -40;
-          var b = 0.6;
-          for (var i = 0; i < 150; i++) {
-            // we create date objects here. In your data, you can have date strings
-            // and then set format of your dates using chart.dataDateFormat property,
-            // however when possible, use date objects, as this will speed up chart rendering.
-            var newDate = new Date(firstDate);
+          let visits = -10,
+            visits2 = -10,
+            visits3 = -10; // 초기값 설정
+          let b = 0.6;
+          for (let i = 0; i < 150; i++) {
+            let newDate = new Date(firstDate);
             newDate.setDate(newDate.getDate() + i);
             if (i > 80) {
               b = 0.4;
@@ -55,55 +56,142 @@
             visits += Math.round(
               (Math.random() < b ? 1 : -1) * Math.random() * 10
             );
+            // 예시를 위한 추가 데이터 변화, 실제 구현에 따라 조정 필요
+            visits2 += Math.round(
+              (Math.random() < b ? 1 : -1) * Math.random() * 10
+            );
+            visits3 += Math.round(
+              (Math.random() < b ? 1 : -1) * Math.random() * 10
+            );
 
             chartData.push({
               date: newDate,
               visits: visits,
+              visits2: visits2, // 추가 필드
+              visits3: visits3, // 추가 필드
             });
           }
           return chartData;
         }
 
-        // Create axes
-        var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-        dateAxis.startLocation = 0.5;
-        dateAxis.endLocation = 0.5;
+        // Chart and Series settings...
+        chart.padding(20, 20, 20, 20);
+        chart.legend = new am4charts.Legend();
 
-        // Create value axis
-        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+        dateAxis.renderer.minGridDistance = 70; // 날짜 레이블 간격 조정
 
-        // Create series
-        var series = chart.series.push(new am4charts.LineSeries());
-        series.dataFields.valueY = "visits";
-        series.dataFields.dateX = "date";
-        series.strokeWidth = 3;
-        series.tooltipText = "{valueY.value}";
-        series.fillOpacity = 0.1;
+        // 날짜 형식 : day
+        dateAxis.dateFormats.setKey("day", "yy.MM.dd");
+        dateAxis.periodChangeDateFormats.setKey("day", "yy.MM.dd");
 
-        // Create a range to change stroke for values below 0
-        var range = valueAxis.createSeriesRange(series);
-        range.value = 0;
-        range.endValue = -1000;
-        range.contents.stroke = chart.colors.getIndex(4);
-        range.contents.fill = range.contents.stroke;
-        range.contents.strokeOpacity = 0.7;
-        range.contents.fillOpacity = 0.1;
+        // 날짜 형식 : month
+        dateAxis.dateFormats.setKey("month", "yy.MM");
+        dateAxis.periodChangeDateFormats.setKey("month", "yy.MM");
+
+        // 날짜 형식 : year
+        dateAxis.dateFormats.setKey("year", "yy");
+        dateAxis.periodChangeDateFormats.setKey("year", "yy");
+
+        dateAxis.renderer.grid.template.strokeOpacity = 0;
+        dateAxis.renderer.baseGrid.disabled = true;
+
+        dateAxis.renderer.labels.template.fill = am4core.color("#71747c");
+        dateAxis.renderer.labels.template.fontSize = 14;
+
+        const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        valueAxis.renderer.baseGrid.disabled = true;
+        valueAxis.renderer.grid.template.strokeOpacity = 1;
+        valueAxis.renderer.grid.template.strokeDasharray = 3;
+        valueAxis.renderer.grid.template.stroke = am4core.color("#D4D8E2");
+        valueAxis.renderer.labels.template.fill = am4core.color("#71747c");
+        valueAxis.renderer.labels.template.fontSize = 14;
+        // valueAxis.renderer.labels.template.location = 100; // 축 중앙에 위치
+
+        let series = null;
+        // Function to create series
+        function createSeries(field, name, lineColor, startColor, endColor) {
+          series = chart.series.push(new am4charts.LineSeries());
+          series.dataFields.valueY = field;
+          series.dataFields.dateX = "date";
+          series.name = name;
+          series.strokeWidth = 2;
+          series.fillOpacity = 0.1;
+          series.tensionX = 0.7; // 곡선 효과 적용
+
+          series.tooltipText = "{valueY.value}";
+          series.stroke = am4core.color(lineColor); // 선 색상 설정
+          series.fill = series.stroke;
+          let gradient = new am4core.LinearGradient();
+          gradient.addColor(am4core.color(startColor));
+          gradient.addColor(am4core.color(endColor));
+          gradient.rotation = 90;
+          series.fill.gradient = gradient;
+
+          return series;
+        }
+
+        // Create series for each data field
+        createSeries(
+          "visits",
+          "NAV",
+          "rgba(240, 41, 90, 0.9)",
+          "rgba(240, 41, 90, 1)",
+          "rgba(240, 41, 90, 0.5)"
+        );
+        createSeries(
+          "visits2",
+          "기초지수",
+          "rgba(38, 193, 248, 0.9)",
+          "rgba(72, 150, 255, 1)",
+          "rgba(72, 150, 255, 0.5)"
+        );
+        createSeries(
+          "visits3",
+          "종가",
+          "rgba(29, 181, 174, 1)",
+          "rgba(29, 181, 174, 1)",
+          "rgba(29, 181, 174, 0.5)"
+        );
 
         // Add cursor
         chart.cursor = new am4charts.XYCursor();
         chart.cursor.xAxis = dateAxis;
-        chart.scrollbarX = new am4core.Scrollbar();
+        // chart.scrollbarX = new am4core.Scrollbar(); // hadle bar
 
-        series.tooltip.getFillFromObject = false;
-        series.tooltip.adapter.add("x", (x, target) => {
-          if (series.tooltip.tooltipDataItem.valueY < 0) {
-            series.tooltip.background.fill = chart.colors.getIndex(4);
-          } else {
-            series.tooltip.background.fill = chart.colors.getIndex(0);
-          }
-          return x;
-        });
-      }); // end am4core.ready()
+        const addIconEvent = () => {
+          // **별 모양 이미지 로드**
+
+          // Add simple bullet
+          const bullet = series.bullets.push(new am4charts.Bullet());
+          const image = bullet.createChild(am4core.Image);
+          image.href = "./images/icon_star.svg";
+          image.width = 24;
+          image.height = 24;
+          image.horizontalCenter = "middle";
+          image.verticalCenter = "middle";
+
+          // **별 모양 오브젝트 생성**
+          bullet.sprite = image;
+          bullet.hiddenState.properties.opacity = 0; // 마우스 오버 시 별 표시
+
+          // **별 위치 설정**
+          // bullet.locationX = 0; // 수평 기준 0 지점에 별 위치 설정
+          bullet.locationY = 0;
+
+          bullet.events.on("hit", function (event) {
+            // 선택된 날짜 정보 가져오기
+            selectDataInfo();
+          });
+        };
+
+        addIconEvent();
+      });
+
+      const selectDataInfo = () => {
+        // 별 클릭 시 실행할 코드
+        console.log("별 클릭!");
+      };
     </script>
   </body>
 </html>
