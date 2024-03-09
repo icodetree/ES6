@@ -10,7 +10,7 @@
         margin: 0;
       }
       #chartdiv {
-        width: 98%;
+        width: 90%;
         height: 600px;
         border: 1px solid #ccc;
         padding: 0;
@@ -76,7 +76,6 @@
 
         // Chart and Series settings...
         chart.padding(20, 20, 20, 20)
-        chart.legend = new am4charts.Legend()
 
         const dateAxis = chart.xAxes.push(new am4charts.DateAxis())
         dateAxis.renderer.minGridDistance = 70 // 날짜 레이블 간격 조정
@@ -93,40 +92,38 @@
         dateAxis.dateFormats.setKey('year', 'yy')
         dateAxis.periodChangeDateFormats.setKey('year', 'yy')
 
+        // dateAxis.title.text = "Turnover ($M)";
         dateAxis.renderer.grid.template.strokeOpacity = 0
         dateAxis.renderer.baseGrid.disabled = true
-
         dateAxis.renderer.labels.template.fill = am4core.color('#71747c')
         dateAxis.renderer.labels.template.fontSize = 14
 
         const valueAxis = chart.yAxes.push(new am4charts.ValueAxis())
         valueAxis.renderer.baseGrid.disabled = true
         valueAxis.renderer.grid.template.strokeOpacity = 1
-        valueAxis.renderer.grid.template.strokeDasharray = 3
         valueAxis.renderer.grid.template.stroke = am4core.color('#D4D8E2')
+        valueAxis.renderer.grid.template.strokeDasharray = 3
         valueAxis.renderer.labels.template.fill = am4core.color('#71747c')
         valueAxis.renderer.labels.template.fontSize = 14
-        // valueAxis.renderer.labels.template.location = 100; // 축 중앙에 위치
 
-        let series = null
         // Function to create series
         function createSeries(field, name, lineColor, startColor, endColor) {
-          series = chart.series.push(new am4charts.LineSeries())
+          const series = chart.series.push(new am4charts.LineSeries())
           series.dataFields.valueY = field
           series.dataFields.dateX = 'date'
           series.name = name
           series.strokeWidth = 2
-          series.fillOpacity = 0.1
+          series.fillOpacity = 0.7
           series.tensionX = 0.7 // 곡선 효과 적용
 
           series.tooltipText = '{valueY.value}'
           series.stroke = am4core.color(lineColor) // 선 색상 설정
-          series.fill = series.stroke
+
           let gradient = new am4core.LinearGradient()
           gradient.addColor(am4core.color(startColor))
           gradient.addColor(am4core.color(endColor))
           gradient.rotation = 90
-          series.fill.gradient = gradient
+          series.fill = gradient
 
           return series
         }
@@ -135,63 +132,51 @@
         createSeries(
           'visits',
           'NAV',
-          'rgba(240, 41, 90, 0.9)',
           'rgba(240, 41, 90, 1)',
-          'rgba(240, 41, 90, 0.5)'
+          'rgba(240, 41, 90, 0.3)',
+          'rgba(240, 41, 90, 0)'
         )
         createSeries(
           'visits2',
           '기초지수',
-          'rgba(38, 193, 248, 0.9)',
-          'rgba(72, 150, 255, 1)',
-          'rgba(72, 150, 255, 0.5)'
+          'rgba(38, 193, 248, 1)',
+          'rgba(72, 150, 255, 0.3)',
+          'rgba(72, 150, 255, 0)'
         )
         createSeries(
           'visits3',
           '종가',
           'rgba(29, 181, 174, 1)',
-          'rgba(29, 181, 174, 1)',
-          'rgba(29, 181, 174, 0.5)'
+          'rgba(29, 181, 174, 0.3)',
+          'rgba(29, 181, 174, 0)'
         )
+        // Sprites 배열 생성
+        chart.sprites = []
+        // 별모양 오브젝트 생성
+        let star = new am4core.Sprite()
+        star.path =
+          'M5.5,0 L7.5,4 L13,4.5 L9.5,8 L10,13.5 L5.5,11 L1,13.5 L1.5,8 L-2,4.5 L3.5,4 L5.5,0' // 별모양 SVG 경로
+        star.scale = 1 // 크기 조정
+        star.fill = am4core.color('#ffd700') // 노란색 채우기
+        star.stroke = am4core.color('#000000') // 검은색 외곽선
+        star.strokeWidth = 1 // 외곽선 두께
+        star.horizontalCenter = 'middle' // 수평 위치 조정
+        star.verticalCenter = 'bottom' // 수직 위치 조정
+        star.align = 'center' // 정렬 방식
+        star.valign = 'bottom' // 수직 정렬 방식
+        star.y = 0 // y 좌표 설정 (0은 수평 기준선에 위치)
+
+        // 차트에 별모양 오브젝트 추가
+        chart.sprites.push(star)
 
         // Add cursor
         chart.cursor = new am4charts.XYCursor()
         chart.cursor.xAxis = dateAxis
         // chart.scrollbarX = new am4core.Scrollbar(); // hadle bar
 
-        const addIconEvent = () => {
-          // **별 모양 이미지 로드**
-
-          // Add simple bullet
-          const bullet = series.bullets.push(new am4charts.Bullet())
-          const image = bullet.createChild(am4core.Image)
-          image.href = './images/icon_star.svg'
-          image.width = 24
-          image.height = 24
-          image.horizontalCenter = 'middle'
-          image.verticalCenter = 'middle'
-
-          // **별 모양 오브젝트 생성**
-          bullet.sprite = image
-          bullet.hiddenState.properties.opacity = 0 // 마우스 오버 시 별 표시
-
-          // **별 위치 설정**
-          // bullet.locationX = 0; // 수평 기준 0 지점에 별 위치 설정
-          bullet.locationY = 0
-
-          bullet.events.on('hit', function (event) {
-            // 선택된 날짜 정보 가져오기
-            selectDataInfo()
-          })
-        }
-
-        addIconEvent()
-      })
-
-      const selectDataInfo = () => {
-        // 별 클릭 시 실행할 코드
-        console.log('별 클릭!')
-      }
+        // Add legend
+        chart.legend = new am4charts.Legend()
+      }) // end am4core.ready()
     </script>
   </body>
 </html>
