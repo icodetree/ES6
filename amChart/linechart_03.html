@@ -105,6 +105,10 @@
         valueAxis.renderer.grid.template.strokeDasharray = 3
         valueAxis.renderer.labels.template.fill = am4core.color('#71747c')
         valueAxis.renderer.labels.template.fontSize = 14
+        valueAxis.renderer.inside = true
+        valueAxis.renderer.maxLabelPosition = 0.99
+        valueAxis.renderer.labels.template.dx = -10
+        valueAxis.renderer.labels.template.dy = -10
 
         // Function to create series
         let series
@@ -151,6 +155,28 @@
           'rgba(29, 181, 174, 0.3)',
           'rgba(29, 181, 174, 0)'
         )
+
+        // 특정 날짜 설정
+        const targetDate = new Date(2024, 0, 1) // 2024년 1월 1일
+
+        // 별모양 마커 추가
+        const marker = series.bullets.push(new am4charts.CircleBullet())
+        marker.preventOutlierNormalization = true
+        marker.propertyFields.stroke = 'fill'
+        marker.propertyFields.opacity = 1
+        marker.radius = 10 // 마커 반지름
+        marker.locationX = dateAxis.dateToPosition(targetDate)
+        marker.locationY = 0 // y 좌표를 0으로 설정
+
+        const starIcon = marker.createChild(am4core.Sprite)
+        starIcon.path =
+          'M3.5,2.5 L5,0.7 L6.5,2.5 L8.3,2.7 L6.8,4.2 L7.2,6 L5.5,5 L3.8,6 L4.2,4.2 L2.7,2.7 L3.5,2.5'
+        starIcon.scale = 3
+        starIcon.fill = am4core.color('#ffd700') // 노란색
+        starIcon.stroke = am4core.color('#000000') // 검은색 외곽선
+        starIcon.strokeWidth = 1
+        starIcon.horizontalCenter = 'middle'
+        starIcon.verticalCenter = 'middle'
 
         // Add cursor
         chart.cursor = new am4charts.XYCursor()

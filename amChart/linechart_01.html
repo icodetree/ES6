@@ -95,9 +95,13 @@
 
         dateAxis.renderer.grid.template.strokeOpacity = 0
         dateAxis.renderer.baseGrid.disabled = true
-
         dateAxis.renderer.labels.template.fill = am4core.color('#71747c')
         dateAxis.renderer.labels.template.fontSize = 14
+
+        // x축라벨 위치
+        dateAxis.renderer.maxLabelPosition = 1
+        dateAxis.renderer.labels.template.dx = 0
+        dateAxis.renderer.labels.template.dy = 0
 
         const valueAxis = chart.yAxes.push(new am4charts.ValueAxis())
         valueAxis.renderer.baseGrid.disabled = true
@@ -107,6 +111,12 @@
         valueAxis.renderer.labels.template.fill = am4core.color('#71747c')
         valueAxis.renderer.labels.template.fontSize = 14
         // valueAxis.renderer.labels.template.location = 100; // 축 중앙에 위치
+
+        // y축라벨 위치 내부로 이동
+        valueAxis.renderer.inside = true
+        valueAxis.renderer.maxLabelPosition = 0.99
+        valueAxis.renderer.labels.template.dx = -10
+        valueAxis.renderer.labels.template.dy = -10
 
         let series = null
         // Function to create series
