@@ -152,29 +152,6 @@
           'rgba(29, 181, 174, 0)'
         )
 
-        // 특정 날짜 설정
-        const targetDate = new Date(2024, 0, 3) // 2024년 1월 1일
-
-        // 커서에 별모양 아이콘 추가
-        chart.cursor = new am4charts.XYCursor()
-        chart.cursor.behavior = 'none' // 커서 동작 비활성화
-        chart.cursor.lineX.disabled = true
-        chart.cursor.lineY.disabled = true
-        chart.cursor.xAxis = dateAxis
-
-        chart.cursor.events.on('cursormoved', function (ev) {
-          const target = ev.target
-          if (target.cursor) {
-            const xAxis = target.cursor.xAxis
-            const date = xAxis.positionToDate(target.cursor.point.x)
-            if (date.getTime() === targetDate.getTime()) {
-              target.cursor.addChild(starIcon)
-            } else {
-              target.cursor.removeChild(starIcon)
-            }
-          }
-        })
-
         // Add cursor
         chart.cursor = new am4charts.XYCursor()
         chart.cursor.xAxis = dateAxis
