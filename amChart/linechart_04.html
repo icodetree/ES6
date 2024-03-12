@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>linechart</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      #chartdiv {
+        width: 98%;
+        height: 600px;
+        border: 1px solid #ccc;
+        padding: 0;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chartdiv"></div>
+
+    <script src="./lib/core.js"></script>
+    <script src="./lib/charts.js"></script>
+    <script src="./lib/animated.js"></script>
+    <script src="./lib/material.js"></script>
+    <script src="./lib/de_DE.js"></script>
+    <script src="./lib/germanyLow.js"></script>
+
+    <script>
+      am4core.ready(function () {
+        am4core.useTheme(am4themes_animated);
+
+        const chart = am4core.create("chartdiv", am4charts.XYChart);
+        const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+        const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        let series = null;
+
+        chart.data = [
+          { date: "2023-10-13", visits: -1, visits2: -14, visits3: -10 },
+          { date: "2023-10-14", visits: 7, visits2: -10, visits3: -9 },
+          { date: "2023-10-15", visits: 13, visits2: -7, visits3: -3 },
+          { date: "2023-10-16", visits: 7, visits2: -16, visits3: 4 },
+          { date: "2023-10-17", visits: 15, visits2: -21, visits3: 4 },
+          { date: "2023-10-18", visits: 14, visits2: -20, visits3: 5 },
+          { date: "2023-10-19", visits: 22, visits2: -18, visits3: 8 },
+          { date: "2023-10-20", visits: 31, visits2: -25, visits3: -2 },
+          { date: "2023-10-21", visits: 24, visits2: -22, visits3: -2 },
+          { date: "2023-10-22", visits: 30, visits2: -29, visits3: 0 },
+          { date: "2023-10-23", visits: 32, visits2: -23, visits3: 6 },
+          { date: "2023-10-24", visits: 31, visits2: -23, visits3: -3 },
+          { date: "2023-10-25", visits: 36, visits2: -19, visits3: -6 },
+          { date: "2023-10-26", visits: 36, visits2: -12, visits3: 3 },
+          { date: "2023-10-27", visits: 28, visits2: -5, visits3: 8 },
+          { date: "2023-10-28", visits: 35, visits2: -1, visits3: 15 },
+          { date: "2023-10-29", visits: 40, visits2: 6, visits3: 6 },
+          { date: "2023-10-30", visits: 50, visits2: -2, visits3: 2 },
+          { date: "2023-10-31", visits: 54, visits2: -7, visits3: 7 },
+          { date: "2023-11-01", visits: 45, visits2: -8, visits3: 9 },
+          { date: "2023-11-02", visits: 46, visits2: -12, visits3: 18 },
+          { date: "2023-11-03", visits: 49, visits2: -4, visits3: 15 },
+          { date: "2023-11-04", visits: 49, visits2: -7, visits3: 25 },
+          { date: "2023-11-05", visits: 41, visits2: -5, visits3: 25 },
+          { date: "2023-11-06", visits: 41, visits2: 1, visits3: 30 },
+          { date: "2023-11-07", visits: 41, visits2: -5, visits3: 28 },
+          { date: "2023-11-08", visits: 48, visits2: -12, visits3: 37 },
+          { date: "2023-11-09", visits: 44, visits2: -11, visits3: 30 },
+          { date: "2023-11-10", visits: 51, visits2: -11, visits3: 36 },
+          { date: "2023-11-11", visits: 41, visits2: -19, visits3: 29 },
+          { date: "2023-11-12", visits: 48, visits2: -21, visits3: 30 },
+          { date: "2023-11-13", visits: 44, visits2: -20, visits3: 40 },
+          { date: "2023-11-14", visits: 52, visits2: -14, visits3: 35 },
+          { date: "2023-11-15", visits: 57, visits2: -16, visits3: 41 },
+          { date: "2023-11-16", visits: 59, visits2: -18, visits3: 33 },
+          { date: "2023-11-17", visits: 55, visits2: -27, visits3: 39 },
+          { date: "2023-11-18", visits: 57, visits2: -32, visits3: 39 },
+          { date: "2023-11-19", visits: 52, visits2: -29, visits3: 47 },
+          { date: "2023-11-20", visits: 54, visits2: -23, visits3: 54 },
+          { date: "2023-11-21", visits: 50, visits2: -24, visits3: 53 },
+          { date: "2023-11-22", visits: 57, visits2: -19, visits3: 51 },
+          { date: "2023-11-23", visits: 51, visits2: -10, visits3: 55 },
+          { date: "2023-11-24", visits: 41, visits2: -3, visits3: 61 },
+          { date: "2023-11-25", visits: 41, visits2: 4, visits3: 66 },
+          { date: "2023-11-26", visits: 37, visits2: 12, visits3: 72 },
+          { date: "2023-11-27", visits: 36, visits2: 15, visits3: 80 },
+          { date: "2023-11-28", visits: 37, visits2: 9, visits3: 72 },
+          { date: "2023-11-29", visits: 27, visits2: 3, visits3: 64 },
+          { date: "2023-11-30", visits: 24, visits2: 9, visits3: 56 },
+          { date: "2023-12-01", visits: 27, visits2: 18, visits3: 52 },
+          { date: "2023-12-02", visits: 23, visits2: 25, visits3: 56 },
+          { date: "2023-12-03", visits: 20, visits2: 19, visits3: 54 },
+          { date: "2023-12-04", visits: 20, visits2: 24, visits3: 59 },
+          { date: "2023-12-05", visits: 14, visits2: 33, visits3: 51 },
+          { date: "2023-12-06", visits: 17, visits2: 28, visits3: 59 },
+          { date: "2023-12-07", visits: 9, visits2: 27, visits3: 52 },
+          { date: "2023-12-08", visits: 19, visits2: 18, visits3: 56 },
+          { date: "2023-12-09", visits: 14, visits2: 18, visits3: 61 },
+          { date: "2023-12-10", visits: 9, visits2: 9, visits3: 71 },
+          { date: "2023-12-11", visits: 2, visits2: 1, visits3: 63 },
+          { date: "2023-12-12", visits: 11, visits2: 10, visits3: 59 },
+          { date: "2023-12-13", visits: 9, visits2: 12, visits3: 65 },
+          { date: "2023-12-14", visits: 2, visits2: 9, visits3: 68 },
+          { date: "2023-12-15", visits: 1, visits2: 11, visits3: 67 },
+          { date: "2023-12-16", visits: -6, visits2: 5, visits3: 68 },
+          { date: "2023-12-17", visits: 2, visits2: 5, visits3: 77 },
+          { date: "2023-12-18", visits: 11, visits2: 7, visits3: 82 },
+          { date: "2023-12-19", visits: 4, visits2: 15, visits3: 89 },
+          { date: "2023-12-20", visits: 14, visits2: 14, visits3: 90 },
+          { date: "2023-12-21", visits: 22, visits2: 11, visits3: 94 },
+          { date: "2023-12-22", visits: 29, visits2: 4, visits3: 102 },
+          { date: "2023-12-23", visits: 37, visits2: 12, visits3: 111 },
+          { date: "2023-12-24", visits: 42, visits2: 7, visits3: 104 },
+          { date: "2023-12-25", visits: 40, visits2: 3, visits3: 114 },
+          { date: "2023-12-26", visits: 42, visits2: -3, visits3: 110 },
+          { date: "2023-12-27", visits: 37, visits2: 6, visits3: 101 },
+          { date: "2023-12-28", visits: 35, visits2: 9, visits3: 94 },
+          { date: "2023-12-29", visits: 37, visits2: 15, visits3: 92 },
+          { date: "2023-12-30", visits: 35, visits2: 17, visits3: 95 },
+          { date: "2023-12-31", visits: 38, visits2: 15, visits3: 92 },
+          { date: "2024-01-01", visits: 33, visits2: 24, visits3: 96 },
+          { date: "2024-01-02", visits: 28, visits2: 18, visits3: 106 },
+          { date: "2024-01-03", visits: 23, visits2: 27, visits3: 113 },
+          { date: "2024-01-04", visits: 26, visits2: 28, visits3: 118 },
+          { date: "2024-01-05", visits: 28, visits2: 34, visits3: 127 },
+          { date: "2024-01-06", visits: 23, visits2: 39, visits3: 124 },
+          { date: "2024-01-07", visits: 15, visits2: 36, visits3: 118 },
+          { date: "2024-01-08", visits: 10, visits2: 40, visits3: 114 },
+          { date: "2024-01-09", visits: 10, visits2: 31, visits3: 122 },
+          { date: "2024-01-10", visits: 14, visits2: 41, visits3: 123 },
+          { date: "2024-01-11", visits: 5, visits2: 37, visits3: 121 },
+          { date: "2024-01-12", visits: -3, visits2: 27, visits3: 122 },
+          { date: "2024-01-13", visits: -7, visits2: 36, visits3: 119 },
+          { date: "2024-01-14", visits: -10, visits2: 33, visits3: 120 },
+          { date: "2024-01-15", visits: -4, visits2: 27, visits3: 119 },
+          { date: "2024-01-16", visits: 1, visits2: 23, visits3: 118 },
+          { date: "2024-01-17", visits: -5, visits2: 22, visits3: 122 },
+          { date: "2024-01-18", visits: -9, visits2: 16, visits3: 116 },
+          { date: "2024-01-19", visits: -10, visits2: 21, visits3: 111 },
+          { date: "2024-01-20", visits: 0, visits2: 20, visits3: 101 },
+        ];
+
+        function chartCommon() {
+          chart.padding(40, 40, 40, 40);
+
+          // Create series for each data field
+          createSeries(
+            "visits",
+            "NAV",
+            "rgba(240, 41, 90, 1)",
+            "rgba(240, 41, 90, 0.3)",
+            "rgba(240, 41, 90, 0)"
+          );
+          createSeries(
+            "visits2",
+            "기초지수",
+            "rgba(38, 193, 248, 1)",
+            "rgba(72, 150, 255, 0.3)",
+            "rgba(72, 150, 255, 0)"
+          );
+          createSeries(
+            "visits3",
+            "종가",
+            "rgba(29, 181, 174, 1)",
+            "rgba(29, 181, 174, 0.3)",
+            "rgba(29, 181, 174, 0)"
+          );
+        }
+
+        function cursorHandler() {
+          chart.cursor = new am4charts.XYCursor();
+          chart.cursor.behavior = "selectX";
+          chart.cursor.events.on("cursorpositionchanged", function (ev) {
+            chart.series.each(function (series) {
+              series.tooltip.disabled = false;
+              series.showTooltipAtDataItem(series.tooltipDataItem);
+            });
+          });
+        }
+
+        function legendHandler() {
+          chart.legend = new am4charts.Legend();
+          chart.legend.useDefaultMarker = true;
+
+          chart.legend.parent = chart.chartContainer;
+          chart.legend.position = "top";
+
+          chart.legend.fontSize = 15;
+          chart.legend.width = 280;
+          chart.legend.padding(0, 0, 10, 0);
+          chart.legend.dx = -10;
+        }
+
+        function dateFormatFunc() {
+          // 날짜 형식 : day
+          dateAxis.dateFormats.setKey("day", "yy.MM.dd");
+          dateAxis.periodChangeDateFormats.setKey("day", "yy.MM.dd");
+
+          // 날짜 형식 : month
+          dateAxis.dateFormats.setKey("month", "yy.MM");
+          dateAxis.periodChangeDateFormats.setKey("month", "yy.MM");
+
+          // 날짜 형식 : year
+          dateAxis.dateFormats.setKey("year", "yy");
+          dateAxis.periodChangeDateFormats.setKey("year", "yy");
+        }
+
+        function dateAxisFunc() {
+          dateAxis.renderer.minGridDistance = 70; // 날짜 레이블 간격 조정
+          dateAxis.renderer.grid.template.strokeOpacity = 0;
+          dateAxis.renderer.baseGrid.disabled = true;
+          dateAxis.renderer.labels.template.fill = am4core.color("#71747c");
+          dateAxis.renderer.labels.template.fontSize = 14;
+
+          // x축라벨 위치
+          dateAxis.renderer.maxLabelPosition = 1;
+          dateAxis.renderer.labels.template.dx = 0;
+          dateAxis.renderer.labels.template.dy = 0;
+        }
+
+        function valueAxisFunc() {
+          valueAxis.renderer.baseGrid.disabled = true;
+          valueAxis.renderer.grid.template.strokeOpacity = 1;
+          valueAxis.renderer.grid.template.strokeDasharray = 3;
+          valueAxis.renderer.grid.template.stroke = am4core.color("#D4D8E2");
+          valueAxis.renderer.labels.template.fill = am4core.color("#71747c");
+          valueAxis.renderer.labels.template.fontSize = 14;
+          // valueAxis.renderer.labels.template.location = 100; // 축 중앙에 위치
+
+          // y축라벨 위치 내부로 이동
+          valueAxis.renderer.inside = true;
+          valueAxis.renderer.maxLabelPosition = 0.99;
+          valueAxis.renderer.labels.template.dx = -10;
+          valueAxis.renderer.labels.template.dy = -10;
+        }
+
+        function createSeries(field, name, lineColor, startColor, endColor) {
+          series = chart.series.push(new am4charts.LineSeries());
+
+          series.dataFields.valueY = field;
+          series.dataFields.dateX = "date";
+          series.name = name;
+          series.strokeWidth = 2;
+          series.fillOpacity = 0.7;
+          series.tensionX = 0.7; // 곡선 효과 적용
+
+          series.tooltipText = "{name}: [b]{valueY}[/]";
+          series.stroke = am4core.color(lineColor); // 선 색상 설정
+
+          let gradient = new am4core.LinearGradient();
+          gradient.addColor(am4core.color(startColor));
+          gradient.addColor(am4core.color(endColor));
+          gradient.rotation = 90;
+          series.fill = gradient;
+
+          series.events.on("hit", function (ev) {
+            let dataItem = ev.target.dataItem;
+            console.log("test");
+            if (!dataItem.bullet) {
+              let bullet = dataItem.createChild(am4charts.CircleBullet);
+              bullet.circle.radius = 5; // you can set the radius of the circle
+              bullet.fill = am4core.color("#ff0000"); // you can set the color of the circle
+
+              dataItem.bullet = bullet;
+            }
+          });
+
+          return series;
+        }
+
+        function addIconEvent() {
+          // Add simple bullet
+          const bullet = series.bullets.push(new am4charts.Bullet());
+          const image = bullet.createChild(am4core.Image);
+
+          image.href = "./images/icon_star.svg";
+          image.width = 24;
+          image.height = 24;
+          image.horizontalCenter = "middle";
+          image.verticalCenter = "middle";
+
+          // **별 모양 오브젝트 생성**
+          bullet.sprite = image;
+          bullet.hiddenState.properties.opacity = 0; // 마우스 오버 시 별 표시
+
+          // **별 위치 설정**
+          // bullet.locationX = 0; // 수평 기준 0 지점에 별 위치 설정
+          bullet.locationY = 0;
+
+          bullet.events.on("hit", function (event) {
+            // 선택된 날짜 정보 가져오기
+            selectDataInfo();
+          });
+        }
+
+        cursorHandler();
+        chartCommon();
+        legendHandler();
+        dateFormatFunc();
+        dateAxisFunc();
+        valueAxisFunc();
+        // addIconEvent();
+      });
+
+      const selectDataInfo = () => {
+        // 별 클릭 시 실행할 코드
+        console.log("별 클릭!");
+      };
+    </script>
+  </body>
+</html>
