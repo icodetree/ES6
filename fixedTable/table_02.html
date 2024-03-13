@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      /* https://dev.to/madsstoumann/a-guide-to-styling-tables-28d2 */
+      /* A Guide to Styling Tables */
+
+      table {
+        border-collapse: collapse;
+        font-family: system-ui;
+        border-spacing: 0;
+      }
+      :is(td, th) {
+        border-style: solid;
+        padding: 0.5ch 1ch;
+        border-block-width: 1px 0;
+        border-inline-width: 1px 0;
+      }
+      :is(td, th):last-of-type {
+        border-inline-end-width: 1px;
+      }
+      caption {
+        margin-block: 1rlh;
+        /* caption-side: bottom; */
+      }
+      col:nth-of-type(even) {
+        background: #dddddd;
+      }
+      /* tr:nth-of-type(odd) {
+        background: #ebc6c6;
+      } */
+      th:first-of-type {
+        border-start-start-radius: 0.5em;
+      }
+      th:last-of-type {
+        border-start-end-radius: 0.5em;
+      }
+
+      tr:last-of-type td:first-of-type {
+        border-end-start-radius: 0.5em;
+      }
+      tr:last-of-type td:last-of-type {
+        border-end-end-radius: 0.5em;
+      }
+      td:hover {
+        background: #666666;
+      }
+
+      tr:hover {
+        background: #e6e6e6;
+      }
+      col:hover {
+        background: #e6e6e6;
+      }
+      :is(td, th, tr):hover {
+        outline: 2px solid #666;
+        outline-offset: -2px;
+      }
+      [data-c2~="center"] tr > *:nth-of-type(2) {
+        text-align: center;
+      }
+      [data-c4~="end"] tr > *:nth-of-type(4) {
+        text-align: end;
+      }
+
+      /* https://velog.io/@surim014/12-modern-css-one-line-upgrades */
+      /* 한 줄로 업그레이드하는 12가지 최신 CSS */
+
+      :is(h1, h2, h3, h4, .text-balance) {
+        text-wrap: pretty;
+
+        /* For demonstration */
+        max-inline-size: 35ch;
+        border: 1px dotted #ddd;
+        margin-top: 50px;
+      }
+
+      .image {
+        object-fit: cover;
+        aspect-ratio: 1;
+
+        /* 선택 사항: 이미지 크기 제한 */
+        max-block-size: 500px;
+
+        background-image: url(../amChart/images/chart.png);
+        background-repeat: no-repeat;
+        background-color: #666;
+        border: 1px solid #ddd;
+        margin-top: 50px;
+      }
+      .textwrap {
+        padding-bottom: 100px;
+      }
+      :root {
+        --outline-offset: 5em;
+      }
+
+      a:not([class]) {
+        text-underline-offset: 0.25em;
+        text-decoration-color: #f00;
+        text-decoration-thickness: 3px;
+
+        outline: 2px dashed blue;
+        outline-offset: var(--outline-offset, 0.5em);
+      }
+
+      /* https://soobing.github.io/a11y/writing-css-with-accessibility-in-mind/ */
+      /* (번역) 접근성을 고려하여 CSS 작성하기 */
+      .visually-hidden {
+        position: absolute; /* 일반적인 흐름에서 항목을 제거 */
+        white-space: nowrap; /* 잘못 발음되거나 뭉개지는 텍스트를 위한 해결책 */
+        width: 1px; /* 가능한 가장 작은 크기로 설정 (일부 화면 낭독기는 높이와 너비가 0인 요소를 무시함) */
+        height: 1px;
+        overflow: hidden; /* 크기 조정 후 넘치는 콘텐츠 숨기기 */
+
+        border: 0; /* 요소의 크기를 변경할 수 있는 모든 속성 초기화 */
+        padding: 0;
+
+        /* 클리핑은 요소의 어떤 부분이 표시될지 정의함. */
+        /* 구식 clip 속성은 구형 브라우저를 위함 */
+        clip: rect(0 0 0 0);
+
+        /* 최신 브라우저를 위한 clip-path. inset(50%)는 콘텐츠를 사라지게 하는 내부 사각형을 정의함. */
+        clip-path: inset(50%);
+
+        /* 현재 아무도 정확히 왜 margin: -1px이 있는지 확실하지 않음. 게다가 이것이 문제를 일으킬 수 있음 (참조:https://github.com/h5bp/html5-boilerplate/issues/1985). */
+        margin: -1px;
+      }
+    </style>
+  </head>
+  <body>
+    <table data-c2="center" data-c4="end">
+      <caption>
+        Super Heroes
+      </caption>
+      <colgroup>
+        <col />
+        <col />
+        <col />
+        <col />
+      </colgroup>
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Known As</th>
+          <th>Place</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Bruce</td>
+          <td>Wayne</td>
+          <td>Batman</td>
+          <td>Gotham City</td>
+        </tr>
+        <tr>
+          <td>Clark</td>
+          <td>Kent</td>
+          <td>Superman</td>
+          <td>Metropolis</td>
+        </tr>
+        <tr>
+          <td>Tony</td>
+          <td>Stark</td>
+          <td>Iron Man</td>
+          <td>Malibu</td>
+        </tr>
+        <tr>
+          <td>Peter</td>
+          <td>Parker</td>
+          <td>Spider-Man</td>
+          <td>New York City</td>
+        </tr>
+        <tr>
+          <td>Matt</td>
+          <td>Murdock</td>
+          <td>Daredevil</td>
+          <td>New York City</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="text-balance">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis ea
+      impedit est perspiciatis doloribus dolorum,
+    </div>
+
+    <div class="image">
+      <!-- <img src="../amChart/images/chart.png" alt="" /> -->
+    </div>
+
+    <div class="textwrap">
+      <a href="#"
+        >text-underline-offset을 사용하면 텍스트 기준선과 밑줄 사이의 거리를
+        제어할 수 있습니다. 이 속성은 다음과 같이 적용되는 표준 재설정의 일부가
+        되었습니다.</a
+      >
+    </div>
+
+    <!-- https://ryankim.hashnode.dev/7iuk7zajioy7qo2fjeykpo2kuoyzgcdsiqtsvzttliqsioq3uoumroqzocdtmljsnbtsiqttjiu -->
+    <!-- 실행 컨텍스트와 스코프, 그리고 호이스팅 -->
+    <script>
+      var x = 1;
+      let y = 2;
+      const z = 3;
+
+      function outer(a) {
+        const outerVal = a + 1;
+        function inner(b) {
+          const innerVal = b + x;
+          return outerVal + innerVal + y + z;
+        }
+        return inner(20);
+      }
+
+      const res = outer(10);
+      console.log(res);
+    </script>
+  </body>
+</html>
