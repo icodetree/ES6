@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>linechart</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      #chartdiv {
+        width: 98%;
+        height: 600px;
+        border: 1px solid #ccc;
+        padding: 0;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chartdiv"></div>
+
+    <script src="./lib/core.js"></script>
+    <script src="./lib/charts.js"></script>
+    <script src="./lib/animated.js"></script>
+    <script src="./lib/material.js"></script>
+    <script src="./lib/de_DE.js"></script>
+    <script src="./lib/germanyLow.js"></script>
+
+    <script>
+      am4core.ready(function () {
+        am4core.useTheme(am4themes_animated);
+
+        const chart = am4core.create("chartdiv", am4charts.XYChart);
+        const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+        const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        let series = null;
+
+        // chart.data = generateChartData();
+        chart.data = [
+          {
+            date: "2023.10.13",
+            NAV: -1,
+            기초지수: -14,
+            종가: -10,
+            "KODEX 24-12 은행채(AA+이상)액티브": 0,
+          },
+          {
+            date: "2023.10.14",
+            NAV: 7,
+            기초지수: -10,
+            종가: -9,
+            "KODEX 24-12 은행채(AA+이상)액티브": -4,
+          },
+          {
+            date: "2023.10.15",
+            NAV: 13,
+            기초지수: -7,
+            종가: -3,
+            "KODEX 24-12 은행채(AA+이상)액티브": -5,
+          },
+          {
+            date: "2023.10.16",
+            NAV: 7,
+            기초지수: -16,
+            종가: 4,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2023.10.17",
+            NAV: 15,
+            기초지수: -21,
+            종가: 4,
+            "KODEX 24-12 은행채(AA+이상)액티브": 8,
+          },
+          {
+            date: "2023.10.18",
+            NAV: 14,
+            기초지수: -20,
+            종가: 5,
+            "KODEX 24-12 은행채(AA+이상)액티브": 4,
+          },
+          {
+            date: "2023.10.19",
+            NAV: 22,
+            기초지수: -18,
+            종가: 8,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.10.20",
+            NAV: 31,
+            기초지수: -25,
+            종가: -2,
+            "KODEX 24-12 은행채(AA+이상)액티브": -2,
+          },
+          {
+            date: "2023.10.21",
+            NAV: 24,
+            기초지수: -22,
+            종가: -2,
+            "KODEX 24-12 은행채(AA+이상)액티브": -3,
+          },
+          {
+            date: "2023.10.22",
+            NAV: 30,
+            기초지수: -29,
+            종가: 0,
+            "KODEX 24-12 은행채(AA+이상)액티브": 4,
+          },
+          {
+            date: "2023.10.23",
+            NAV: 32,
+            기초지수: -23,
+            종가: 6,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.10.24",
+            NAV: 31,
+            기초지수: -23,
+            종가: -3,
+            "KODEX 24-12 은행채(AA+이상)액티브": -1,
+          },
+          {
+            date: "2023.10.25",
+            NAV: 36,
+            기초지수: -19,
+            종가: -6,
+            "KODEX 24-12 은행채(AA+이상)액티브": -3,
+          },
+          {
+            date: "2023.10.26",
+            NAV: 36,
+            기초지수: -12,
+            종가: 3,
+            "KODEX 24-12 은행채(AA+이상)액티브": 4,
+          },
+          {
+            date: "2023.10.27",
+            NAV: 28,
+            기초지수: -5,
+            종가: 8,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.10.28",
+            NAV: 35,
+            기초지수: -1,
+            종가: 15,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.10.29",
+            NAV: 40,
+            기초지수: 6,
+            종가: 6,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2023.10.30",
+            NAV: 50,
+            기초지수: -2,
+            종가: 2,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2023.10.31",
+            NAV: 54,
+            기초지수: -7,
+            종가: 7,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2023.11.01",
+            NAV: 45,
+            기초지수: -8,
+            종가: 9,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2023.11.02",
+            NAV: 46,
+            기초지수: -12,
+            종가: 18,
+            "KODEX 24-12 은행채(AA+이상)액티브": 8,
+          },
+          {
+            date: "2023.11.03",
+            NAV: 49,
+            기초지수: -4,
+            종가: 15,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.11.04",
+            NAV: 49,
+            기초지수: -7,
+            종가: 25,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.11.05",
+            NAV: 41,
+            기초지수: -5,
+            종가: 25,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.11.06",
+            NAV: 41,
+            기초지수: 1,
+            종가: 30,
+            "KODEX 24-12 은행채(AA+이상)액티브": 0,
+          },
+          {
+            date: "2023.11.07",
+            NAV: 41,
+            기초지수: -5,
+            종가: 28,
+            "KODEX 24-12 은행채(AA+이상)액티브": 8,
+          },
+          {
+            date: "2023.11.08",
+            NAV: 48,
+            기초지수: -12,
+            종가: 37,
+            "KODEX 24-12 은행채(AA+이상)액티브": 7,
+          },
+          {
+            date: "2023.11.09",
+            NAV: 44,
+            기초지수: -11,
+            종가: 30,
+            "KODEX 24-12 은행채(AA+이상)액티브": 0,
+          },
+          {
+            date: "2023.11.10",
+            NAV: 51,
+            기초지수: -11,
+            종가: 36,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2023.11.11",
+            NAV: 41,
+            기초지수: -19,
+            종가: 29,
+            "KODEX 24-12 은행채(AA+이상)액티브": 9,
+          },
+          {
+            date: "2023.11.12",
+            NAV: 48,
+            기초지수: -21,
+            종가: 30,
+            "KODEX 24-12 은행채(AA+이상)액티브": 0,
+          },
+          {
+            date: "2023.11.13",
+            NAV: 44,
+            기초지수: -20,
+            종가: 40,
+            "KODEX 24-12 은행채(AA+이상)액티브": 0,
+          },
+          {
+            date: "2023.11.14",
+            NAV: 52,
+            기초지수: -14,
+            종가: 35,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.11.15",
+            NAV: 57,
+            기초지수: -16,
+            종가: 41,
+            "KODEX 24-12 은행채(AA+이상)액티브": 1,
+          },
+          {
+            date: "2023.11.16",
+            NAV: 59,
+            기초지수: -18,
+            종가: 33,
+            "KODEX 24-12 은행채(AA+이상)액티브": 3,
+          },
+          {
+            date: "2023.11.17",
+            NAV: 55,
+            기초지수: -27,
+            종가: 39,
+            "KODEX 24-12 은행채(AA+이상)액티브": 9,
+          },
+          {
+            date: "2023.11.18",
+            NAV: 57,
+            기초지수: -32,
+            종가: 39,
+            "KODEX 24-12 은행채(AA+이상)액티브": 9,
+          },
+          {
+            date: "2023.11.19",
+            NAV: 52,
+            기초지수: -29,
+            종가: 47,
+            "KODEX 24-12 은행채(AA+이상)액티브": 7,
+          },
+          {
+            date: "2023.11.20",
+            NAV: 54,
+            기초지수: -23,
+            종가: 54,
+            "KODEX 24-12 은행채(AA+이상)액티브": 4,
+          },
+          {
+            date: "2023.11.21",
+            NAV: 50,
+            기초지수: -24,
+            종가: 53,
+            "KODEX 24-12 은행채(AA+이상)액티브": 3,
+          },
+          {
+            date: "2023.11.22",
+            NAV: 57,
+            기초지수: -19,
+            종가: 51,
+            "KODEX 24-12 은행채(AA+이상)액티브": 1,
+          },
+          {
+            date: "2023.11.23",
+            NAV: 51,
+            기초지수: -10,
+            종가: 55,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.11.24",
+            NAV: 41,
+            기초지수: -3,
+            종가: 61,
+            "KODEX 24-12 은행채(AA+이상)액티브": 1,
+          },
+          {
+            date: "2023.11.25",
+            NAV: 41,
+            기초지수: 4,
+            종가: 66,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2023.11.26",
+            NAV: 37,
+            기초지수: 12,
+            종가: 72,
+            "KODEX 24-12 은행채(AA+이상)액티브": 2,
+          },
+          {
+            date: "2023.11.27",
+            NAV: 36,
+            기초지수: 15,
+            종가: 80,
+            "KODEX 24-12 은행채(AA+이상)액티브": 0,
+          },
+          {
+            date: "2023.11.28",
+            NAV: 37,
+            기초지수: 9,
+            종가: 72,
+            "KODEX 24-12 은행채(AA+이상)액티브": 2,
+          },
+          {
+            date: "2023.11.29",
+            NAV: 27,
+            기초지수: 3,
+            종가: 64,
+            "KODEX 24-12 은행채(AA+이상)액티브": 4,
+          },
+          {
+            date: "2023.11.30",
+            NAV: 24,
+            기초지수: 9,
+            종가: 56,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2023.12.01",
+            NAV: 27,
+            기초지수: 18,
+            종가: 52,
+            "KODEX 24-12 은행채(AA+이상)액티브": 2,
+          },
+          {
+            date: "2023.12.02",
+            NAV: 23,
+            기초지수: 25,
+            종가: 56,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2023.12.03",
+            NAV: 20,
+            기초지수: 19,
+            종가: 54,
+            "KODEX 24-12 은행채(AA+이상)액티브": 4,
+          },
+          {
+            date: "2023.12.04",
+            NAV: 20,
+            기초지수: 24,
+            종가: 59,
+            "KODEX 24-12 은행채(AA+이상)액티브": 9,
+          },
+          {
+            date: "2023.12.05",
+            NAV: 14,
+            기초지수: 33,
+            종가: 51,
+            "KODEX 24-12 은행채(AA+이상)액티브": 1,
+          },
+          {
+            date: "2023.12.06",
+            NAV: 17,
+            기초지수: 28,
+            종가: 59,
+            "KODEX 24-12 은행채(AA+이상)액티브": 9,
+          },
+          {
+            date: "2023.12.07",
+            NAV: 9,
+            기초지수: 27,
+            종가: 52,
+            "KODEX 24-12 은행채(AA+이상)액티브": 2,
+          },
+          {
+            date: "2023.12.08",
+            NAV: 19,
+            기초지수: 18,
+            종가: 56,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2023.12.09",
+            NAV: 14,
+            기초지수: 18,
+            종가: 61,
+            "KODEX 24-12 은행채(AA+이상)액티브": 1,
+          },
+          {
+            date: "2023.12.10",
+            NAV: 9,
+            기초지수: 9,
+            종가: 71,
+            "KODEX 24-12 은행채(AA+이상)액티브": 1,
+          },
+          {
+            date: "2023.12.11",
+            NAV: 2,
+            기초지수: 1,
+            종가: 63,
+            "KODEX 24-12 은행채(AA+이상)액티브": 3,
+          },
+          {
+            date: "2023.12.12",
+            NAV: 11,
+            기초지수: 10,
+            종가: 59,
+            "KODEX 24-12 은행채(AA+이상)액티브": 9,
+          },
+          {
+            date: "2023.12.13",
+            NAV: 9,
+            기초지수: 12,
+            종가: 65,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.12.14",
+            NAV: 2,
+            기초지수: 9,
+            종가: 68,
+            "KODEX 24-12 은행채(AA+이상)액티브": 8,
+          },
+          {
+            date: "2023.12.15",
+            NAV: 1,
+            기초지수: 11,
+            종가: 67,
+            "KODEX 24-12 은행채(AA+이상)액티브": 7,
+          },
+          {
+            date: "2023.12.16",
+            NAV: -6,
+            기초지수: 5,
+            종가: 68,
+            "KODEX 24-12 은행채(AA+이상)액티브": 8,
+          },
+          {
+            date: "2023.12.17",
+            NAV: 2,
+            기초지수: 5,
+            종가: 77,
+            "KODEX 24-12 은행채(AA+이상)액티브": 7,
+          },
+          {
+            date: "2023.12.18",
+            NAV: 11,
+            기초지수: 7,
+            종가: 82,
+            "KODEX 24-12 은행채(AA+이상)액티브": 2,
+          },
+          {
+            date: "2023.12.19",
+            NAV: 4,
+            기초지수: 15,
+            종가: 89,
+            "KODEX 24-12 은행채(AA+이상)액티브": 9,
+          },
+          {
+            date: "2023.12.20",
+            NAV: 14,
+            기초지수: 14,
+            종가: 90,
+            "KODEX 24-12 은행채(AA+이상)액티브": 0,
+          },
+          {
+            date: "2023.12.21",
+            NAV: 22,
+            기초지수: 11,
+            종가: 94,
+            "KODEX 24-12 은행채(AA+이상)액티브": 4,
+          },
+          {
+            date: "2023.12.22",
+            NAV: 29,
+            기초지수: 4,
+            종가: 102,
+            "KODEX 24-12 은행채(AA+이상)액티브": 2,
+          },
+          {
+            date: "2023.12.23",
+            NAV: 37,
+            기초지수: 12,
+            종가: 111,
+            "KODEX 24-12 은행채(AA+이상)액티브": 11,
+          },
+          {
+            date: "2023.12.24",
+            NAV: 42,
+            기초지수: 7,
+            종가: 104,
+            "KODEX 24-12 은행채(AA+이상)액티브": 4,
+          },
+          {
+            date: "2023.12.25",
+            NAV: 40,
+            기초지수: 3,
+            종가: 114,
+            "KODEX 24-12 은행채(AA+이상)액티브": 14,
+          },
+          {
+            date: "2023.12.26",
+            NAV: 42,
+            기초지수: -3,
+            종가: 110,
+            "KODEX 24-12 은행채(AA+이상)액티브": 10,
+          },
+          {
+            date: "2023.12.27",
+            NAV: 37,
+            기초지수: 6,
+            종가: 101,
+            "KODEX 24-12 은행채(AA+이상)액티브": 1,
+          },
+          {
+            date: "2023.12.28",
+            NAV: 35,
+            기초지수: 9,
+            종가: 94,
+            "KODEX 24-12 은행채(AA+이상)액티브": 4,
+          },
+          {
+            date: "2023.12.29",
+            NAV: 37,
+            기초지수: 15,
+            종가: 92,
+            "KODEX 24-12 은행채(AA+이상)액티브": 2,
+          },
+          {
+            date: "2023.12.30",
+            NAV: 35,
+            기초지수: 17,
+            종가: 95,
+            "KODEX 24-12 은행채(AA+이상)액티브": 5,
+          },
+          {
+            date: "2023.12.31",
+            NAV: 38,
+            기초지수: 15,
+            종가: 92,
+            "KODEX 24-12 은행채(AA+이상)액티브": 2,
+          },
+          {
+            date: "2024.01.01",
+            NAV: 33,
+            기초지수: 24,
+            종가: 96,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2024.01.02",
+            NAV: 28,
+            기초지수: 18,
+            종가: 106,
+            "KODEX 24-12 은행채(AA+이상)액티브": 6,
+          },
+          {
+            date: "2024.01.03",
+            NAV: 23,
+            기초지수: 27,
+            종가: 113,
+            "KODEX 24-12 은행채(AA+이상)액티브": 13,
+          },
+          {
+            date: "2024.01.04",
+            NAV: 26,
+            기초지수: 28,
+            종가: 118,
+            "KODEX 24-12 은행채(AA+이상)액티브": 18,
+          },
+          {
+            date: "2024.01.05",
+            NAV: 28,
+            기초지수: 34,
+            종가: 127,
+            "KODEX 24-12 은행채(AA+이상)액티브": 27,
+          },
+          {
+            date: "2024.01.06",
+            NAV: 23,
+            기초지수: 39,
+            종가: 124,
+            "KODEX 24-12 은행채(AA+이상)액티브": 24,
+          },
+          {
+            date: "2024.01.07",
+            NAV: 15,
+            기초지수: 36,
+            종가: 118,
+            "KODEX 24-12 은행채(AA+이상)액티브": 18,
+          },
+          {
+            date: "2024.01.08",
+            NAV: 10,
+            기초지수: 40,
+            종가: 114,
+            "KODEX 24-12 은행채(AA+이상)액티브": 14,
+          },
+          {
+            date: "2024.01.09",
+            NAV: 10,
+            기초지수: 31,
+            종가: 122,
+            "KODEX 24-12 은행채(AA+이상)액티브": 22,
+          },
+          {
+            date: "2024.01.10",
+            NAV: 14,
+            기초지수: 41,
+            종가: 123,
+            "KODEX 24-12 은행채(AA+이상)액티브": 23,
+          },
+          {
+            date: "2024.01.11",
+            NAV: 5,
+            기초지수: 37,
+            종가: 121,
+            "KODEX 24-12 은행채(AA+이상)액티브": 21,
+          },
+          {
+            date: "2024.01.12",
+            NAV: -3,
+            기초지수: 27,
+            종가: 122,
+            "KODEX 24-12 은행채(AA+이상)액티브": 22,
+          },
+          {
+            date: "2024.01.13",
+            NAV: -7,
+            기초지수: 36,
+            종가: 119,
+            "KODEX 24-12 은행채(AA+이상)액티브": 19,
+          },
+          {
+            date: "2024.01.14",
+            NAV: -10,
+            기초지수: 33,
+            종가: 120,
+            "KODEX 24-12 은행채(AA+이상)액티브": 20,
+          },
+          {
+            date: "2024.01.15",
+            NAV: -4,
+            기초지수: 27,
+            종가: 119,
+            "KODEX 24-12 은행채(AA+이상)액티브": 19,
+          },
+          {
+            date: "2024.01.16",
+            NAV: 1,
+            기초지수: 23,
+            종가: 118,
+            "KODEX 24-12 은행채(AA+이상)액티브": 18,
+          },
+          {
+            date: "2024.01.17",
+            NAV: -5,
+            기초지수: 22,
+            종가: 122,
+            "KODEX 24-12 은행채(AA+이상)액티브": 22,
+          },
+          {
+            date: "2024.01.18",
+            NAV: -9,
+            기초지수: 16,
+            종가: 116,
+            "KODEX 24-12 은행채(AA+이상)액티브": 16,
+          },
+          {
+            date: "2024.01.19",
+            NAV: -10,
+            기초지수: 21,
+            종가: 111,
+            "KODEX 24-12 은행채(AA+이상)액티브": 11,
+          },
+          {
+            date: "2024.01.20",
+            NAV: 0,
+            기초지수: 20,
+            종가: 101,
+            "KODEX 24-12 은행채(AA+이상)액티브": 1,
+          },
+        ];
+        function generateChartData() {
+          let chartData = [];
+          let firstDate = new Date();
+          firstDate.setDate(firstDate.getDate() - 150);
+          let visits = -10,
+            visits2 = -10,
+            visits3 = -10; // 초기값 설정
+          let b = 0.6;
+          for (let i = 0; i < 150; i++) {
+            let newDate = new Date(firstDate);
+            newDate.setDate(newDate.getDate() + i);
+            if (i > 80) {
+              b = 0.4;
+            }
+            visits += Math.round(
+              (Math.random() < b ? 1 : -1) * Math.random() * 10
+            );
+            // 예시를 위한 추가 데이터 변화, 실제 구현에 따라 조정 필요
+            visits2 += Math.round(
+              (Math.random() < b ? 1 : -1) * Math.random() * 10
+            );
+            visits3 += Math.round(
+              (Math.random() < b ? 1 : -1) * Math.random() * 10
+            );
+
+            chartData.push({
+              date: newDate,
+              visits: visits,
+              visits2: visits2, // 추가 필드
+              visits3: visits3, // 추가 필드
+            });
+          }
+          return chartData;
+        }
+
+        function chartCommon() {
+          chart.padding(40, 40, 40, 40);
+
+          // Create series for each data field
+          createSeries(
+            "visits",
+            "NAV",
+            "rgba(240, 41, 90, 1)",
+            "rgba(240, 41, 90, 0.3)",
+            "rgba(240, 41, 90, 0)"
+          );
+          createSeries(
+            "visits2",
+            "기초지수",
+            "rgba(38, 193, 248, 1)",
+            "rgba(72, 150, 255, 0.3)",
+            "rgba(72, 150, 255, 0)"
+          );
+          createSeries(
+            "visits3",
+            "종가",
+            "rgba(29, 181, 174, 1)",
+            "rgba(29, 181, 174, 0.3)",
+            "rgba(29, 181, 174, 0)"
+          );
+        }
+
+        function cursorHandler() {
+          // Add cursor
+          chart.cursor = new am4charts.XYCursor();
+          chart.cursor.xAxis = dateAxis;
+          chart.cursor.snapToSeries = chart.series.values;
+        }
+
+        function legendHandler() {
+          chart.legend = new am4charts.Legend();
+          chart.legend.useDefaultMarker = true;
+
+          chart.legend.parent = chart.chartContainer;
+          chart.legend.position = "top";
+
+          chart.legend.fontSize = 15;
+          chart.legend.width = 280;
+          chart.legend.padding(0, 0, 10, 0);
+          chart.legend.dx = -10;
+        }
+
+        function dateFormatFunc() {
+          // 날짜 형식 : day
+          dateAxis.dateFormats.setKey("day", "yy.MM.dd");
+          dateAxis.periodChangeDateFormats.setKey("day", "yy.MM.dd");
+
+          // 날짜 형식 : month
+          dateAxis.dateFormats.setKey("month", "yy.MM");
+          dateAxis.periodChangeDateFormats.setKey("month", "yy.MM");
+
+          // 날짜 형식 : year
+          dateAxis.dateFormats.setKey("year", "yy");
+          dateAxis.periodChangeDateFormats.setKey("year", "yy");
+        }
+
+        function dateAxisFunc() {
+          dateAxis.renderer.minGridDistance = 70; // 날짜 레이블 간격 조정
+          dateAxis.renderer.grid.template.strokeOpacity = 0;
+          dateAxis.renderer.baseGrid.disabled = true;
+          dateAxis.renderer.labels.template.fill = am4core.color("#71747c");
+          dateAxis.renderer.labels.template.fontSize = 14;
+
+          // x축라벨 위치
+          dateAxis.renderer.maxLabelPosition = 1;
+          dateAxis.renderer.labels.template.dx = 0;
+          dateAxis.renderer.labels.template.dy = 0;
+        }
+
+        function valueAxisFunc() {
+          valueAxis.renderer.baseGrid.disabled = true;
+          valueAxis.renderer.grid.template.strokeOpacity = 1;
+          valueAxis.renderer.grid.template.strokeDasharray = 3;
+          valueAxis.renderer.grid.template.stroke = am4core.color("#D4D8E2");
+          valueAxis.renderer.labels.template.fill = am4core.color("#71747c");
+          valueAxis.renderer.labels.template.fontSize = 14;
+          // valueAxis.renderer.labels.template.location = 100; // 축 중앙에 위치
+
+          // y축라벨 위치 내부로 이동
+          valueAxis.renderer.inside = true;
+          valueAxis.renderer.maxLabelPosition = 0.99;
+          valueAxis.renderer.labels.template.dx = -10;
+          valueAxis.renderer.labels.template.dy = -10;
+        }
+
+        function createSeries(field, name, lineColor, startColor, endColor) {
+          series = chart.series.push(new am4charts.LineSeries());
+
+          series.dataFields.valueY = field;
+          series.dataFields.dateX = "date";
+          series.name = name;
+          series.strokeWidth = 2;
+          series.fillOpacity = 0.7;
+          series.tensionX = 0.7; // 곡선 효과 적용
+
+          series.tooltipText = "{valueY.value}";
+          series.stroke = am4core.color(lineColor); // 선 색상 설정
+
+          let gradient = new am4core.LinearGradient();
+          gradient.addColor(am4core.color(startColor));
+          gradient.addColor(am4core.color(endColor));
+          gradient.rotation = 90;
+          series.fill = gradient;
+
+          return series;
+        }
+
+        function addIconEvent() {
+          // Add simple bullet
+          const bullet = series.bullets.push(new am4charts.Bullet());
+          const image = bullet.createChild(am4core.Image);
+
+          image.href = "./images/icon_star.svg";
+          image.width = 24;
+          image.height = 24;
+          image.horizontalCenter = "middle";
+          image.verticalCenter = "middle";
+
+          const targetDate = new Date(2024, 0, 1); // 2024년 1월 1일
+
+          console.log(targetDate);
+
+          // **별 모양 오브젝트 생성**
+          bullet.sprite = image;
+          bullet.hiddenState.properties.opacity = 0; // 마우스 오버 시 별 표시
+
+          // **별 위치 설정**
+          // bullet.locationX = 0; // 수평 기준 0 지점에 별 위치 설정
+          bullet.locationY = 0;
+
+          bullet.events.on("hit", function (event) {
+            // 선택된 날짜 정보 가져오기
+            selectDataInfo();
+          });
+        }
+        let label = chart.chartContainer.createChild(am4core.Label);
+        label.text =
+          "차트의 아이콘을 선택하면 그 날의 News를 확인하실 수 있어요.";
+        label.align = "center";
+        // 추가적인 CSS로 스타일링 가능
+
+        cursorHandler();
+        chartCommon();
+        legendHandler();
+        dateFormatFunc();
+        dateAxisFunc();
+        valueAxisFunc();
+        addIconEvent();
+      });
+
+      const selectDataInfo = () => {
+        // 별 클릭 시 실행할 코드
+        console.log("별 클릭!");
+      };
+    </script>
+  </body>
+</html>

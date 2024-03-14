@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>amChart4 Treemap 차트 예시</title>
+    <style>
+      .map-chart {
+        position: relative;
+        width: 800px;
+        height: 360px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- HTML -->
+    <div id="map-chart-01" class="map-chart"></div>
+
+    <script src="../lib/core.js"></script>
+    <script src="../lib/charts.js"></script>
+    <script src="../lib/animated.js"></script>
+    <script src="../lib/material.js"></script>
+    <script src="../lib/de_DE.js"></script>
+    <script src="../lib/germanyLow.js"></script>
+    <script src="../lib/maps.js"></script>
+    <script src="../lib/worldLow.js"></script>
+
+    <script>
+      am4core.ready(function () {
+        am4core.useTheme(am4themes_animated);
+
+        const chart = am4core.create("map-chart-01", am4maps.MapChart);
+
+        chart.geodata = am4geodata_worldLow;
+        chart.projection = new am4maps.projections.NaturalEarth1();
+        chart.panBehavior = "rotateLong";
+
+        const polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+
+        polygonSeries.useGeodata = true;
+        polygonSeries.mapPolygons.template.fillOpacity = 0.6;
+        polygonSeries.mapPolygons.template.nonScalingStroke = true;
+        polygonSeries.mapPolygons.template.strokeWidth = 0.5;
+        polygonSeries.mapPolygons.template.adapter.add(
+          "fill",
+          function (fill, target) {
+            return chart.colors
+              .getIndex(Math.round(Math.random() * 4))
+              .saturate(0.3);
+          }
+        );
+
+        const polygonTemplate = polygonSeries.mapPolygons.template;
+        polygonTemplate.tooltipText = "{name}";
+
+        const hs = polygonTemplate.states.create("hover");
+        hs.properties.fill = chart.colors.getIndex(1);
+
+        chart.deltaLongitude = -154.8;
+
+        // const graticuleSeries = chart.series.push(
+        //   new am4maps.GraticuleSeries()
+        // );
+        // graticuleSeries.fitExtent = false;
+
+        polygonSeries.exclude = ["AQ"]; // 남극제거
+      });
+    </script>
+  </body>
+</html>

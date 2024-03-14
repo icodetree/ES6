@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="../lib/core.js"></script>
+    <script src="../lib/charts.js"></script>
+    <script src="../lib/animated.js"></script>
+    <script src="../lib/material.js"></script>
+    <script src="../lib/de_DE.js"></script>
+    <script src="../lib/germanyLow.js"></script>
+    <script src="javascript.js"></script>
+    <style>
+      .wrap {
+        display: flex;
+        margin: 50px;
+      }
+      .pieRound-chart {
+        position: relative;
+        width: 250px;
+        height: 150px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- HTML -->
+    <div class="wrap">
+      <div id="pieRound-chart-01" class="pieRound-chart"></div>
+      <div id="pieRound-chart-02" class="pieRound-chart"></div>
+    </div>
+
+    <script>
+      am4core.options.commercialLicense = "AKD-73667548429";
+
+      // 데이터 생성
+      const data1 = [
+        {
+          category: "트래킹에러",
+          value: 12.98,
+          color: "#F7A443",
+        },
+      ];
+      const data2 = [
+        {
+          category: "변동성",
+          value: 29.06,
+          color: "#F14E4E",
+        },
+      ];
+
+      const pieRoundChart = (id, data) => {
+        am4core.useTheme(am4themes_animated);
+
+        var chart = am4core.create(id, am4charts.PieChart);
+        chart.hiddenState.properties.opacity = 0;
+
+        chart.data = [
+          ...data,
+          { category: "기타", value: 100 - data[0].value, color: "#E0E7EC" },
+        ];
+        chart.radius = am4core.percent(100);
+        chart.innerRadius = am4core.percent(70);
+        chart.startAngle = 180;
+        chart.endAngle = 360;
+
+        var series = chart.series.push(new am4charts.PieSeries());
+        series.dataFields.value = "value";
+        series.dataFields.category = "category";
+
+        series.slices.template.propertyFields.fill = "color";
+        series.slices.template.cornerRadius = 0;
+        series.slices.template.innerCornerRadius = 0;
+        series.slices.template.draggable = false; // 드래그 비활성화
+        series.slices.template.inert = false; // 드래그 후 관성 효과 비활성화
+        series.slices.template.clickable = false; // 클릭 이벤트 비활성화
+
+        series.labels.template.disabled = true;
+        series.ticks.template.disabled = true;
+
+        series.slices.template.tooltipText = ""; // Disable tooltips
+        series.tooltip.disabled = true;
+
+        // 슬라이스 호버 비활성화
+        series.slices.template.hoverable = false;
+        series.slices.template.states.getKey("hover").properties.scale = 1;
+
+        // 클릭시 active 애니메이션 효과 false
+        series.slices.template.events.on("toggled", function (ev) {
+          if (ev.target.isActive) {
+            series.slices.each(function (slice) {
+              slice.isActive = false;
+            });
+          }
+        });
+
+        chart.paddingBottom = 30;
+
+        // 라벨정렬
+        let label = chart.seriesContainer.createChild(am4core.Label);
+        label.horizontalCenter = "middle";
+        label.verticalCenter = "middle";
+        label.fontSize = 28;
+        label.fontWeight = "600";
+        label.dy = -30; // 차트 중앙에서 위로 20px 옮김. 필요에 따라 조정
+
+        // Calculate
+        let total = data.reduce((acc, item) => acc + item.value, 0);
+        label.text = total + "%";
+
+        let label0 = chart.seriesContainer.createChild(am4core.Label);
+        label0.isMeasured = false;
+        label0.text = "LOW";
+        label0.valign = "bottom"; // 텍스트를 하단으로 정렬
+        label0.horizontalCenter = "middle"; // 텍스트를 왼쪽으로 정렬
+        label0.fontSize = 14;
+        label0.fontWeight = "400";
+        label0.fill = am4core.color("#71747C");
+        label0.dx = -100;
+        label0.dy = 5;
+
+        let label1 = chart.seriesContainer.createChild(am4core.Label);
+        label1.isMeasured = false;
+        label1.text = "HIGH";
+        label1.valign = "bottom"; // 텍스트를 하단으로 정렬
+        label1.horizontalCenter = "middle"; // 텍스트를 왼쪽으로 정렬
+        label1.fontSize = 14;
+        label1.fontWeight = "400";
+        label1.fill = am4core.color("#71747C");
+        label1.dx = 100;
+        label1.dy = 5;
+      };
+
+      pieRoundChart("pieRound-chart-01", data1);
+      pieRoundChart("pieRound-chart-02", data2);
+    </script>
+  </body>
+</html>
