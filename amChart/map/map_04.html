@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>차트 예시</title>
+    <style>
+      .map-chart {
+        position: relative;
+        width: 100%;
+        height: 600px;
+      }
+
+      .map-marker {
+        margin-left: -8px;
+        margin-top: -8px;
+        box-sizing: border-box;
+      }
+      .map-marker.map-clickable {
+        cursor: pointer;
+      }
+      .pulse {
+        width: 16px;
+        height: 16px;
+        border: 3px solid #fff;
+        border-radius: 30px;
+        background-color: #006af9;
+        z-index: 10;
+        position: absolute;
+        box-sizing: border-box;
+      }
+      .map-marker .dot {
+        border: 15px solid #006af9;
+        background: transparent;
+        border-radius: 60px;
+        height: 50px;
+        width: 50px;
+        animation: pulse 2s ease-out;
+        animation-iteration-count: infinite;
+        position: absolute;
+        top: -17px;
+        left: -17px;
+        z-index: 1;
+        opacity: 0;
+        box-sizing: border-box;
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        25% {
+          transform: scale(0.1);
+          opacity: 0.1;
+        }
+        50% {
+          transform: scale(0.3);
+          opacity: 0.3;
+        }
+        75% {
+          transform: scale(0.5);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0;
+        }
+      }
+
+      .map-tooltip {
+        min-width: 100px;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- HTML -->
+    <div id="map-chart-01" class="map-chart"></div>
+
+    <script src="../lib/core.js"></script>
+    <script src="../lib/charts.js"></script>
+    <script src="../lib/animated.js"></script>
+    <script src="../lib/material.js"></script>
+    <script src="../lib/de_DE.js"></script>
+    <script src="../lib/germanyLow.js"></script>
+    <script src="../lib/maps.js"></script>
+    <script src="../lib/worldLow.js"></script>
+    <script src="../lib/continentsLow.js"></script>
+
+    <!-- Chart code -->
+    <script>
+      am4core.ready(function () {
+        am4core.useTheme(am4themes_animated)
+
+        const targetSVG =
+          'M9,0C4.029,0,0,4.029,0,9s4.029,9,9,9s9-4.029,9-9S13.971,0,9,0z M9,15.93 c-3.83,0-6.93-3.1-6.93-6.93S5.17,2.07,9,2.07s6.93,3.1,6.93,6.93S12.83,15.93,9,15.93 M12.5,9c0,1.933-1.567,3.5-3.5,3.5S5.5,10.933,5.5,9S7.067,5.5,9,5.5 S12.5,7.067,12.5,9z'
+
+        const chart = am4core.create('map-chart-01', am4maps.MapChart)
+        const polygonSeries = chart.series.push(new am4maps.MapPolygonSeries())
+        const polygonTemplate = polygonSeries.mapPolygons.template
+        const hs = polygonTemplate.states.create('hover')
+        const imageSeries = chart.series.push(new am4maps.MapImageSeries())
+        const imageSeriesTemplate = imageSeries.mapImages.template
+        const interfaceColors = new am4core.InterfaceColorSet()
+
+        chart.geodata = am4geodata_worldLow
+        chart.projection = new am4maps.projections.Miller()
+
+        polygonSeries.useGeodata = true
+        polygonSeries.exclude = ['AQ'] // 남극, 그린란드 제외
+
+        // 도트 패턴 생성
+        var pattern = new am4core.CirclePattern()
+        pattern.width = 7
+        pattern.height = 7
+        pattern.radius = 2 // 도트 크기 조절
+        pattern.fill = am4core.color('#B9C6D8') // 빨간색으로 설정
+        pattern.strokeWidth = 0 // 테두리 제거
+
+        // 패턴을 국가들에 적용
+        polygonTemplate.fill = pattern
+
+        // set propertyfields
+        imageSeriesTemplate.propertyFields.longitude = 'longitude'
+        imageSeriesTemplate.propertyFields.latitude = 'latitude'
+
+        imageSeries.data = [
+          {
+            title: '서유럽',
+            latitude: 51.5002,
+            longitude: -0.1262
+          },
+          {
+            title: '아시아',
+            latitude: 37.5139,
+            longitude: 126.9828
+          },
+          {
+            title: '북미',
+            latitude: 38.8921,
+            longitude: -77.0241
+          }
+        ]
+
+        chart.events.on('ready', updateCustomMarkers)
+        chart.events.on('mappositionchanged', updateCustomMarkers)
+
+        function updateCustomMarkers(event) {
+          imageSeries.mapImages.each(function (image) {
+            if (!image.dummyData || !image.dummyData.externalElement) {
+              image.dummyData = {
+                externalElement: createCustomMarker(image)
+              }
+            }
+
+            // 좌표에 따라 요소 위치를 변경합니다.
+            const xy = chart.geoPointToSVG({
+              longitude: image.longitude,
+              latitude: image.latitude
+            })
+            image.dummyData.externalElement.style.top = xy.y + 'px'
+            image.dummyData.externalElement.style.left = xy.x + 'px'
+          })
+        }
+
+        function createCustomMarker(image) {
+          const chart = image.dataItem.component.chart
+
+          // 마커 생성
+          const holder = document.createElement('div')
+          holder.className = 'map-marker'
+          holder.style.position = 'absolute'
+
+          // 툴팁 생성
+          const tooltip = document.createElement('div')
+          tooltip.style.position = 'absolute'
+          tooltip.className = 'map-tooltip'
+          tooltip.innerHTML = image.dataItem.dataContext.title
+          holder.appendChild(tooltip)
+
+          // 도트 생성
+          const dot = document.createElement('div')
+          dot.className = 'dot'
+          holder.appendChild(dot)
+
+          // 펄스 생성
+          const pulse = document.createElement('div')
+          pulse.className = 'pulse'
+          holder.appendChild(pulse)
+
+          // 클릭 가능한 링크 추가 (선택 사항)
+          if (undefined != image.url) {
+            holder.onclick = function () {
+              window.location.href = image.url
+            }
+            holder.className += ' map-clickable'
+          }
+
+          // 마커를 지도 컨테이너에 추가
+          chart.svgContainer.htmlElement.appendChild(holder)
+
+          return holder
+        }
+
+        chart.deltaLongitude = -154.8
+      })
+    </script>
+  </body>
+</html>
