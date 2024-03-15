@@ -11,7 +11,6 @@
     <script src="../lib/material.js"></script>
     <script src="../lib/de_DE.js"></script>
     <script src="../lib/germanyLow.js"></script>
-    <script src="javascript.js"></script>
     <style>
       .wrap {
         display: flex;
@@ -54,19 +53,23 @@
       const pieRoundChart = (id, data) => {
         am4core.useTheme(am4themes_animated);
 
-        var chart = am4core.create(id, am4charts.PieChart);
+        const chart = am4core.create(id, am4charts.PieChart);
+        const series = chart.series.push(new am4charts.PieSeries());
+
+        // 차트에 애니메이션 효과 적용
         chart.hiddenState.properties.opacity = 0;
 
+        // 배경데이터 만들기
         chart.data = [
           ...data,
           { category: "기타", value: 100 - data[0].value, color: "#E0E7EC" },
         ];
+
         chart.radius = am4core.percent(100);
         chart.innerRadius = am4core.percent(70);
         chart.startAngle = 180;
         chart.endAngle = 360;
 
-        var series = chart.series.push(new am4charts.PieSeries());
         series.dataFields.value = "value";
         series.dataFields.category = "category";
 

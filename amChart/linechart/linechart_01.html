@@ -115,12 +115,12 @@
 
     <div id="chartdiv"></div>
 
-    <script src="./lib/core.js"></script>
-    <script src="./lib/charts.js"></script>
-    <script src="./lib/animated.js"></script>
-    <script src="./lib/material.js"></script>
-    <script src="./lib/de_DE.js"></script>
-    <script src="./lib/germanyLow.js"></script>
+    <script src="../lib/core.js"></script>
+    <script src="../lib/charts.js"></script>
+    <script src="../lib/animated.js"></script>
+    <script src="../lib/material.js"></script>
+    <script src="../lib/de_DE.js"></script>
+    <script src="../lib/germanyLow.js"></script>
 
     <script>
       // 체크박스 선택 상태를 저장할 변수
@@ -564,7 +564,7 @@
         // 별모양 만들기
         const makeStarBullet = (_date) => {
           const imageStar = series.bullets.push(new am4core.Image());
-          imageStar.href = "./images/icon_star.svg";
+          imageStar.href = "../images/icon_star.svg";
           imageStar.width = 24;
           imageStar.height = 24;
           imageStar.horizontalCenter = "middle";
