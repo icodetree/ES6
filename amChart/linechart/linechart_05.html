@@ -63,6 +63,7 @@
         const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
         const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
         const categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        const fixedDate = new Date("2023-11-14");
 
         let series = null;
         let bullet = null;
@@ -77,25 +78,25 @@
 
           let visits = Array(10).fill(0);
           visits = visits.map((visit, index) => {
-            if (index === 0) return -1;
-            if (index === 1) return 3;
-            if (index === 2) return 0;
-            return -5;
+            if (index === 0) return 100;
+            if (index === 1) return 200;
+            if (index === 2) return 700;
+            return 500;
           });
 
-          let b = 0.6;
-          return Array(250)
+          let b = 0.3;
+          return Array(30)
             .fill()
             .map((_, i) => {
               const newDate = new Date(firstDate);
               newDate.setDate(newDate.getDate() + i);
 
-              if (i > 80) b = 0.4;
+              if (i > 90) b = 0.9;
 
               visits = visits.map(
                 (visit) =>
                   visit +
-                  Math.round((Math.random() < b ? 1 : -1) * Math.random() * 10)
+                  Math.round((Math.random() < b ? 1 : 10) * Math.random() * 20)
               );
 
               return {
@@ -136,7 +137,7 @@
         function cursorHandler() {
           chart.cursor = new am4charts.XYCursor();
           chart.cursor.lineY.disabled = true;
-          chart.cursor.maxTooltipDistance = -1;
+          chart.cursor.maxTooltipDistance = 1;
 
           chart.cursor.lineX.stroke = am4core.color("#4896FF");
           chart.cursor.fullWidthLineX = true;
@@ -179,7 +180,7 @@
           dateAxis.renderer.labels.template.dx = 0;
           dateAxis.renderer.labels.template.dy = 0;
 
-          dateAxis.startLocation = 0; // X축의 시작점을 약간 오른쪽으로 이동
+          dateAxis.startLocation = 1; // X축의 시작점을 약간 오른쪽으로 이동
           dateAxis.endLocation = 0; // X축의 끝점을 약간 왼쪽으로 이동
 
           // x축 하단 세로바
@@ -252,11 +253,11 @@
           circle.stroke = am4core.color("#fff");
           circle.fill = am4core.color(lineColor);
 
-          let shadow = new am4core.DropShadowFilter();
-          shadow.dx = 0;
-          shadow.dy = 2;
-          shadow.blur = 2;
-          circle.filters.push(shadow);
+          // let shadow = new am4core.DropShadowFilter();
+          // shadow.dx = 0;
+          // shadow.dy = 2;
+          // shadow.blur = 2;
+          // circle.filters.push(shadow);
 
           // 툴팁 함수호출
           makeTooltip();
@@ -269,12 +270,6 @@
           series.dataFields.visits1ValueY = "visits1";
           series.dataFields.visits2ValueY = "visits2";
           series.dataFields.visits3ValueY = "visits3";
-
-          series.tooltipHTML = `
-            <ul class='lineTooltip'>
-              <li>{date}</li>
-              <li><span>KODEX 200</span> <strong>{visits1ValueY}만</strong></li>
-            </ul>`;
 
           series.tooltip.getFillFromObject = false;
           series.tooltip.background.fill = am4core.color("#fff");
@@ -295,7 +290,15 @@
 
           // 툴팁 그림자 비활성화
           series.tooltip.background.filters.clear();
+
+          series.tooltipHTML = `
+            <ul class='lineTooltip'>
+              <li>{date}</li>
+              <li><span>KODEX 200</span> <strong>{visits1ValueY}만</strong></li>
+            </ul>`;
         };
+
+        chart.validateData(); // 데이터 업데이트
 
         chartCommon();
         setDateFormat();
