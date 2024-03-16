@@ -64,8 +64,14 @@ main {
 .table.fixed thead {
   position: fixed;
   top: 0;
+  display:table;
+  width:100%;
+  height:50px;
 }
 
+.table.fixed thead th{
+  padding:0;
+}
 
 .table th,
 .table td {
