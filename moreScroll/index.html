@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>더보기 리스트 예제</title>
+    <style>
+      .toggle-button {
+        background-color: #ccc;
+        color: #fff;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <button class="btn-more">더보기</button>
+      <ul class="list"></ul>
+    </div>
+
+    <script>
+      const dummyData = [
+        {
+          id: 1,
+          title: '토글 버튼 1',
+          description: '토글 버튼 1의 설명입니다.'
+        },
+        {
+          id: 2,
+          title: '토글 버튼 2',
+          description: '토글 버튼 2의 설명입니다.'
+        },
+        {
+          id: 3,
+          title: '토글 버튼 3',
+          description: '토글 버튼 3의 설명입니다.'
+        }
+      ]
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const list = document.querySelector('.list')
+
+        document.querySelector('.btn-more').addEventListener('click', () => {
+          fetchMoreData().then(data => {
+            // 백엔드로부터 받은 데이터를 리스트에 추가
+            list.innerHTML += data
+              .map(
+                item => `
+      <li>
+        <button class="btn-toggle" data-id="${item.id}">${item.title}</button>
+        <p>${item.description}</p>
+      </li>
+    `
+              )
+              .join('')
+
+            // 새로 추가된 토글 버튼에 이벤트 연결
+            const newToggleButtons = list.querySelectorAll('.btn-toggle')
+            newToggleButtons.forEach(button => {
+              button.addEventListener('click', handleToggleButtonClick)
+            })
+          })
+        })
+
+        function handleToggleButtonClick(event) {
+          const id = event.target.dataset.id
+          // 토글 버튼 클릭 시 처리할 로직을 추가합니다.
+          // 예: 토글 버튼 상태 변경, 데이터 업데이트 등
+        }
+
+        function fetchMoreData() {
+          return new Promise(resolve => {
+            setTimeout(() => {
+              resolve(dummyData)
+            }, 1000)
+          })
+        }
+      })
+    </script>
+  </body>
+</html>

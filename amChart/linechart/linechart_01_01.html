@@ -83,16 +83,25 @@
         background-color: #41e237;
       }
 
-      .linechart-chkbox {
+      .linechart-chkbox-top {
         display: flex;
       }
       .linechart-chkbox .inner {
         margin: 30px 10px;
       }
+      .linechart-chkbox-bottom {
+        display: flex;
+      }
+      .addbtn {
+        padding: 10px 10px;
+      }
     </style>
   </head>
   <body>
-    <div class="linechart-chkbox">
+    <div class="addbtn">
+      <button class="btn-add">추가하기</button>
+    </div>
+    <article class="linechart-chkbox-top">
       <div class="inner">
         <input
           type="checkbox"
@@ -101,17 +110,32 @@
           value="series1"
           checked
         />
-        <label for="series1">시리즈 1</label><br />
+        <label for="series1">NAV</label><br />
       </div>
       <div class="inner">
         <input type="checkbox" id="series2" name="series" value="series2" />
-        <label for="series2">시리즈 2</label><br />
+        <label for="series2">기초지수</label><br />
       </div>
       <div class="inner">
         <input type="checkbox" id="series3" name="series" value="series3" />
-        <label for="series3">시리즈 3</label><br />
+        <label for="series3">종가</label><br />
       </div>
-    </div>
+    </article>
+
+    <article class="linechart-chkbox-bottom">
+      <div class="inner">
+        <input type="checkbox" id="series7" name="series" value="series7" />
+        <label for="series7">KOSPI</label><br />
+      </div>
+      <div class="inner">
+        <input type="checkbox" id="series8" name="series" value="series8" />
+        <label for="series8">NASDAQ</label><br />
+      </div>
+      <div class="inner">
+        <input type="checkbox" id="series9" name="series" value="series9" />
+        <label for="series9">S&P500</label><br />
+      </div>
+    </article>
 
     <div id="chartdiv"></div>
 
@@ -123,121 +147,113 @@
     <script src="../lib/germanyLow.js"></script>
 
     <script>
-      // 체크박스 선택 상태를 저장할 변수
-      let selectedSeries = [
-        'visits1',
-        'visits2',
-        'visits3',
-        'visits4',
-        'visits5',
-        'visits6',
-        'visits7',
-        'visits8',
-        'visits9'
+      // 더미 데이터 생성
+      const dummyData = [
+        {
+          date: '2023.10.8',
+          visits1: 2,
+          visits2: 3,
+          visits3: 4,
+          visits4: 6,
+          visits5: 7,
+          visits6: 0,
+          visits7: -5,
+          visits8: 10,
+          visits9: 20,
+          specialDate: false
+        },
+        {
+          date: '2023.10.9',
+          visits1: 5,
+          visits2: 8,
+          visits3: 9,
+          visits4: 11,
+          visits5: 12,
+          visits6: 15,
+          visits7: 18,
+          visits8: 22,
+          visits9: 25,
+          specialDate: false
+        },
+        {
+          date: '2023.10.10',
+          visits1: 2,
+          visits2: 3,
+          visits3: 4,
+          visits4: 6,
+          visits5: 7,
+          visits6: 0,
+          visits7: -5,
+          visits8: 10,
+          visits9: 20,
+          specialDate: false
+        },
+        {
+          date: '2023.10.11',
+          visits1: 5,
+          visits2: 8,
+          visits3: 9,
+          visits4: 11,
+          visits5: 12,
+          visits6: 15,
+          visits7: 18,
+          visits8: 22,
+          visits9: 25,
+          specialDate: false
+        },
+        {
+          date: '2023.10.12',
+          visits1: 3,
+          visits2: 6,
+          visits3: 7,
+          visits4: 10,
+          visits5: 13,
+          visits6: 16,
+          visits7: 19,
+          visits8: 23,
+          visits9: 26,
+          specialDate: true
+        },
+        {
+          date: '2023.10.13',
+          visits1: 2,
+          visits2: 3,
+          visits3: 4,
+          visits4: 6,
+          visits5: 7,
+          visits6: 0,
+          visits7: -5,
+          visits8: 10,
+          visits9: 20,
+          specialDate: false
+        },
+        {
+          date: '2023.10.14',
+          visits1: 5,
+          visits2: 8,
+          visits3: 9,
+          visits4: 11,
+          visits5: 12,
+          visits6: 15,
+          visits7: 18,
+          visits8: 22,
+          visits9: 25,
+          specialDate: false
+        },
+        {
+          date: '2023.10.15',
+          visits1: 3,
+          visits2: 6,
+          visits3: 7,
+          visits4: 10,
+          visits5: 13,
+          visits6: 16,
+          visits7: 19,
+          visits8: 23,
+          visits9: 26,
+          specialDate: true
+        }
       ]
-
-      // 차트 데이터 생성 함수 (수정됨)
-      function generateChartData() {
-        const firstDate = new Date()
-        firstDate.setDate(firstDate.getDate() - 150)
-
-        // 실제 데이터를 가져오는 로직 추가 (예시)
-        const data = fetchRealData() // 실제 데이터 가져오는 함수 호출
-
-        // 데이터 가공 (선택된 시리즈만 남기기)
-        const processedData = data.map(item => {
-          const selectedValues = {}
-          selectedSeries.forEach(series => {
-            selectedValues[series] = item[series]
-          })
-          return { ...selectedValues }
-        })
-
-        return Array(3)
-          .fill()
-          .map((_, i) => {
-            const newDate = new Date(firstDate)
-            newDate.setDate(newDate.getDate() + i)
-          })
-      }
-
-      // 실제 데이터를 가져오는 예시 함수 (사용 상황에 맞게 수정 필요)
-      function fetchRealData() {
-        // API 호출, 데이터베이스 조회 등 실제 데이터를 가져오는 로직 구현
-        // 예시 데이터 반환
-        return [
-          {
-            date: '2023.10.13',
-            visits1: 2,
-            visits2: 3,
-            visits3: 4,
-            visits4: 6,
-            visits5: 7,
-            visits6: 0,
-            visits7: -5,
-            visits8: 10,
-            visits9: 20,
-            specialDate: false
-          },
-          {
-            date: '2023.10.14',
-            visits1: 5,
-            visits2: 8,
-            visits3: 9,
-            visits4: 11,
-            visits5: 12,
-            visits6: 15,
-            visits7: 18,
-            visits8: 22,
-            visits9: 25,
-            specialDate: false
-          },
-          {
-            date: '2023.10.15',
-            visits1: 3,
-            visits2: 6,
-            visits3: 7,
-            visits4: 10,
-            visits5: 13,
-            visits6: 16,
-            visits7: 19,
-            visits8: 23,
-            visits9: 26,
-            specialDate: true
-          }
-        ]
-      }
-
-      // 체크박스 선택 이벤트 처리 (추가)
-      const checkboxes = document.querySelectorAll('input[name="series"]')
-      checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-          const seriesName = checkbox.value
-          selectedSeries = Array.from(checkboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.value)
-          // 차트 업데이트
-          updateChart()
-        })
-      })
-
-      // 차트 업데이트 함수 (추가)
-      function updateChart() {
-        // 차트 라이브러리 함수를 이용하여 차트 데이터 업데이트
-        chart.data = generateChartData()
-      }
-
-      // 라인그래프에 시리즈 추가 함수
-      function addSeriesToLinegraph(seriesName) {
-        // ... 라인그래프에 시리즈 추가 코드 ...
-        console.log('추가 코드', seriesName)
-      }
-
-      // 라인그래프에서 시리즈 제거 함수
-      function removeSeriesFromLinegraph(seriesName) {
-        // ... 라인그래프에서 시리즈 제거 코드 ...
-        console.log('제거 코드', seriesName)
-      }
 
       am4core.ready(function () {
         am4core.useTheme(am4themes_animated)
@@ -249,64 +265,87 @@
         let series = null
         let bullet = null
 
+        // 차트 데이터
+        chart.data = dummyData
+
         // 별모양 특정일지정
         const specialDates = [new Date(2023, 10, 1), new Date(2023, 11, 1)]
 
-        // 차트 데이터
-        chart.data = generateChartData()
+        function createInitialSeriesAndCheckboxes() {
+          const seriesOptions = [
+            { field: 'visits1', color: '#f0295a' },
+            { field: 'visits2', color: '#26c1f8' },
+            { field: 'visits3', color: '#1db5ae' }
+            // 추가 시리즈 옵션
+          ]
 
-        // 데이터 랜덤
-        function generateChartData() {
-          const firstDate = new Date()
-          firstDate.setDate(firstDate.getDate() - 150)
+          const checkBoxContainer = document.querySelector(
+            '.linechart-chkbox-top'
+          )
+          checkBoxContainer.innerHTML = '' // 초기화
 
-          let visits = Array(10).fill(0)
-          visits = visits.map((visit, index) => {
-            if (index === 0) return -1
-            if (index === 1) return 3
-            if (index === 2) return 0
-            if (index === 3) return -10
-            if (index === 4) return 0
-            if (index === 5) return -2
-            if (index === 6) return -3
-            if (index === 7) return 0
-            return -5
+          seriesOptions.forEach((option, index) => {
+            // 시리즈 생성
+            createSeries(option.field, option.color)
+
+            // 체크박스 생성
+            const checkBoxHTML = `
+                <div class="inner">
+                    <input type="checkbox" id="series${
+                      index + 1
+                    }" name="series" value="${option.field}" />
+                    <label for="series${index + 1}">${option.name}</label><br />
+                </div>`
+            checkBoxContainer.innerHTML += checkBoxHTML
           })
 
-          let b = 0.6
-          return Array(250)
-            .fill()
-            .map((_, i) => {
-              const newDate = new Date(firstDate)
-              newDate.setDate(newDate.getDate() + i)
+          addCheckboxListeners()
+        }
 
-              if (i > 80) b = 0.4
+        function toggleSeries(seriesName, show) {
+          const series = chart.series.getIndex(seriesName)
+          if (series) {
+            series.hidden = !show
+          }
+        }
 
-              const isSpecialDate = specialDates.some(
-                specialDate =>
-                  specialDate.getFullYear() === newDate.getFullYear() &&
-                  specialDate.getMonth() === newDate.getMonth() &&
-                  specialDate.getDate() === newDate.getDate()
+        function addCheckboxListeners() {
+          document
+            .querySelectorAll('input[type="checkbox"][name="series"]')
+            .forEach(checkbox => {
+              checkbox.addEventListener('change', function () {
+                const seriesName = this.value // 예: 'series1', 'series2', ...
+                const show = this.checked
+                toggleSeries(seriesName, show) // 시리즈 표시 여부를 체크박스 상태에 따라 조절
+              })
+            })
+        }
+
+        function addButtonListeners() {
+          document
+            .querySelector('.btn-add')
+            .addEventListener('click', function () {
+              const checkBoxContainer = document.querySelector(
+                '.linechart-chkbox-top'
               )
+              if (checkBoxContainer.children.length < 6) {
+                // 최대 3개 추가 체크박스 허용
+                const newCheckBoxNumber = checkBoxContainer.children.length + 1
+                const seriesName = `series${newCheckBoxNumber}`
+                // const color = getRandomColor() // 새 시리즈에 대한 색상 생성 함수
 
-              visits = visits.map(
-                visit =>
-                  visit +
-                  Math.round((Math.random() < b ? 1 : -1) * Math.random() * 10)
-              )
+                // 새 시리즈 생성
+                // createSeries(`visits${newCheckBoxNumber}`, seriesName, color)
 
-              return {
-                date: newDate,
-                visits1: visits[0],
-                visits2: visits[1],
-                visits3: visits[2],
-                visits4: visits[3],
-                visits5: visits[4],
-                visits6: visits[5],
-                visits7: visits[6],
-                visits8: visits[7],
-                visits9: visits[8],
-                specialDate: isSpecialDate
+                // 새 체크박스 HTML 추가
+                const newCheckBoxHTML = `
+                    <div class="inner">
+                        <input type="checkbox" id="${seriesName}" name="series" value="${seriesName}" checked />
+                        <label for="${seriesName}">시리즈 ${newCheckBoxNumber}</label><br />
+                    </div>`
+                checkBoxContainer.innerHTML += newCheckBoxHTML
+
+                addCheckboxListeners() // 새 체크박스에 리스너 추가
               }
             })
         }
@@ -316,60 +355,60 @@
           chart.padding(40, 40, 40, 40)
 
           // Create series for each data field
-          createSeries(
-            'visits1',
-            'rgba(240, 41, 90, 1)', // lineColor
-            'rgba(240, 41, 90, 0.3)', // startColor
-            'rgba(240, 41, 90, 0)' // endColor
-          )
-          createSeries(
-            'visits2',
-            'rgba(38, 193, 248, 1)', // lineColor
-            'rgba(72, 150, 255, 0.3)', // startColor
-            'rgba(72, 150, 255, 0)' // endColor
-          )
-          createSeries(
-            'visits3',
-            'rgba(29, 181, 174, 1)', // lineColor
-            'rgba(29, 181, 174, 0.3)', // startColor
-            'rgba(29, 181, 174, 0)' // endColor
-          )
-          createSeries(
-            'visits4',
-            'rgba(90, 86, 225, 1)', // lineColor
-            'rgba(90, 86, 225, 0.3)', // startColor
-            'rgba(90, 86, 225, 0)' // endColor
-          )
-          createSeries(
-            'visits5',
-            'rgba(254, 203, 39, 1)', // lineColor
-            'rgba(254, 203, 39, 0.3)', // startColor
-            'rgba(254, 203, 39, 0)' // endColor
-          )
-          createSeries(
-            'visits6',
-            'rgba(254, 143, 214, 1)', // lineColor
-            'rgba(254, 143, 214, 0.3)', // startColor
-            'rgba(254, 143, 214, 0)' // endColor
-          )
-          createSeries(
-            'visits7',
-            'rgba(24, 61, 255, 1)', // lineColor
-            'rgba(24, 61, 255, 0.3)', // startColor
-            'rgba(24, 61, 255, 0)' // endColor
-          )
-          createSeries(
-            'visits8',
-            'rgba(139, 0, 255, 1)', // lineColor
-            'rgba(139, 0, 255, 0.3)', // startColor
-            'rgba(139, 0, 255, 0)' // endColor
-          )
-          createSeries(
-            'visits9',
-            'rgba(65, 226, 55, 1)', // lineColor
-            'rgba(65, 226, 55, 0.3)', // startColor
-            'rgba(65, 226, 55, 0)' // endColor
-          )
+          //   createSeries(
+          //     'visits1',
+          //     'rgba(240, 41, 90, 1)', // lineColor
+          //     'rgba(240, 41, 90, 0.3)', // startColor
+          //     'rgba(240, 41, 90, 0)' // endColor
+          //   )
+          //   createSeries(
+          //     'visits2',
+          //     'rgba(38, 193, 248, 1)', // lineColor
+          //     'rgba(72, 150, 255, 0.3)', // startColor
+          //     'rgba(72, 150, 255, 0)' // endColor
+          //   )
+          //   createSeries(
+          //     'visits3',
+          //     'rgba(29, 181, 174, 1)', // lineColor
+          //     'rgba(29, 181, 174, 0.3)', // startColor
+          //     'rgba(29, 181, 174, 0)' // endColor
+          //   )
+          //   createSeries(
+          //     'visits4',
+          //     'rgba(90, 86, 225, 1)', // lineColor
+          //     'rgba(90, 86, 225, 0.3)', // startColor
+          //     'rgba(90, 86, 225, 0)' // endColor
+          //   )
+          //   createSeries(
+          //     'visits5',
+          //     'rgba(254, 203, 39, 1)', // lineColor
+          //     'rgba(254, 203, 39, 0.3)', // startColor
+          //     'rgba(254, 203, 39, 0)' // endColor
+          //   )
+          //   createSeries(
+          //     'visits6',
+          //     'rgba(254, 143, 214, 1)', // lineColor
+          //     'rgba(254, 143, 214, 0.3)', // startColor
+          //     'rgba(254, 143, 214, 0)' // endColor
+          //   )
+          //   createSeries(
+          //     'visits7',
+          //     'rgba(24, 61, 255, 1)', // lineColor
+          //     'rgba(24, 61, 255, 0.3)', // startColor
+          //     'rgba(24, 61, 255, 0)' // endColor
+          //   )
+          //   createSeries(
+          //     'visits8',
+          //     'rgba(139, 0, 255, 1)', // lineColor
+          //     'rgba(139, 0, 255, 0.3)', // startColor
+          //     'rgba(139, 0, 255, 0)' // endColor
+          //   )
+          //   createSeries(
+          //     'visits9',
+          //     'rgba(65, 226, 55, 1)', // lineColor
+          //     'rgba(65, 226, 55, 0.3)', // startColor
+          //     'rgba(65, 226, 55, 0)' // endColor
+          //   )
         }
 
         // 커서 설정
@@ -386,6 +425,7 @@
         function legendHandler() {
           chart.legend = new am4charts.Legend()
           chart.legend.useDefaultMarker = true
+          chart.legend.disabled = true
 
           chart.legend.parent = chart.chartContainer
           chart.legend.position = 'top'
@@ -460,7 +500,7 @@
         }
 
         // 차트 시리즈 생성
-        const createSeries = (field, lineColor, startColor, endColor) => {
+        const createSeries = (field, lineColor) => {
           series = chart.series.push(new am4charts.LineSeries())
           series.dataFields.valueY = field
           series.dataFields.dateX = 'date'
@@ -473,11 +513,11 @@
           series.stroke = am4core.color(lineColor) // 선 색상 설정
 
           // 그라데이션
-          let gradient = new am4core.LinearGradient()
-          gradient.addColor(am4core.color(startColor))
-          gradient.addColor(am4core.color(endColor))
-          gradient.rotation = 90
-          series.fill = gradient
+          //   let gradient = new am4core.LinearGradient()
+          //   gradient.addColor(am4core.color(startColor))
+          //   gradient.addColor(am4core.color(endColor))
+          //   gradient.rotation = 90
+          //   series.fill = gradient
 
           // 기본 블릿
           const bullet = series.bullets.push(new am4charts.CircleBullet())
@@ -575,15 +615,15 @@
           imageStar.cursorOverStyle = am4core.MouseCursorStyle.pointer
 
           // 데이터 항목별로 'disabled' 필드 업데이트
-          chart.data.forEach(item => {
-            // 데이터 항목의 날짜를 기준으로 특정 날짜 배열과 비교
-            let resultDate = (item.disabled = !specialDates.some(
-              specialDate =>
-                specialDate.getDate() === item.date.getDate() &&
-                specialDate.getMonth() === item.date.getMonth() &&
-                specialDate.getFullYear() === item.date.getFullYear()
-            ))
-          })
+          //   chart.data.forEach(item => {
+          //     // 데이터 항목의 날짜를 기준으로 특정 날짜 배열과 비교
+          //     let resultDate = (item.disabled = !specialDates.some(
+          //       specialDate =>
+          //         specialDate.getDate() === item.date.getDate() &&
+          //         specialDate.getMonth() === item.date.getMonth() &&
+          //         specialDate.getFullYear() === item.date.getFullYear()
+          //     ))
+          //   })
 
           // 이미지 블릿 클릭
           imageStar.events.on('hit', function (event) {
@@ -592,12 +632,22 @@
           })
         }
 
+        // 외부체크박스 추가
+
+        function initCustomLegend() {
+          addCheckboxListeners()
+          addButtonListeners()
+        }
+
         chartCommon()
         setDateFormat()
         setDateAxis()
         setValueAxis()
         cursorHandler()
-        legendHandler()
+        // legendHandler()
+        createInitialSeriesAndCheckboxes()
+
+        initCustomLegend()
       })
 
       // 외부 핸들링 함수
