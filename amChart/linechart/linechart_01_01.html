@@ -425,7 +425,6 @@
         function legendHandler() {
           chart.legend = new am4charts.Legend()
           chart.legend.useDefaultMarker = true
-          chart.legend.disabled = true
 
           chart.legend.parent = chart.chartContainer
           chart.legend.position = 'top'
@@ -644,7 +643,7 @@
         setDateAxis()
         setValueAxis()
         cursorHandler()
-        // legendHandler()
+        legendHandler()
         createInitialSeriesAndCheckboxes()
 
         initCustomLegend()

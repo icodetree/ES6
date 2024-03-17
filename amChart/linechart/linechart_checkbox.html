@@ -12,23 +12,6 @@
       li {
         list-style: none;
       }
-      #chartdiv {
-        width: 98%;
-        height: 600px;
-        border: 1px solid #ccc;
-        padding: 0;
-        margin: 10px;
-      }
-      #chartLegend {
-        margin-bottom: 20px;
-      }
-      #chartLegend .legend-item {
-        display: inline-block;
-        margin-right: 10px;
-      }
-      #chartLegend .legend-checkbox {
-        margin-right: 5px;
-      }
 
       .lineTooltip {
         padding: 10px;
@@ -106,19 +89,52 @@
       .addbtn {
         padding: 10px 10px;
       }
-      #checkboxes {
-        display: flex;
-        justify-content: space-between;
+      #chartdiv {
+        width: 530px;
+        height: 450px;
+        font-size: 11px;
+        border: 1px solid #eee;
+        float: left;
       }
 
-      input[type='checkbox'] {
+      #legend {
+        width: 200px;
+        height: 450px;
+        border: 1px solid #eee;
+        margin-left: 10px;
+        float: left;
+      }
+
+      #legend .legend-item {
+        margin: 10px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      #legend .legend-item .legend-value {
+        font-size: 12px;
+        font-weight: normal;
+        margin-left: 22px;
+      }
+
+      #legend .legend-item .legend-marker {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border: 1px solid #ccc;
         margin-right: 10px;
+      }
+
+      #legend .legend-item.disabled .legend-marker {
+        opacity: 0.5;
+        background: #ddd;
       }
     </style>
   </head>
   <body>
     <div id="chartdiv"></div>
-    <div id="checkboxes"></div>
+    <div id="legend"></div>
 
     <script src="../lib/core.js"></script>
     <script src="../lib/charts.js"></script>
@@ -128,71 +144,108 @@
     <script src="../lib/germanyLow.js"></script>
 
     <script>
-      // chart.js
-      am4core.ready(function () {
-        // Create chart instance
-        var chart = am4core.create('chartdiv', am4charts.XYChart)
+      am4core.useTheme(am4themes_animated)
 
-        // Add data
-        chart.data = [
-          { date: new Date(2023, 0, 1), value1: 10, value2: 20, value3: 30 },
-          { date: new Date(2023, 0, 2), value1: 15, value2: 25, value3: 35 }
-          // Add more data points as needed
-        ]
+      // Create chart instance
+      var chart = am4core.create('chartdiv', am4charts.PieChart)
 
-        // Create axes
-        var dateAxis = chart.xAxes.push(new am4charts.DateAxis())
-        dateAxis.renderer.grid.template.location = 0
-
-        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis())
-
-        // Create series
-        var series1 = chart.series.push(new am4charts.LineSeries())
-        series1.dataFields.valueY = 'value1'
-        series1.dataFields.dateX = 'date'
-        series1.name = 'Series 1'
-
-        var series2 = chart.series.push(new am4charts.LineSeries())
-        series2.dataFields.valueY = 'value2'
-        series2.dataFields.dateX = 'date'
-        series2.name = 'Series 2'
-
-        var series3 = chart.series.push(new am4charts.LineSeries())
-        series3.dataFields.valueY = 'value3'
-        series3.dataFields.dateX = 'date'
-        series3.name = 'Series 3'
-
-        // Create checkboxes
-        var checkboxes = document.getElementById('checkboxes')
-        var seriesArray = [series1, series2, series3]
-
-        for (var i = 0; i < seriesArray.length; i++) {
-          var series = seriesArray[i]
-          var checkbox = document.createElement('input')
-          checkbox.type = 'checkbox'
-          checkbox.checked = true
-          checkbox.addEventListener('change', toggleSeries)
-
-          var label = document.createElement('label')
-          label.textContent = series.name
-          label.appendChild(checkbox)
-
-          checkboxes.appendChild(label)
-          series.visible = true // 시리즈를 초기에 표시하도록 설정
+      // Add data
+      chart.data = [
+        {
+          country: 'Lithuania',
+          litres: 501.9
+        },
+        {
+          country: 'Czechia',
+          litres: 301.9
+        },
+        {
+          country: 'Ireland',
+          litres: 201.1
+        },
+        {
+          country: 'Germany',
+          litres: 165.8
+        },
+        {
+          country: 'Australia',
+          litres: 139.9
+        },
+        {
+          country: 'Austria',
+          litres: 128.3
+        },
+        {
+          country: 'UK',
+          litres: 99
+        },
+        {
+          country: 'Belgium',
+          litres: 60
+        },
+        {
+          country: 'The Netherlands',
+          litres: 50
         }
+      ]
 
-        // Toggle series visibility
-        function toggleSeries(event) {
-          var seriesIndex = Array.prototype.indexOf.call(
-            seriesArray,
-            event.target.nextElementSibling
-          )
-          if (seriesIndex !== -1) {
-            // seriesIndex가 유효한 값일 때만 실행
-            seriesArray[seriesIndex].visible = event.target.checked
-          }
-        }
+      // Add and configure Series
+      var pieSeries = chart.series.push(new am4charts.PieSeries())
+      pieSeries.dataFields.value = 'litres'
+      pieSeries.dataFields.category = 'country'
+      pieSeries.labels.template.disabled = true
+
+      chart.radius = am4core.percent(95)
+
+      // Create custom legend
+      chart.events.on('ready', function (event) {
+        // populate our custom legend when chart renders
+        chart.customLegend = document.getElementById('legend')
+        pieSeries.dataItems.each(function (row, i) {
+          var color = chart.colors.getIndex(i)
+          var percent = Math.round(row.values.value.percent * 100) / 100
+          var value = row.value
+          legend.innerHTML +=
+            '<div class="legend-item" id="legend-item-' +
+            i +
+            '" onclick="toggleSlice(' +
+            i +
+            ');" onmouseover="hoverSlice(' +
+            i +
+            ');" onmouseout="blurSlice(' +
+            i +
+            ');" style="color: ' +
+            color +
+            ';"><div class="legend-marker" style="background: ' +
+            color +
+            '"></div>' +
+            row.category +
+            '<div class="legend-value">' +
+            value +
+            ' | ' +
+            percent +
+            '%</div></div>'
+        })
       })
+
+      function toggleSlice(item) {
+        var slice = pieSeries.dataItems.getIndex(item)
+        if (slice.visible) {
+          slice.hide()
+        } else {
+          slice.show()
+        }
+      }
+
+      function hoverSlice(item) {
+        var slice = pieSeries.slices.getIndex(item)
+        slice.isHover = true
+      }
+
+      function blurSlice(item) {
+        var slice = pieSeries.slices.getIndex(item)
+        slice.isHover = false
+      }
     </script>
   </body>
 </html>
