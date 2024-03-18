@@ -25,7 +25,6 @@
         padding: 20px;
         box-sizing: border-box;
         margin-bottom: 20px;
-        border-radius: 5px;
       }
       li {
         background-color: rgba(255, 255, 255, 0.1);
@@ -34,7 +33,6 @@
         color: #fff;
         display: flex;
         justify-content: space-around;
-        border-radius: 3px;
       }
 
       .section h2 {
@@ -476,48 +474,102 @@
 
     <script>
       const FlipListPlugin = (function () {
-        function flipList(items, options) {
-          items.forEach((item, index) => {
-            // Set a timeout based on the index to create a staggered animation effect
-            setTimeout(() => {
-              let angle = 0
-              const totalRotation = 360 // Each item will rotate 360 degrees
-              const flip = () => {
-                angle += options.flipSpeed
-                if (angle >= totalRotation) {
-                  item.style.transform = '' // Reset transform after one full rotation
-                  return // Stop the animation when a full rotation is reached
-                }
-                item.style.transform = `rotateX(${angle}deg)`
-                requestAnimationFrame(flip)
+        let animationOptions
+        let currentSectionIndex = 0
+        let currentItemIndex = 0
+
+        function flipItem(item, angle, targetAngle, flipDirection) {
+          item.style.transform = `rotateX(${angle}deg)`
+
+          if (Math.abs(angle) < Math.abs(targetAngle)) {
+            angle += animationOptions.flipSpeed * flipDirection
+            requestAnimationFrame(() =>
+              flipItem(item, angle, targetAngle, flipDirection)
+            )
+          } else {
+            item.style.transform = ''
+            currentItemIndex++
+            if (currentItemIndex < getSectionLength(currentSectionIndex)) {
+              setTimeout(
+                () => flipSection(currentSectionIndex),
+                animationOptions.itemDelay
+              )
+            } else {
+              currentItemIndex = 0
+              currentSectionIndex++
+              if (currentSectionIndex < animationOptions.sections.length) {
+                setTimeout(
+                  () => startAnimation(),
+                  animationOptions.sectionDelay
+                )
               }
-              flip()
-            }, index * 200) // Start next item's animation with a delay of 0.2s
-          })
-        }
-
-        function startAnimation(sections, options) {
-          sections.forEach(section => {
-            const items = section.querySelectorAll('li')
-            flipList(items, options)
-          })
-        }
-
-        function init(selector, options = {}) {
-          const sections = document.querySelectorAll(selector)
-          const defaultOptions = {
-            flipSpeed: 5 // Rotation speed of the animation
+            }
           }
-          const mergedOptions = { ...defaultOptions, ...options }
-          startAnimation(sections, mergedOptions)
+        }
+
+        function flipSection(sectionIndex) {
+          const item = getSectionItem(sectionIndex, currentItemIndex)
+          const targetAngle = 360 // Single flip
+          const flipDirection = 1 // Always flip in the same direction for sequential animation
+          flipItem(item, 0, targetAngle, flipDirection)
+        }
+
+        function startAnimation() {
+          if (currentSectionIndex < animationOptions.sections.length) {
+            currentItemIndex = 0
+            // Start animations for two sections sequentially
+            flipSection(currentSectionIndex)
+            if (currentSectionIndex + 1 < animationOptions.sections.length) {
+              flipSection(currentSectionIndex + 1)
+            }
+            currentSectionIndex += 2 // Move to the next pair of sections
+          } else {
+            resetIndices()
+          }
+        }
+
+        function getSectionItem(sectionIndex, itemIndex) {
+          return animationOptions.sections[sectionIndex].querySelectorAll(
+            'ul li'
+          )[itemIndex]
+        }
+
+        function getSectionLength(sectionIndex) {
+          return animationOptions.sections[sectionIndex].querySelectorAll(
+            'ul li'
+          ).length
+        }
+
+        function resetIndices() {
+          currentSectionIndex = 0
+          currentItemIndex = 0
+        }
+
+        function init(selector, userOptions = {}) {
+          const sections = document.querySelectorAll(selector)
+          animationOptions = {
+            flipSpeed: 1.5,
+            iterations: 3,
+            itemDelay: 300,
+            sectionDelay: 2000,
+            sections,
+            ...userOptions
+          }
+
+          startAnimation()
         }
 
         return { init }
       })()
 
-      // 사용 예시
-      FlipListPlugin.init('.section', {
-        flipSpeed: 10 // Adjust the speed as necessary
+      // Example usage
+      document.addEventListener('DOMContentLoaded', function () {
+        FlipListPlugin.init('.section', {
+          flipSpeed: 20,
+          iterations: 3,
+          itemDelay: 100,
+          sectionDelay: 2000
+        })
       })
     </script>
   </body>

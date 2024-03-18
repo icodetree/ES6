@@ -4,9 +4,15 @@
     <meta charset="UTF-8" />
     <title>랭킹 보드 리스트</title>
     <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      ul,
       li {
         list-style: none;
       }
+
       .container {
         display: flex;
         flex-wrap: wrap;
@@ -15,14 +21,24 @@
 
       .section {
         width: 30%;
-        background-color: #f2f2f2;
+        background-color: #004096;
         padding: 20px;
         box-sizing: border-box;
         margin-bottom: 20px;
       }
+      li {
+        background-color: rgba(255, 255, 255, 0.1);
+        margin: 2px 0;
+        padding: 10px;
+        color: #fff;
+        display: flex;
+        justify-content: space-around;
+      }
 
       .section h2 {
         margin-top: 0;
+        color: #fff;
+        padding-bottom: 20px;
       }
     </style>
   </head>
@@ -30,7 +46,6 @@
     <div class="container">
       <div class="section">
         <h2>해외시장지수 1위</h2>
-        <!-- 해외시장지수 1위 리스트 아이템 -->
         <ul>
           <li>
             <span>미국(S&P500)</span>
@@ -102,348 +117,358 @@
       </div>
       <div class="section">
         <h2>해외주식데이터/섹터 1위</h2>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
+        <ul>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+        </ul>
       </div>
       <div class="section">
         <h2>국내시장지수 1위</h2>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
+        <ul>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+        </ul>
       </div>
       <div class="section">
         <h2>국내주식데이터/섹터 1위</h2>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
+        <ul>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+        </ul>
       </div>
       <div class="section">
         <h2>정기재건/종합채권/리커베이션 제권 1위</h2>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
+        <ul>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+        </ul>
       </div>
       <div class="section">
         <h2>배당/소득기준리 1위</h2>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
-        <li>
-          <span>미국(S&P500)</span>
-          <span>KODEX 미국S&P500TR</span>
-          <span>11회</span>
-          <span>30점</span>
-        </li>
+        <ul>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+          <li>
+            <span>미국(S&P500)</span>
+            <span>KODEX 미국S&P500TR</span>
+            <span>11회</span>
+            <span>30점</span>
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -489,7 +514,7 @@
           if (!isAnimating) {
             isAnimating = true
             const item = getSectionItem(sectionIndex, currentItemIndex)
-            const targetAngle = 360 // Single flip
+            const targetAngle = 180 // Single flip
             const flipDirection = Math.random() < 0.5 ? 1 : -1
             flipItem(item, 0, targetAngle, flipDirection)
           }
@@ -539,10 +564,10 @@
 
       // Example usage
       FlipListPlugin.init('.section', {
-        flipSpeed: 1,
-        iterations: 3,
-        itemDelay: 100,
-        sectionDelay: 2000
+        flipSpeed: 20,
+        iterations: 1,
+        itemDelay: 1,
+        sectionDelay: 1
       })
     </script>
   </body>
