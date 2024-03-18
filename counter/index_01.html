@@ -478,21 +478,19 @@
       const FlipListPlugin = (function () {
         function flipList(items, options) {
           items.forEach((item, index) => {
-            // Set a timeout based on the index to create a staggered animation effect
             setTimeout(() => {
               let angle = 0
-              const totalRotation = 360 // Each item will rotate 360 degrees
               const flip = () => {
                 angle += options.flipSpeed
-                if (angle >= totalRotation) {
-                  item.style.transform = '' // Reset transform after one full rotation
-                  return // Stop the animation when a full rotation is reached
+                if (angle >= options.totalRotation) {
+                  item.style.transform = `rotateX(${options.resetRotation}deg)` // Optionally reset to a specific rotation
+                  return
                 }
                 item.style.transform = `rotateX(${angle}deg)`
                 requestAnimationFrame(flip)
               }
               flip()
-            }, index * 200) // Start next item's animation with a delay of 0.2s
+            }, index * options.itemDelay)
           })
         }
 
@@ -506,7 +504,10 @@
         function init(selector, options = {}) {
           const sections = document.querySelectorAll(selector)
           const defaultOptions = {
-            flipSpeed: 5 // Rotation speed of the animation
+            flipSpeed: 5, // 회전 속도
+            totalRotation: 360, // 회전각도
+            itemDelay: 200, // 지연 시간
+            resetRotation: 0 // 0 원래 위치로 리셋
           }
           const mergedOptions = { ...defaultOptions, ...options }
           startAnimation(sections, mergedOptions)
@@ -515,9 +516,12 @@
         return { init }
       })()
 
-      // 사용 예시
+      // 사용 예시, 필요에 따라 옵션을 조정
       FlipListPlugin.init('.section', {
-        flipSpeed: 10 // Adjust the speed as necessary
+        flipSpeed: 5,
+        totalRotation: 360,
+        itemDelay: 200,
+        resetRotation: 0
       })
     </script>
   </body>
