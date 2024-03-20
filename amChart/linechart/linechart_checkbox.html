@@ -38,7 +38,7 @@
       }
 
       .lineTooltip li::after {
-        content: '';
+        content: "";
         width: 10px;
         height: 10px;
         border-radius: 4px;
@@ -89,52 +89,25 @@
       .addbtn {
         padding: 10px 10px;
       }
+      /* 차트 컨테이너 스타일 */
       #chartdiv {
-        width: 530px;
-        height: 450px;
-        font-size: 11px;
-        border: 1px solid #eee;
-        float: left;
+        width: 100%;
+        height: 500px;
       }
-
-      #legend {
-        width: 200px;
-        height: 450px;
-        border: 1px solid #eee;
-        margin-left: 10px;
-        float: left;
-      }
-
-      #legend .legend-item {
-        margin: 10px;
-        font-size: 15px;
-        font-weight: bold;
+      /* 버튼 스타일 */
+      .add-series-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
         cursor: pointer;
-      }
-
-      #legend .legend-item .legend-value {
-        font-size: 12px;
-        font-weight: normal;
-        margin-left: 22px;
-      }
-
-      #legend .legend-item .legend-marker {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        border: 1px solid #ccc;
-        margin-right: 10px;
-      }
-
-      #legend .legend-item.disabled .legend-marker {
-        opacity: 0.5;
-        background: #ddd;
       }
     </style>
   </head>
   <body>
     <div id="chartdiv"></div>
-    <div id="legend"></div>
+    <!-- 차트를 표시할 div -->
+    <button id="addSeriesButton" class="add-series-button">상품 추가</button>
+    <!-- 시리즈 추가 버튼 -->
 
     <script src="../lib/core.js"></script>
     <script src="../lib/charts.js"></script>
@@ -144,108 +117,174 @@
     <script src="../lib/germanyLow.js"></script>
 
     <script>
-      am4core.useTheme(am4themes_animated)
+      const MAX_LINES = 9;
+      const DEFAULT_LINES = 3;
 
-      // Create chart instance
-      var chart = am4core.create('chartdiv', am4charts.PieChart)
+      const colors = [
+        "#FF0000",
+        "#00FF00",
+        "#0000FF",
+        "#FFFF00",
+        "#FF00FF",
+        "#00FFFF",
+        "#FF8000",
+        "#80FF00",
+        "#0080FF",
+      ];
 
-      // Add data
-      chart.data = [
-        {
-          country: 'Lithuania',
-          litres: 501.9
-        },
-        {
-          country: 'Czechia',
-          litres: 301.9
-        },
-        {
-          country: 'Ireland',
-          litres: 201.1
-        },
-        {
-          country: 'Germany',
-          litres: 165.8
-        },
-        {
-          country: 'Australia',
-          litres: 139.9
-        },
-        {
-          country: 'Austria',
-          litres: 128.3
-        },
-        {
-          country: 'UK',
-          litres: 99
-        },
-        {
-          country: 'Belgium',
-          litres: 60
-        },
-        {
-          country: 'The Netherlands',
-          litres: 50
+      const chart = am4core.create("chart-container", am4charts.XYChart);
+
+      const addProductBtn = document.getElementById("add-product-btn");
+      addProductBtn.addEventListener("click", () => {
+        const legendContainer = chart.legend.container;
+        const legendCount = legendContainer.children.length;
+
+        if (legendCount >= MAX_LINES) {
+          return;
         }
-      ]
 
-      // Add and configure Series
-      var pieSeries = chart.series.push(new am4charts.PieSeries())
-      pieSeries.dataFields.value = 'litres'
-      pieSeries.dataFields.category = 'country'
-      pieSeries.labels.template.disabled = true
+        // Create checkbox and label elements inside the loop
+        for (let i = 0; i < DEFAULT_LINES; i++) {
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.id = `checkbox-${i}`;
+          checkbox.checked = true;
 
-      chart.radius = am4core.percent(95)
+          const label = document.createElement("label");
+          label.htmlFor = checkbox.id;
+          label.textContent = `상품 ${i + 1}`;
 
-      // Create custom legend
-      chart.events.on('ready', function (event) {
-        // populate our custom legend when chart renders
-        chart.customLegend = document.getElementById('legend')
-        pieSeries.dataItems.each(function (row, i) {
-          var color = chart.colors.getIndex(i)
-          var percent = Math.round(row.values.value.percent * 100) / 100
-          var value = row.value
-          legend.innerHTML +=
-            '<div class="legend-item" id="legend-item-' +
-            i +
-            '" onclick="toggleSlice(' +
-            i +
-            ');" onmouseover="hoverSlice(' +
-            i +
-            ');" onmouseout="blurSlice(' +
-            i +
-            ');" style="color: ' +
-            color +
-            ';"><div class="legend-marker" style="background: ' +
-            color +
-            '"></div>' +
-            row.category +
-            '<div class="legend-value">' +
-            value +
-            ' | ' +
-            percent +
-            '%</div></div>'
-        })
-      })
+          const legendItem = document.createElement("li");
+          legendItem.appendChild(checkbox);
+          legendItem.appendChild(label);
+          legendContainer.appendChild(legendItem);
 
-      function toggleSlice(item) {
-        var slice = pieSeries.dataItems.getIndex(item)
-        if (slice.visible) {
-          slice.hide()
-        } else {
-          slice.show()
+          const lineSeries = createLineSeries(i);
+          chart.series.push(lineSeries);
+
+          // Add event listener to each checkbox (optional)
+          checkbox.addEventListener("change", () => {
+            lineSeries.hidden = !checkbox.checked;
+          });
         }
+      });
+
+      function createLineSeries(index) {
+        const series = new am4charts.LineSeries();
+        series.dataFields.valueY = `value${index}`;
+        series.dataFields.categoryX = "date";
+        series.name = `상품 ${index + 1}`;
+        series.stroke = colors[index];
+
+        const bullet = series.bullets.push(new am4charts.CircleBullet());
+        bullet.fill = series.stroke;
+
+        const tooltipText = `
+        <div>
+          <strong>${series.name}</strong>
+          <ul>
+            <li>날짜: {date}</li>
+            <li>수익률: {valueY}%</li>
+            <li>특정일 표시: {specialDay}</li>
+          </ul>
+        </div>
+      `;
+
+        series.tooltipHTML = tooltipText;
+
+        return series;
       }
 
-      function hoverSlice(item) {
-        var slice = pieSeries.slices.getIndex(item)
-        slice.isHover = true
-      }
+      const data = [
+        {
+          date: "2024-03-01",
+          value0: 1.23,
+          value1: 7.56,
+          value2: 9.89,
+          specialDay: true,
+        },
+        {
+          date: "2024-03-02",
+          value0: 2.23,
+          value1: -4.56,
+          value2: 2.89,
+          specialDay: true,
+        },
+        {
+          date: "2024-03-03",
+          value0: 5.23,
+          value1: 2.56,
+          value2: 6.89,
+          specialDay: true,
+        },
+        {
+          date: "2024-03-04",
+          value0: 6.23,
+          value1: 7.56,
+          value2: 2.89,
+          specialDay: true,
+        },
+        {
+          date: "2024-03-05",
+          value0: 21.23,
+          value1: 14.56,
+          value2: 12.89,
+          specialDay: true,
+        },
+        {
+          date: "2024-03-06",
+          value0: 8.23,
+          value1: 11.56,
+          value2: 0.89,
+          specialDay: true,
+        },
+        {
+          date: "2024-03-07",
+          value0: -1.23,
+          value1: 18.56,
+          value2: 17.89,
+          specialDay: true,
+        },
+        {
+          date: "2024-03-08",
+          value0: -4.23,
+          value1: 24.56,
+          value2: -7.89,
+          specialDay: true,
+        },
+        {
+          date: "2024-03-09",
+          value0: -10.23,
+          value1: 34.56,
+          value2: 1.89,
+          specialDay: true,
+        },
+        {
+          date: "2024-03-10",
+          value0: 5.0,
+          value1: 23.56,
+          value2: 7.89,
+          specialDay: true,
+        },
+      ];
 
-      function blurSlice(item) {
-        var slice = pieSeries.slices.getIndex(item)
-        slice.isHover = false
-      }
+      chart.data = data;
+
+      const tooltip = chart.tooltip;
+      tooltip.background.fill = "#ffffff";
+      tooltip.border.color = "#000000";
+      tooltip.padding = 10;
+
+      chart.cursor = new am4charts.XYCursor();
+      chart.legend = new am4charts.Legend();
+      chart.legend.position = "right";
+
+      const xAxis = chart.xAxes.push(new am4charts.DateAxis());
+      xAxis.renderer.minGridDistance = 50;
+
+      const yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+      chart.exporting.menu = new am4charts.ExportMenu();
     </script>
   </body>
 </html>

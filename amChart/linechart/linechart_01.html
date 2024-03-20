@@ -44,7 +44,7 @@
       }
 
       .lineTooltip li::after {
-        content: '';
+        content: "";
         width: 10px;
         height: 10px;
         border-radius: 4px;
@@ -123,496 +123,380 @@
     <script src="../lib/germanyLow.js"></script>
 
     <script>
-      // 체크박스 선택 상태를 저장할 변수
-      let selectedSeries = [
-        'visits1',
-        'visits2',
-        'visits3',
-        'visits4',
-        'visits5',
-        'visits6',
-        'visits7',
-        'visits8',
-        'visits9'
-      ]
-
-      // 차트 데이터 생성 함수 (수정됨)
-      function generateChartData() {
-        const firstDate = new Date()
-        firstDate.setDate(firstDate.getDate() - 150)
-
-        // 실제 데이터를 가져오는 로직 추가 (예시)
-        const data = fetchRealData() // 실제 데이터 가져오는 함수 호출
-
-        // 데이터 가공 (선택된 시리즈만 남기기)
-        const processedData = data.map(item => {
-          const selectedValues = {}
-          selectedSeries.forEach(series => {
-            selectedValues[series] = item[series]
-          })
-          return { ...selectedValues }
-        })
-
-        return Array(3)
-          .fill()
-          .map((_, i) => {
-            const newDate = new Date(firstDate)
-            newDate.setDate(newDate.getDate() + i)
-          })
-      }
-
-      // 실제 데이터를 가져오는 예시 함수 (사용 상황에 맞게 수정 필요)
-      function fetchRealData() {
-        // API 호출, 데이터베이스 조회 등 실제 데이터를 가져오는 로직 구현
-        // 예시 데이터 반환
-        return [
-          {
-            date: '2023.10.13',
-            visits1: 2,
-            visits2: 3,
-            visits3: 4,
-            visits4: 6,
-            visits5: 7,
-            visits6: 0,
-            visits7: -5,
-            visits8: 10,
-            visits9: 20,
-            specialDate: false
-          },
-          {
-            date: '2023.10.14',
-            visits1: 5,
-            visits2: 8,
-            visits3: 9,
-            visits4: 11,
-            visits5: 12,
-            visits6: 15,
-            visits7: 18,
-            visits8: 22,
-            visits9: 25,
-            specialDate: false
-          },
-          {
-            date: '2023.10.15',
-            visits1: 3,
-            visits2: 6,
-            visits3: 7,
-            visits4: 10,
-            visits5: 13,
-            visits6: 16,
-            visits7: 19,
-            visits8: 23,
-            visits9: 26,
-            specialDate: true
-          }
-        ]
-      }
-
-      // 체크박스 선택 이벤트 처리 (추가)
-      const checkboxes = document.querySelectorAll('input[name="series"]')
-      checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-          const seriesName = checkbox.value
-          selectedSeries = Array.from(checkboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.value)
-          // 차트 업데이트
-          updateChart()
-        })
-      })
-
-      // 차트 업데이트 함수 (추가)
-      function updateChart() {
-        // 차트 라이브러리 함수를 이용하여 차트 데이터 업데이트
-        chart.data = generateChartData()
-      }
-
-      // 라인그래프에 시리즈 추가 함수
-      function addSeriesToLinegraph(seriesName) {
-        // ... 라인그래프에 시리즈 추가 코드 ...
-        console.log('추가 코드', seriesName)
-      }
-
-      // 라인그래프에서 시리즈 제거 함수
-      function removeSeriesFromLinegraph(seriesName) {
-        // ... 라인그래프에서 시리즈 제거 코드 ...
-        console.log('제거 코드', seriesName)
-      }
-
       am4core.ready(function () {
-        am4core.useTheme(am4themes_animated)
+        am4core.useTheme(am4themes_animated);
 
-        const chart = am4core.create('chartdiv', am4charts.XYChart)
-        const dateAxis = chart.xAxes.push(new am4charts.DateAxis())
-        const valueAxis = chart.yAxes.push(new am4charts.ValueAxis())
+        const chart = am4core.create("chartdiv", am4charts.XYChart);
+        const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+        const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-        let series = null
-        let bullet = null
+        let series = null;
+        let bullet = null;
 
         // 별모양 특정일지정
-        const specialDates = [new Date(2023, 10, 1), new Date(2023, 11, 1)]
+        const specialDates = [new Date(2023, 10, 1), new Date(2023, 11, 1)];
 
         // 차트 데이터
-        chart.data = generateChartData()
+        chart.data = generateChartData();
 
         // 데이터 랜덤
         function generateChartData() {
-          const firstDate = new Date()
-          firstDate.setDate(firstDate.getDate() - 150)
+          const firstDate = new Date();
+          firstDate.setDate(firstDate.getDate() - 150);
 
-          let visits = Array(10).fill(0)
-          visits = visits.map((visit, index) => {
-            if (index === 0) return -1
-            if (index === 1) return 3
-            if (index === 2) return 0
-            if (index === 3) return -10
-            if (index === 4) return 0
-            if (index === 5) return -2
-            if (index === 6) return -3
-            if (index === 7) return 0
-            return -5
-          })
+          let value = Array(10).fill(0);
+          value = value.map((visit, index) => {
+            if (index === 0) return -1;
+            if (index === 1) return 3;
+            if (index === 2) return 0;
+            if (index === 3) return -10;
+            if (index === 4) return 0;
+            if (index === 5) return -2;
+            if (index === 6) return -3;
+            if (index === 7) return 0;
+            return -5;
+          });
 
-          let b = 0.6
+          let b = 0.6;
           return Array(250)
             .fill()
             .map((_, i) => {
-              const newDate = new Date(firstDate)
-              newDate.setDate(newDate.getDate() + i)
+              const newDate = new Date(firstDate);
+              newDate.setDate(newDate.getDate() + i);
 
-              if (i > 80) b = 0.4
+              if (i > 80) b = 0.4;
 
               const isSpecialDate = specialDates.some(
-                specialDate =>
+                (specialDate) =>
                   specialDate.getFullYear() === newDate.getFullYear() &&
                   specialDate.getMonth() === newDate.getMonth() &&
                   specialDate.getDate() === newDate.getDate()
-              )
+              );
 
-              visits = visits.map(
-                visit =>
+              value = value.map(
+                (visit) =>
                   visit +
                   Math.round((Math.random() < b ? 1 : -1) * Math.random() * 10)
-              )
+              );
 
               return {
                 date: newDate,
-                visits1: visits[0],
-                visits2: visits[1],
-                visits3: visits[2],
-                visits4: visits[3],
-                visits5: visits[4],
-                visits6: visits[5],
-                visits7: visits[6],
-                visits8: visits[7],
-                visits9: visits[8],
-                specialDate: isSpecialDate
-              }
-            })
+                value1: value[0],
+                value2: value[1],
+                value3: value[2],
+                value4: value[3],
+                value5: value[4],
+                value6: value[5],
+                value7: value[6],
+                value8: value[7],
+                value9: value[8],
+                specialDate: isSpecialDate,
+              };
+            });
         }
 
         // 차트 공통
         function chartCommon() {
-          chart.padding(40, 40, 40, 40)
+          chart.padding(40, 40, 40, 40);
 
           // Create series for each data field
           createSeries(
-            'visits1',
-            'rgba(240, 41, 90, 1)', // lineColor
-            'rgba(240, 41, 90, 0.3)', // startColor
-            'rgba(240, 41, 90, 0)' // endColor
-          )
+            "value1",
+            "rgba(240, 41, 90, 1)", // lineColor
+            "rgba(240, 41, 90, 0.3)", // startColor
+            "rgba(240, 41, 90, 0)" // endColor
+          );
           createSeries(
-            'visits2',
-            'rgba(38, 193, 248, 1)', // lineColor
-            'rgba(72, 150, 255, 0.3)', // startColor
-            'rgba(72, 150, 255, 0)' // endColor
-          )
+            "value2",
+            "rgba(38, 193, 248, 1)", // lineColor
+            "rgba(72, 150, 255, 0.3)", // startColor
+            "rgba(72, 150, 255, 0)" // endColor
+          );
           createSeries(
-            'visits3',
-            'rgba(29, 181, 174, 1)', // lineColor
-            'rgba(29, 181, 174, 0.3)', // startColor
-            'rgba(29, 181, 174, 0)' // endColor
-          )
+            "value3",
+            "rgba(29, 181, 174, 1)", // lineColor
+            "rgba(29, 181, 174, 0.3)", // startColor
+            "rgba(29, 181, 174, 0)" // endColor
+          );
           createSeries(
-            'visits4',
-            'rgba(90, 86, 225, 1)', // lineColor
-            'rgba(90, 86, 225, 0.3)', // startColor
-            'rgba(90, 86, 225, 0)' // endColor
-          )
+            "value4",
+            "rgba(90, 86, 225, 1)", // lineColor
+            "rgba(90, 86, 225, 0.3)", // startColor
+            "rgba(90, 86, 225, 0)" // endColor
+          );
           createSeries(
-            'visits5',
-            'rgba(254, 203, 39, 1)', // lineColor
-            'rgba(254, 203, 39, 0.3)', // startColor
-            'rgba(254, 203, 39, 0)' // endColor
-          )
+            "value5",
+            "rgba(254, 203, 39, 1)", // lineColor
+            "rgba(254, 203, 39, 0.3)", // startColor
+            "rgba(254, 203, 39, 0)" // endColor
+          );
           createSeries(
-            'visits6',
-            'rgba(254, 143, 214, 1)', // lineColor
-            'rgba(254, 143, 214, 0.3)', // startColor
-            'rgba(254, 143, 214, 0)' // endColor
-          )
+            "value6",
+            "rgba(254, 143, 214, 1)", // lineColor
+            "rgba(254, 143, 214, 0.3)", // startColor
+            "rgba(254, 143, 214, 0)" // endColor
+          );
           createSeries(
-            'visits7',
-            'rgba(24, 61, 255, 1)', // lineColor
-            'rgba(24, 61, 255, 0.3)', // startColor
-            'rgba(24, 61, 255, 0)' // endColor
-          )
+            "value7",
+            "rgba(24, 61, 255, 1)", // lineColor
+            "rgba(24, 61, 255, 0.3)", // startColor
+            "rgba(24, 61, 255, 0)" // endColor
+          );
           createSeries(
-            'visits8',
-            'rgba(139, 0, 255, 1)', // lineColor
-            'rgba(139, 0, 255, 0.3)', // startColor
-            'rgba(139, 0, 255, 0)' // endColor
-          )
+            "value8",
+            "rgba(139, 0, 255, 1)", // lineColor
+            "rgba(139, 0, 255, 0.3)", // startColor
+            "rgba(139, 0, 255, 0)" // endColor
+          );
           createSeries(
-            'visits9',
-            'rgba(65, 226, 55, 1)', // lineColor
-            'rgba(65, 226, 55, 0.3)', // startColor
-            'rgba(65, 226, 55, 0)' // endColor
-          )
+            "value9",
+            "rgba(65, 226, 55, 1)", // lineColor
+            "rgba(65, 226, 55, 0.3)", // startColor
+            "rgba(65, 226, 55, 0)" // endColor
+          );
         }
 
         // 커서 설정
         function cursorHandler() {
-          chart.cursor = new am4charts.XYCursor()
-          chart.cursor.lineY.disabled = true
-          chart.cursor.maxTooltipDistance = -1
+          chart.cursor = new am4charts.XYCursor();
+          chart.cursor.lineY.disabled = true;
+          chart.cursor.maxTooltipDistance = -1;
 
           // 드래그하여 X축과 Y축 모두에서 줌 가능하게 설정
-          chart.cursor.behavior = 'zoomXY'
+          chart.cursor.behavior = "zoomXY";
         }
 
         // 차트 제목
         function legendHandler() {
-          chart.legend = new am4charts.Legend()
-          chart.legend.useDefaultMarker = true
+          chart.legend = new am4charts.Legend();
+          chart.legend.useDefaultMarker = true;
 
-          chart.legend.parent = chart.chartContainer
-          chart.legend.position = 'top'
+          chart.legend.parent = chart.chartContainer;
+          chart.legend.position = "top";
 
-          chart.legend.fontSize = 13
-          chart.legend.padding(0, 0, 10, 0)
-          chart.legend.dx = -10
+          chart.legend.fontSize = 13;
+          chart.legend.padding(0, 0, 10, 0);
+          chart.legend.dx = -10;
         }
 
         // 날짜 형식
         function setDateFormat() {
           // day
-          dateAxis.dateFormats.setKey('day', 'yy.MM.dd')
-          dateAxis.periodChangeDateFormats.setKey('day', 'yy.MM.dd')
+          dateAxis.dateFormats.setKey("day", "yy.MM.dd");
+          dateAxis.periodChangeDateFormats.setKey("day", "yy.MM.dd");
 
           // month
-          dateAxis.dateFormats.setKey('month', 'yy.MM')
-          dateAxis.periodChangeDateFormats.setKey('month', 'yy.MM')
+          dateAxis.dateFormats.setKey("month", "yy.MM");
+          dateAxis.periodChangeDateFormats.setKey("month", "yy.MM");
 
           // year
-          dateAxis.dateFormats.setKey('year', 'yy')
-          dateAxis.periodChangeDateFormats.setKey('year', 'yy')
+          dateAxis.dateFormats.setKey("year", "yy");
+          dateAxis.periodChangeDateFormats.setKey("year", "yy");
         }
 
         // x축 설정
         function setDateAxis() {
-          dateAxis.renderer.minGridDistance = 70 // 날짜 레이블 간격 조정
-          dateAxis.renderer.baseGrid.disabled = true
-          dateAxis.renderer.grid.template.strokeOpacity = 0
-          dateAxis.renderer.labels.template.fill = am4core.color('#71747c')
-          dateAxis.renderer.labels.template.fontSize = 14
+          dateAxis.renderer.minGridDistance = 70; // 날짜 레이블 간격 조정
+          dateAxis.renderer.baseGrid.disabled = true;
+          dateAxis.renderer.grid.template.strokeOpacity = 0;
+          dateAxis.renderer.labels.template.fill = am4core.color("#71747c");
+          dateAxis.renderer.labels.template.fontSize = 14;
 
           // x축라벨 위치
-          dateAxis.renderer.maxLabelPosition = 1
-          dateAxis.renderer.labels.template.dx = 0
-          dateAxis.renderer.labels.template.dy = 0
+          dateAxis.renderer.maxLabelPosition = 1;
+          dateAxis.renderer.labels.template.dx = 0;
+          dateAxis.renderer.labels.template.dy = 0;
 
-          dateAxis.startLocation = -2 // X축의 시작점을 약간 오른쪽으로 이동
-          dateAxis.endLocation = 0 // X축의 끝점을 약간 왼쪽으로 이동
+          dateAxis.startLocation = -2; // X축의 시작점을 약간 오른쪽으로 이동
+          dateAxis.endLocation = 0; // X축의 끝점을 약간 왼쪽으로 이동
 
           // x축 하단 세로바
-          dateAxis.renderer.ticks.template.disabled = false
-          dateAxis.renderer.ticks.template.strokeOpacity = 1
-          dateAxis.renderer.ticks.template.stroke = am4core.color('#D4D8E2')
-          dateAxis.renderer.ticks.template.strokeWidth = 1
-          dateAxis.renderer.ticks.template.length = 8
+          dateAxis.renderer.ticks.template.disabled = false;
+          dateAxis.renderer.ticks.template.strokeOpacity = 1;
+          dateAxis.renderer.ticks.template.stroke = am4core.color("#D4D8E2");
+          dateAxis.renderer.ticks.template.strokeWidth = 1;
+          dateAxis.renderer.ticks.template.length = 8;
 
-          dateAxis.renderer.line.strokeOpacity = 1
-          dateAxis.renderer.line.strokeWidth = 1
-          dateAxis.renderer.line.stroke = am4core.color('#D4D8E2')
+          dateAxis.renderer.line.strokeOpacity = 1;
+          dateAxis.renderer.line.strokeWidth = 1;
+          dateAxis.renderer.line.stroke = am4core.color("#D4D8E2");
 
-          dateAxis.tooltip.disabled = true // 축툴팁 감추기
+          dateAxis.tooltip.disabled = true; // 축툴팁 감추기
         }
 
         // y축 설정
         function setValueAxis() {
-          valueAxis.renderer.baseGrid.disabled = true
-          valueAxis.renderer.grid.template.strokeOpacity = 1
-          valueAxis.renderer.grid.template.strokeDasharray = 3
-          valueAxis.renderer.grid.template.stroke = am4core.color('#D4D8E2')
-          valueAxis.renderer.labels.template.fill = am4core.color('#71747c')
-          valueAxis.renderer.labels.template.fontSize = 14
+          valueAxis.renderer.baseGrid.disabled = true;
+          valueAxis.renderer.grid.template.strokeOpacity = 1;
+          valueAxis.renderer.grid.template.strokeDasharray = 3;
+          valueAxis.renderer.grid.template.stroke = am4core.color("#D4D8E2");
+          valueAxis.renderer.labels.template.fill = am4core.color("#71747c");
+          valueAxis.renderer.labels.template.fontSize = 14;
           // valueAxis.renderer.labels.template.location = 100; // 축 중앙에 위치
 
           // y축라벨 위치 내부로 이동
-          valueAxis.renderer.inside = true
-          valueAxis.renderer.maxLabelPosition = 0.99
-          valueAxis.renderer.labels.template.dx = -10
-          valueAxis.renderer.labels.template.dy = -15
+          valueAxis.renderer.inside = true;
+          valueAxis.renderer.maxLabelPosition = 0.99;
+          valueAxis.renderer.labels.template.dx = -10;
+          valueAxis.renderer.labels.template.dy = -15;
 
-          valueAxis.tooltip.disabled = true // 축툴팁 감추기
+          valueAxis.tooltip.disabled = true; // 축툴팁 감추기
         }
 
         // 차트 시리즈 생성
         const createSeries = (field, lineColor, startColor, endColor) => {
-          series = chart.series.push(new am4charts.LineSeries())
-          series.dataFields.valueY = field
-          series.dataFields.dateX = 'date'
+          series = chart.series.push(new am4charts.LineSeries());
+          series.dataFields.valueY = field;
+          series.dataFields.dateX = "date";
 
-          series.name = field // legend 네임에 들어감
-          series.strokeWidth = 2 // 차트라인 두께
-          series.fillOpacity = 0.7 // 차트배경 투명도
-          series.tensionX = 0.7 // 곡선 효과
+          series.name = field; // legend 네임에 들어감
+          series.strokeWidth = 2; // 차트라인 두께
+          series.fillOpacity = 0.7; // 차트배경 투명도
+          series.tensionX = 0.7; // 곡선 효과
 
-          series.stroke = am4core.color(lineColor) // 선 색상 설정
+          series.stroke = am4core.color(lineColor); // 선 색상 설정
 
           // 그라데이션
-          let gradient = new am4core.LinearGradient()
-          gradient.addColor(am4core.color(startColor))
-          gradient.addColor(am4core.color(endColor))
-          gradient.rotation = 90
-          series.fill = gradient
+          let gradient = new am4core.LinearGradient();
+          gradient.addColor(am4core.color(startColor));
+          gradient.addColor(am4core.color(endColor));
+          gradient.rotation = 90;
+          series.fill = gradient;
 
           // 기본 블릿
-          const bullet = series.bullets.push(new am4charts.CircleBullet())
-          const circle = bullet.createChild(am4core.Circle)
-          const circleHover = bullet.states.create('hover')
+          const bullet = series.bullets.push(new am4charts.CircleBullet());
+          const circle = bullet.createChild(am4core.Circle);
+          const circleHover = bullet.states.create("hover");
 
-          bullet.cursorOverStyle = am4core.MouseCursorStyle.pointer // 커서 스타일
-          bullet.properties.scale = 0 // 기본블릿 스케일
-          circleHover.properties.scale = 1 // 기본블릿 마우스 오버 스케일
+          bullet.cursorOverStyle = am4core.MouseCursorStyle.pointer; // 커서 스타일
+          bullet.properties.scale = 0; // 기본블릿 스케일
+          circleHover.properties.scale = 1; // 기본블릿 마우스 오버 스케일
 
           // 기본블릿 스타일
-          circle.width = 16
-          circle.height = 16
-          circle.strokeWidth = 10
-          circle.strokeOpacity = 0.2
-          circle.stroke = am4core.color(lineColor).lighten(0.2)
-          circle.fill = am4core.color(lineColor)
+          circle.width = 16;
+          circle.height = 16;
+          circle.strokeWidth = 10;
+          circle.strokeOpacity = 0.2;
+          circle.stroke = am4core.color(lineColor).lighten(0.2);
+          circle.fill = am4core.color(lineColor);
 
           // 별모양 블릿 필터
-          if (field === 'visits1') {
-            chart.data.forEach(element => {
+          if (field === "value1") {
+            chart.data.forEach((element) => {
               if (element.specialDate === true) {
-                makeStarBullet(element.date)
+                makeStarBullet(element.date);
               }
-            })
+            });
           }
 
           // 기본 블릿 클릭
-          bullet.events.on('hit', function (event) {
-            eventHandler(event)
-          })
+          bullet.events.on("hit", function (event) {
+            eventHandler(event);
+          });
 
           // 툴팁 함수호출
-          makeTooltip()
+          makeTooltip();
 
-          return series
-        }
+          return series;
+        };
 
         // 툴팁 만들기
         const makeTooltip = () => {
-          series.dataFields.visits1ValueY = 'visits1'
-          series.dataFields.visits2ValueY = 'visits2'
-          series.dataFields.visits3ValueY = 'visits3'
-          series.dataFields.visits4ValueY = 'visits4'
-          series.dataFields.visits5ValueY = 'visits5'
-          series.dataFields.visits6ValueY = 'visits6'
-          series.dataFields.visits7ValueY = 'visits7'
-          series.dataFields.visits8ValueY = 'visits8'
-          series.dataFields.visits9ValueY = 'visits9'
+          series.dataFields.value1ValueY = "value1";
+          series.dataFields.value2ValueY = "value2";
+          series.dataFields.value3ValueY = "value3";
+          series.dataFields.value4ValueY = "value4";
+          series.dataFields.value5ValueY = "value5";
+          series.dataFields.value6ValueY = "value6";
+          series.dataFields.value7ValueY = "value7";
+          series.dataFields.value8ValueY = "value8";
+          series.dataFields.value9ValueY = "value9";
 
           series.tooltipHTML = `
                   <ul class='lineTooltip'>
                     <li>{date}</li>
-                    <li><span>NAV</span> <strong>{visits1ValueY}%</strong></li>
-                    <li><span>기초지수</span> <strong>{visits2ValueY}%</strong></li>
-                    <li><span>종가</span> <strong>{visits3ValueY}%</strong></li>
-                    <li><span>KODEX 24-12 은행채(AA+이상)액티브</span> <strong>{visits4ValueY}%</strong></li>
-                    <li><span>KODEX 미국S&P바이오(합성)</span> <strong>{visits5ValueY}%</strong></li>
-                    <li><span>KODEX 200</span> <strong>{visits6ValueY}%</strong></li>
-                    <li><span>KOSPI</span> <strong>{visits7ValueY}%</strong></li>
-                    <li><span>NASDAQ</span> <strong>{visits8ValueY}%</strong></li>
-                    <li><span>S&P500</span> <strong>{visits9ValueY}%</strong></li>
-                  </ul>`
+                    <li><span>NAV</span> <strong>{value1ValueY}%</strong></li>
+                    <li><span>기초지수</span> <strong>{value2ValueY}%</strong></li>
+                    <li><span>종가</span> <strong>{value3ValueY}%</strong></li>
+                    <li><span>KODEX 24-12 은행채(AA+이상)액티브</span> <strong>{value4ValueY}%</strong></li>
+                    <li><span>KODEX 미국S&P바이오(합성)</span> <strong>{value5ValueY}%</strong></li>
+                    <li><span>KODEX 200</span> <strong>{value6ValueY}%</strong></li>
+                    <li><span>KOSPI</span> <strong>{value7ValueY}%</strong></li>
+                    <li><span>NASDAQ</span> <strong>{value8ValueY}%</strong></li>
+                    <li><span>S&P500</span> <strong>{value9ValueY}%</strong></li>
+                  </ul>`;
 
-          series.tooltip.getFillFromObject = false
+          series.tooltip.getFillFromObject = false;
           series.tooltip.background.fill = am4core.color(
-            'rgba(0, 64, 150, 0.95)'
-          )
+            "rgba(0, 64, 150, 0.95)"
+          );
 
           // 툴팁 가이드 라인 설정
-          series.tooltip.label.minWidth = 120 // 툴팁의 최소 너비 설정
-          series.tooltip.label.minHeight = 120 // 툴팁의 최소 높이 설정
-          series.tooltip.label.fontSize = 13 // 툴팁 내 텍스트의 폰트 크기
-          series.tooltip.pointerOrientation = 'left' // 툴팁 방향
+          series.tooltip.label.minWidth = 120; // 툴팁의 최소 너비 설정
+          series.tooltip.label.minHeight = 120; // 툴팁의 최소 높이 설정
+          series.tooltip.label.fontSize = 13; // 툴팁 내 텍스트의 폰트 크기
+          series.tooltip.pointerOrientation = "left"; // 툴팁 방향
 
           // 가이드 라인 스타일 설정
-          series.tooltip.background.strokeWidth = 0 // 가이드 라인 두께
-          series.tooltip.background.strokeOpacity = 0 // 가이드 라인 투명도
-          series.tooltip.background.pointerLength = 6 // 화살표 크기
+          series.tooltip.background.strokeWidth = 0; // 가이드 라인 두께
+          series.tooltip.background.strokeOpacity = 0; // 가이드 라인 투명도
+          series.tooltip.background.pointerLength = 6; // 화살표 크기
 
-          series.tooltip.dx = 10 // 툴팁 좌표
-        }
+          series.tooltip.dx = 10; // 툴팁 좌표
+        };
 
         // 별모양 만들기
-        const makeStarBullet = _date => {
-          const imageStar = series.bullets.push(new am4core.Image())
-          imageStar.href = '../images/icon_star.svg'
-          imageStar.width = 24
-          imageStar.height = 24
-          imageStar.horizontalCenter = 'middle'
-          imageStar.verticalCenter = 'middle'
-          imageStar.nonScaling = true // 확대/축소시 이미지 크기를 고정
-          imageStar.disabled = true
-          imageStar.propertyFields.disabled = 'disabled'
-          imageStar.cursorOverStyle = am4core.MouseCursorStyle.pointer
+        const makeStarBullet = (_date) => {
+          const imageStar = series.bullets.push(new am4core.Image());
+          imageStar.href = "../images/icon_star.svg";
+          imageStar.width = 24;
+          imageStar.height = 24;
+          imageStar.horizontalCenter = "middle";
+          imageStar.verticalCenter = "middle";
+          imageStar.nonScaling = true; // 확대/축소시 이미지 크기를 고정
+          imageStar.disabled = true;
+          imageStar.propertyFields.disabled = "disabled";
+          imageStar.cursorOverStyle = am4core.MouseCursorStyle.pointer;
 
           // 데이터 항목별로 'disabled' 필드 업데이트
-          chart.data.forEach(item => {
+          chart.data.forEach((item) => {
             // 데이터 항목의 날짜를 기준으로 특정 날짜 배열과 비교
             let resultDate = (item.disabled = !specialDates.some(
-              specialDate =>
+              (specialDate) =>
                 specialDate.getDate() === item.date.getDate() &&
                 specialDate.getMonth() === item.date.getMonth() &&
                 specialDate.getFullYear() === item.date.getFullYear()
-            ))
-          })
+            ));
+          });
 
           // 이미지 블릿 클릭
-          imageStar.events.on('hit', function (event) {
+          imageStar.events.on("hit", function (event) {
             // 선택된 날짜 정보 가져오기
-            eventHandler(event)
-          })
-        }
+            eventHandler(event);
+          });
+        };
 
-        chartCommon()
-        setDateFormat()
-        setDateAxis()
-        setValueAxis()
-        cursorHandler()
-        legendHandler()
-      })
+        chartCommon();
+        setDateFormat();
+        setDateAxis();
+        setValueAxis();
+        cursorHandler();
+        legendHandler();
+      });
 
       // 외부 핸들링 함수
-      const eventHandler = e => {
-        if (e.target.className === 'Image') {
+      const eventHandler = (e) => {
+        if (e.target.className === "Image") {
           // 별 클릭
-          console.log('별 클릭!', e.target.className)
+          console.log("별 클릭!", e.target.className);
         } else {
           // 기본 블릿 클릭
           console.log(
-            '기본 블릿!',
-            e.target.dataItem.dateX + ': ' + e.target.dataItem.valueY
-          )
+            "기본 블릿!",
+            e.target.dataItem.dateX + ": " + e.target.dataItem.valueY
+          );
         }
-      }
+      };
     </script>
   </body>
 </html>
