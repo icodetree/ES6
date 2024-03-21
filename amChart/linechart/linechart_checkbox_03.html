@@ -15,7 +15,7 @@
       li {
         list-style: none;
       }
-      input[type="checkbox"] {
+      input[type='checkbox'] {
         width: 20px;
         height: 20px;
       }
@@ -45,7 +45,7 @@
       }
 
       .lineTooltip li::after {
-        content: "";
+        content: '';
         width: 1rem;
         height: 1rem;
         border-radius: 0.4rem;
@@ -120,7 +120,7 @@
       .linechart-chkbox-item:nth-child(3)::after,
       .linechart-chkbox-item:nth-child(4)::after,
       .linechart-chkbox-item:nth-child(5)::after {
-        content: "";
+        content: '';
         width: 2rem;
         height: 0.3rem;
         background-color: #183dff;
@@ -147,7 +147,7 @@
         text-indent: -999rem;
         border: none;
         cursor: pointer;
-        background: #d4d8e2 url("../images/ico_x_small.png") no-repeat center
+        background: #d4d8e2 url('../images/ico_x_small.png') no-repeat center
           center;
         background-size: 0.8rem 0.8rem;
         margin-left: 0.5rem;
@@ -177,7 +177,7 @@
         display: flex;
         padding: 2rem;
       }
-      .chart-legend input[type="checkbox"] {
+      .chart-legend input[type='checkbox'] {
         margin-right: 0.5rem;
       }
     </style>
@@ -210,99 +210,72 @@
       // 5. color객체는 시리즈별로 고정값이며, 내부객체 line은 시리즈의 라인컬러가 적용되고, start는 내부 그라데이션 시작컬러, start는 내부 그라데이션 끝나는 지점의 컬러의 값이야.
       // 6. specialDay는 true만 체크해서 해당 날짜 시리즈위에 별도 이미지 블릿으로 삽입되고 이미지 블릿 클릭시에 외부함수로 전달되는 콜백함수로 만들어주면 좋겠어.
 
-      am4core.options.commercialLicense = "AKD-73667548429";
+      am4core.options.commercialLicense = 'AKD-73667548429'
 
       const lineChartGradient = (id, data) => {
         // 기본 설정
-        am4core.useTheme(am4themes_animated);
+        am4core.useTheme(am4themes_animated)
 
-        const chart = am4core.create(id, am4charts.XYChart);
-        const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-        const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        const chart = am4core.create(id, am4charts.XYChart)
+        const dateAxis = chart.xAxes.push(new am4charts.DateAxis())
+        const valueAxis = chart.yAxes.push(new am4charts.ValueAxis())
 
-        console.log(data);
-        // 차트 데이터
-        chart.data = data[0].date;
+        // Add data
+        const rawData = data
+        const dateData = rawData[0].date
+        const seriesData = rawData[1]
 
-        // 차트공통 스타일
-        function chartCommon() {
-          chart.padding(40, 40, 40, 40);
+        chart.data = dateData.map((date, index) => {
+          const dataPoint = { date }
+          Object.entries(seriesData).forEach(([seriesName, seriesValues]) => {
+            dataPoint[seriesName] = seriesValues[0].value[index]
+          })
+          return dataPoint
+        })
+
+        // Create series
+        const createSeries = (seriesName, name) => {
+          let series = chart.series.push(new am4charts.LineSeries())
+          series.dataFields.valueY = seriesName
+          series.dataFields.dateX = 'date'
+          series.name = name
+
+          series.tooltipText = '{name}: [bold]{valueY}[/]'
+          series.strokeWidth = 2
+          series.minBulletDistance = 15
+
+          // Add bullets
+          let bullet = series.bullets.push(new am4charts.Bullet())
+          let image = bullet.createChild(am4core.Image)
+          // Configure bullet images here based on specialDay
+
+          return series
         }
 
-        // 날짜 형식
-        function setDateFormat() {
-          // day
-          dateAxis.dateFormats.setKey("day", "yy.MM.dd");
-          dateAxis.periodChangeDateFormats.setKey("day", "yy.MM.dd");
+        // seriesData를 반복하여 시리즈를 만듭니다.
+        Object.entries(seriesData).forEach(
+          ([seriesName, seriesValues], index) => {
+            const { name, color } = seriesValues[0]
+            let series = createSeries(seriesName, name)
+            series.stroke = am4core.color(color[0].line)
 
-          // month
-          dateAxis.dateFormats.setKey("month", "yy.MM");
-          dateAxis.periodChangeDateFormats.setKey("month", "yy.MM");
+            // 여기에 그라데이션과 같은 다른 속성을 설정합니다.
+            if (index >= 6) {
+              series.hiddenInLegend = true
+              series.hide()
+            }
+          }
+        )
 
-          // year
-          dateAxis.dateFormats.setKey("year", "yy");
-          dateAxis.periodChangeDateFormats.setKey("year", "yy");
-        }
+        // Create legend
+        chart.legend = new am4charts.Legend()
+        chart.legend.position = 'top'
+        chart.legend.paddingBottom = 20
+        chart.legend.labels.template.maxWidth = 95
 
-        // x축 설정
-        function setDateAxis() {
-          dateAxis.renderer.minGridDistance = 50; // 날짜 레이블 간격 조정
-          dateAxis.renderer.baseGrid.disabled = true;
-          dateAxis.renderer.grid.template.strokeOpacity = 0;
-          dateAxis.renderer.labels.template.fill = am4core.color("#71747c");
-          dateAxis.renderer.labels.template.fontSize = 14;
-
-          // x축라벨 위치
-          dateAxis.renderer.maxLabelPosition = 1;
-          dateAxis.renderer.labels.template.dx = 0;
-          dateAxis.renderer.labels.template.dy = 0;
-
-          dateAxis.startLocation = 0; // X축의 시작점을 약간 오른쪽으로 이동
-          dateAxis.endLocation = 0; // X축의 끝점을 약간 왼쪽으로 이동
-
-          // x축 하단 세로바
-          dateAxis.renderer.ticks.template.disabled = false;
-          dateAxis.renderer.ticks.template.strokeOpacity = 1;
-          dateAxis.renderer.ticks.template.stroke = am4core.color("#D4D8E2");
-          dateAxis.renderer.ticks.template.strokeWidth = 1;
-          dateAxis.renderer.ticks.template.length = 8;
-
-          dateAxis.renderer.line.strokeOpacity = 1;
-          dateAxis.renderer.line.strokeWidth = 1;
-          dateAxis.renderer.line.stroke = am4core.color("#D4D8E2");
-
-          dateAxis.tooltip.disabled = true; // 축툴팁 감추기
-        }
-
-        // y축 설정
-        function setValueAxis() {
-          valueAxis.renderer.baseGrid.disabled = true;
-          valueAxis.renderer.grid.template.strokeOpacity = 1;
-          valueAxis.renderer.grid.template.strokeDasharray = 3;
-          valueAxis.renderer.grid.template.stroke = am4core.color("#D4D8E2");
-          valueAxis.renderer.labels.template.fill = am4core.color("#71747c");
-          valueAxis.renderer.labels.template.fontSize = 14;
-          // valueAxis.renderer.labels.template.location = 100; // 축 중앙에 위치
-
-          // y축라벨 위치 내부로 이동
-          valueAxis.renderer.inside = true;
-          valueAxis.renderer.maxLabelPosition = 0.99;
-          valueAxis.renderer.labels.template.dx = -10;
-          valueAxis.renderer.labels.template.dy = -15;
-
-          valueAxis.tooltip.disabled = true; // 축툴팁 감추기
-        }
-
-        // 커서 설정
-        function cursorHandler() {
-          chart.cursor = new am4charts.XYCursor();
-          chart.cursor.lineY.disabled = true;
-          chart.cursor.maxTooltipDistance = -1;
-
-          // 드래그하여 X축과 Y축 모두에서 줌 가능하게 설정
-          chart.cursor.behavior = "zoomXY";
-        }
-      };
+        // Add cursor
+        chart.cursor = new am4charts.XYCursor()
+      }
     </script>
 
     <script>
@@ -310,24 +283,24 @@
       data = [
         {
           date: [
-            "2023.10.01",
-            "2023.10.02",
-            "2023.10.03",
-            "2023.10.04",
-            "2023.10.05",
-            "2023.10.06",
-            "2023.10.07",
-            "2023.10.08",
-            "2023.10.09",
-            "2023.10.10",
-          ],
+            '2023.10.01',
+            '2023.10.02',
+            '2023.10.03',
+            '2023.10.04',
+            '2023.10.05',
+            '2023.10.06',
+            '2023.10.07',
+            '2023.10.08',
+            '2023.10.09',
+            '2023.10.10'
+          ]
         },
         {
           seriese1: [
             {
-              name: "NAV",
+              name: 'NAV',
               value: [
-                1.23, 7.56, 9.89, 41.23, 7.56, -3.89, -1.23, 7.56, 29.89, 3.89,
+                1.23, 7.56, 9.89, 41.23, 7.56, -3.89, -1.23, 7.56, 29.89, 3.89
               ],
               specialDay: [
                 false,
@@ -339,23 +312,23 @@
                 false,
                 false,
                 false,
-                false,
+                false
               ],
               color: [
                 {
-                  line: "rgba(240, 41, 90, 1)",
-                  start: "rgba(240, 41, 90, 0.3)",
-                  end: "rgba(240, 41, 90, 0)",
-                },
-              ],
-            },
+                  line: 'rgba(240, 41, 90, 1)',
+                  start: 'rgba(240, 41, 90, 0.3)',
+                  end: 'rgba(240, 41, 90, 0)'
+                }
+              ]
+            }
           ],
           seriese2: [
             {
-              name: "기초지수",
+              name: '기초지수',
               value: [
                 2.23, -4.56, 2.89, 32.23, -4.56, 2.89, -6.23, -4.56, -4.56,
-                22.89,
+                22.89
               ],
               specialDay: [
                 false,
@@ -367,22 +340,22 @@
                 false,
                 false,
                 false,
-                false,
+                false
               ],
               color: [
                 {
-                  line: "rgba(38, 193, 248, 1)",
-                  start: "rgba(72, 150, 255, 0.3)",
-                  end: "rgba(72, 150, 255, 0)",
-                },
-              ],
-            },
+                  line: 'rgba(38, 193, 248, 1)',
+                  start: 'rgba(72, 150, 255, 0.3)',
+                  end: 'rgba(72, 150, 255, 0)'
+                }
+              ]
+            }
           ],
           seriese3: [
             {
-              name: "종가",
+              name: '종가',
               value: [
-                5.23, 2.56, 6.89, 25.23, 3.56, -6.89, -5.23, 2.56, 2.56, 56.89,
+                5.23, 2.56, 6.89, 25.23, 3.56, -6.89, -5.23, 2.56, 2.56, 56.89
               ],
               specialDay: [
                 false,
@@ -394,22 +367,22 @@
                 false,
                 false,
                 false,
-                false,
+                false
               ],
               color: [
                 {
-                  line: "rgba(29, 181, 174, 1)",
-                  start: "rgba(29, 181, 174, 0.3)",
-                  end: "rgba(29, 181, 174, 0)",
-                },
-              ],
-            },
+                  line: 'rgba(29, 181, 174, 1)',
+                  start: 'rgba(29, 181, 174, 0.3)',
+                  end: 'rgba(29, 181, 174, 0)'
+                }
+              ]
+            }
           ],
           seriese4: [
             {
-              name: "KOSPI",
+              name: 'KOSPI',
               value: [
-                6.23, 7.56, 12.89, 5.56, 16.23, 2.89, -6.23, 5.56, 7.56, 62.89,
+                6.23, 7.56, 12.89, 5.56, 16.23, 2.89, -6.23, 5.56, 7.56, 62.89
               ],
               specialDay: [
                 false,
@@ -421,23 +394,23 @@
                 false,
                 false,
                 false,
-                false,
+                false
               ],
               color: [
                 {
-                  line: "rgba(90, 86, 225, 1)",
-                  start: "rgba(90, 86, 225, 0.3)",
-                  end: "rgba(90, 86, 225, 0)",
-                },
-              ],
-            },
+                  line: 'rgba(90, 86, 225, 1)',
+                  start: 'rgba(90, 86, 225, 0.3)',
+                  end: 'rgba(90, 86, 225, 0)'
+                }
+              ]
+            }
           ],
           seriese5: [
             {
-              name: "NASDAQ",
+              name: 'NASDAQ',
               value: [
                 21.23, 14.56, 12.89, 1.56, 1.23, 14.56, 3.89, -21.23, 14.56,
-                42.89,
+                42.89
               ],
               specialDay: [
                 false,
@@ -449,23 +422,23 @@
                 false,
                 false,
                 false,
-                false,
+                false
               ],
               color: [
                 {
-                  line: "rgba(254, 203, 39, 1)",
-                  start: "rgba(254, 203, 39, 0.3)",
-                  end: "rgba(254, 203, 39, 0)",
-                },
-              ],
-            },
+                  line: 'rgba(254, 203, 39, 1)',
+                  start: 'rgba(254, 203, 39, 0.3)',
+                  end: 'rgba(254, 203, 39, 0)'
+                }
+              ]
+            }
           ],
           seriese6: [
             {
-              name: "S&P500",
+              name: 'S&P500',
               value: [
                 8.23, 2.56, -8.23, 0.89, -2.23, 11.56, 10.89, -4.23, 11.56,
-                10.89,
+                10.89
               ],
               specialDay: [
                 false,
@@ -477,23 +450,23 @@
                 false,
                 false,
                 false,
-                false,
+                false
               ],
               color: [
                 {
-                  line: "rgba(254, 143, 214, 1)",
-                  start: "rgba(254, 143, 214, 0.3)",
-                  end: "rgba(254, 143, 214, 0)",
-                },
-              ],
-            },
+                  line: 'rgba(254, 143, 214, 1)',
+                  start: 'rgba(254, 143, 214, 0.3)',
+                  end: 'rgba(254, 143, 214, 0)'
+                }
+              ]
+            }
           ],
           seriese7: [
             {
-              name: "KODEX 24-12 ",
+              name: 'KODEX 24-12 ',
               value: [
                 -1.23, 18.56, 17.89, -1.23, 7.61, 1.56, 12.89, -1.23, 18.56,
-                7.89,
+                7.89
               ],
               specialDay: [
                 false,
@@ -505,23 +478,23 @@
                 false,
                 false,
                 false,
-                false,
+                false
               ],
               color: [
                 {
-                  line: "rgba(24, 61, 255, 1)",
-                  start: "rgba(24, 61, 255, 0.3)",
-                  end: "rgba(24, 61, 255, 0)",
-                },
-              ],
-            },
+                  line: 'rgba(24, 61, 255, 1)',
+                  start: 'rgba(24, 61, 255, 0.3)',
+                  end: 'rgba(24, 61, 255, 0)'
+                }
+              ]
+            }
           ],
           seriese8: [
             {
-              name: "KODEX 미국S&P바이오",
+              name: 'KODEX 미국S&P바이오',
               value: [
                 -4.23, 24.56, -7.89, -4.23, -12.23, 12.56, 17.89, -4.23, -32.56,
-                -17.89,
+                -17.89
               ],
               specialDay: [
                 false,
@@ -533,23 +506,23 @@
                 false,
                 false,
                 false,
-                false,
+                false
               ],
               color: [
                 {
-                  line: "rgba(139, 0, 255, 1)",
-                  start: "rgba(139, 0, 255, 0.3)",
-                  end: "rgba(139, 0, 255, 0)",
-                },
-              ],
-            },
+                  line: 'rgba(139, 0, 255, 1)',
+                  start: 'rgba(139, 0, 255, 0.3)',
+                  end: 'rgba(139, 0, 255, 0)'
+                }
+              ]
+            }
           ],
           seriese9: [
             {
-              name: "KODEX 200",
+              name: 'KODEX 200',
               value: [
                 -10.23, 44.56, 1.89, 0.23, 34.56, 3.56, 21.89, 10.23, 66.56,
-                11.89,
+                11.89
               ],
               specialDay: [
                 false,
@@ -561,199 +534,20 @@
                 false,
                 false,
                 false,
-                false,
+                false
               ],
               color: [
                 {
-                  line: "rgba(65, 226, 55, 1)",
-                  start: "rgba(65, 226, 55, 0.3)",
-                  end: "rgba(65, 226, 55, 0)",
-                },
-              ],
-            },
-          ],
-        },
-      ];
-      lineChartGradient("chartdiv", data);
-    </script>
-
-    <script>
-      // amCharts4 라이브러리 로드 및 초기화
-      import * as am4core from "@amcharts/amcharts4/core";
-      import * as am4charts from "@amcharts/amcharts4/charts";
-      import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-
-      am4core.useTheme(am4themes_animated);
-
-      // 데이터 가져오기
-      const data = [
-        // ... (제공된 데이터)
-      ];
-
-      // 날짜 데이터 추출
-      const dates = data[0].date;
-
-      // 각 시리즈에 대한 데이터 추출
-      const seriesData = data[1];
-
-      // 차트 생성
-      const chart = am4core.create("chartdiv", am4charts.XYChart);
-      chart.paddingRight = 20;
-
-      // 날짜 데이터를 기반으로 카테고리 축 생성
-      const dateAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-      dateAxis.dataFields.category = "date";
-      dateAxis.renderer.grid.template.location = 0;
-      dateAxis.renderer.minGridDistance = 60;
-
-      // 값 축 생성
-      const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-
-      // 시리즈 생성 함수
-      function createSeries(seriesData, seriesIndex) {
-        const series = chart.series.push(new am4charts.LineSeries());
-        series.dataFields.valueY = "value";
-        series.dataFields.categoryX = "date";
-        series.name = seriesData.name;
-        series.tooltipText = "{name}: [bold]{valueY}[/]";
-        series.tensionX = 0.8;
-        series.showOnInit = seriesIndex < 6; // 처음에는 6개의 시리즈만 보여줌
-
-        const gradient = new am4core.LinearGradient();
-        gradient.addColor(am4core.color(seriesData.color[0].start), 0);
-        gradient.addColor(am4core.color(seriesData.color[0].end), 1);
-        gradient.rotation = 90;
-        series.fillOpacity = 0.2;
-        series.fill = gradient;
-
-        const bullet = series.bullets.push(new am4charts.CircleBullet());
-        bullet.circle.fill = am4core.color(seriesData.color[0].line);
-        bullet.circle.stroke = am4core.color(seriesData.color[0].line);
-        bullet.circle.strokeWidth = 3;
-
-        // specialDay가 true인 경우에만 이미지 블릿 추가
-        seriesData.value.forEach((value, index) => {
-          if (seriesData.specialDay[index]) {
-            const imageBullet = series.bullets.push(new am4charts.Bullet());
-            const image = imageBullet.createChild(am4core.Image);
-            image.href = "https://example.com/image.png"; // 이미지 URL로 변경해야 함
-            image.width = 20;
-            image.height = 20;
-            image.horizontalCenter = "middle";
-            image.verticalCenter = "middle";
-
-            // 이미지 블릿 클릭 이벤트 처리
-            imageBullet.events.on("hit", function (ev) {
-              console.log("이미지 블릿 클릭", seriesData.name, dates[index]);
-              // 추가 작업 수행
-            });
-          }
-        });
-
-        return series;
-      }
-
-      // 처음 6개의 시리즈 생성
-      for (let i = 0; i < 6; i++) {
-        const seriesData = seriesData[`seriese${i + 1}`][0];
-        const series = createSeries(seriesData, i);
-        series.data = seriesData.value.map((value, index) => ({
-          date: dates[index],
-          value,
-        }));
-      }
-
-      // 범례 생성
-      const legend = new am4charts.Legend();
-      legend.useDefaultMarker = true;
-      chart.legend = legend;
-
-      // 범례에 체크박스 추가
-      seriesData.seriese1.forEach((series, index) => {
-        const legendContainer = document.createElement("div");
-        legendContainer.classList.add("legend-container");
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = index < 6; // 처음 6개의 시리즈는 체크 상태로 설정
-        checkbox.addEventListener("change", () => {
-          const series = chart.series.getIndex(index);
-          series.showOnInit = checkbox.checked;
-          series.hide(0);
-          series.show();
-        });
-
-        const label = document.createElement("label");
-        label.textContent = series.name;
-        label.prepend(checkbox);
-
-        if (index >= 6) {
-          const closeButton = document.createElement("span");
-          closeButton.textContent = "X";
-          closeButton.classList.add("close-button");
-          closeButton.addEventListener("click", () => {
-            const series = chart.series.getIndex(index);
-            chart.series.removeIndex(index).dispose();
-            legendContainer.remove();
-          });
-          label.appendChild(closeButton);
+                  line: 'rgba(65, 226, 55, 1)',
+                  start: 'rgba(65, 226, 55, 0.3)',
+                  end: 'rgba(65, 226, 55, 0)'
+                }
+              ]
+            }
+          ]
         }
-
-        legendContainer.appendChild(label);
-        legend.contentContainer.containers.push(legendContainer);
-      });
-
-      // 추가 시리즈 버튼
-      const addSeriesButton = document.createElement("button");
-      addSeriesButton.textContent = "추가 시리즈";
-      addSeriesButton.addEventListener("click", () => {
-        const seriesIndex = chart.series.length;
-        if (seriesIndex < 9) {
-          const seriesData = seriesData[`seriese${seriesIndex + 1}`][0];
-          const series = createSeries(seriesData, seriesIndex);
-          series.data = seriesData.value.map((value, index) => ({
-            date: dates[index],
-            value,
-          }));
-
-          const legendContainer = document.createElement("div");
-          legendContainer.classList.add("legend-container");
-
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.checked = true;
-          checkbox.addEventListener("change", () => {
-            series.showOnInit = checkbox.checked;
-            series.hide(0);
-            series.show();
-          });
-
-          const label = document.createElement("label");
-          label.textContent = seriesData.name;
-          label.prepend(checkbox);
-
-          const closeButton = document.createElement("span");
-          closeButton.textContent = "X";
-          closeButton.classList.add("close-button");
-          closeButton.addEventListener("click", () => {
-            chart.series.removeIndex(seriesIndex).dispose();
-            legendContainer.remove();
-          });
-          label.appendChild(closeButton);
-
-          legendContainer.appendChild(label);
-          legend.contentContainer.containers.push(legendContainer);
-        } else {
-          alert("더 이상 시리즈를 추가할 수 없습니다.");
-        }
-      });
-
-      // 추가 시리즈 버튼을 차트 컨테이너에 추가
-      const chartContainer = chart.chartContainer.htmlElement;
-      chartContainer.parentNode.insertBefore(
-        addSeriesButton,
-        chartContainer.nextSibling
-      );
+      ]
+      lineChartGradient('chartdiv', data)
     </script>
   </body>
 </html>
