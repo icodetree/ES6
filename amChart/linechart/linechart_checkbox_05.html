@@ -132,17 +132,17 @@
       .linechart-chkbox-item:nth-child(5),
       .linechart-chkbox-item:nth-child(6) {
         position: absolute;
-        bottom: 2rem;
+        top: 60rem;
         padding-right: 2.5rem;
       }
       .linechart-chkbox-item:nth-child(4) {
-        left: 3rem;
+        left: 4rem;
       }
       .linechart-chkbox-item:nth-child(5) {
-        left: 15rem;
+        left: 17rem;
       }
       .linechart-chkbox-item:nth-child(6) {
-        left: 30rem;
+        left: 32rem;
       }
 
       .linechart-chkbox-item:nth-child(4)::after,
@@ -203,10 +203,96 @@
       }
       .chart-legend {
         display: flex;
-        padding: 2rem;
+        padding: 2rem 0 0 4rem;
       }
       .chart-legend input[type='checkbox'] {
         margin-right: 0.5rem;
+      }
+
+      .chart-topic {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        font-size: 1.5rem;
+        margin: 4rem 0 0 4rem;
+      }
+
+      .chart-news-before {
+        color: #232433;
+        padding-left: 3rem;
+        line-height: 2;
+        background: url('../images/icon_star.svg') no-repeat left center;
+      }
+
+      .chart-news-after {
+        display: none;
+        align-items: center;
+      }
+
+      .chart-news.active .chart-news-before {
+        display: none;
+      }
+
+      .chart-news.active .chart-news-after {
+        display: flex;
+      }
+      .chart-news-after p {
+        color: #232433;
+        padding-left: 3rem;
+        line-height: 2;
+        background: url('../images/icon_star.svg') no-repeat left center;
+        margin-right: 1rem;
+      }
+      .chart-news-after .btn-view {
+        color: #71747c;
+        font-size: 1.5rem;
+        font-weight: 500;
+        padding-right: 2rem;
+        background: url('../images/icon_arrow_r.svg') no-repeat right center;
+        display: inline-block;
+        text-decoration: none;
+      }
+
+      .chart-download button {
+        width: 24.8rem;
+        height: 4.8rem;
+        line-height: 4.8rem;
+        border-radius: 0.6rem;
+        background-color: #f0f2f6;
+        font-size: 1.5rem;
+        font-weight: 500;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      .chart-download.active button.btn-down {
+        background-color: #006af9;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .chart-download-tooltip {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        top: 5rem;
+        right: 0;
+        width: 40rem;
+        height: 4.4rem;
+        border-radius: 0.6rem;
+        background-color: #5a56e1;
+        color: #fff;
+        font-size: 1.4rem;
+        padding: 0 1.6rem;
+      }
+      .chart-download-tooltip .btn-close {
+        width: 1.6rem;
+        height: 1.6rem;
+        text-indent: -9999rem;
+        overflow: hidden;
+        background: url('../images/icon_close.svg') no-repeat left center;
       }
     </style>
   </head>
@@ -217,6 +303,30 @@
     <div id="chartLegend" class="chart-legend"></div>
     <!-- 차트를 표시할 div -->
     <div id="chartdiv"></div>
+
+    <section class="chart-topic">
+      <!-- 뉴스 -->
+      <article class="chart-news" data-topic-news="chartMsg">
+        <p class="chart-news-before">
+          차트의 아이콘을 선택하면 그날의 News를 확인하실 수 있어요.
+        </p>
+        <div class="chart-news-after">
+          <p>2020.02.15 한국 기준 금리 인상</p>
+          <a href="#" class="btn-view">자세히보기</a>
+        </div>
+      </article>
+
+      <!-- 다운로드 -->
+      <article class="chart-download" data-topic-pdf="download">
+        <button type="button" class="btn-down" disabled>
+          선택일 구성종목(PDF) 확인
+        </button>
+        <div class="chart-download-tooltip">
+          <p>차트의 특정일을 선택하여 구성종목을 쉽게 확인할 수 있습니다.</p>
+          <button class="btn-close">닫기</button>
+        </div>
+      </article>
+    </section>
 
     <script src="../lib/core.js"></script>
     <script src="../lib/charts.js"></script>
@@ -694,15 +804,30 @@
       // 외부 핸들링 함수
       const bulletEventHandler = e => {
         if (e.target.className === 'Image') {
-          // 별 클릭
-          console.log('별 클릭!', e.target.className)
+          changeNews(e)
         } else {
-          // 기본 블릿 클릭
-          console.log(
-            '기본 블릿!',
-            e.target.dataItem.dateX + ': ' + e.target.dataItem.valueY
-          )
+          changeDownload(e)
         }
+      }
+
+      const changeNews = e => {
+        // 별 클릭
+        console.log('별 클릭!', e.target.className)
+
+        const chartMsg = document.querySelector('[data-topic-news="chartMsg"]')
+        chartMsg.classList.toggle('active')
+      }
+
+      const changeDownload = e => {
+        // 기본 블릿 클릭
+        console.log(
+          '기본 블릿!',
+          e.target.dataItem.dateX + ': ' + e.target.dataItem.valueY
+        )
+
+        const btnDown = document.querySelector('[data-topic-pdf="download"]')
+        const btnClose = document.querySelector('.btn-close')
+        btnDown.classList.add('active')
       }
     </script>
 
