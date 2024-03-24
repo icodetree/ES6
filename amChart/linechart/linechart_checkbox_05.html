@@ -277,10 +277,26 @@
         // 차트공통 스타일
         function chartCommon() {
           chart.padding(40, 40, 40, 40)
+
+          chart.zoomOutButton.icon.disabled = true // 줌 기본아이콘 제거
+          chart.zoomOutButton.background.fill = am4core.color(
+            'rgba(35, 36, 51, 0.6)'
+          ) // 배경색
+          chart.zoomOutButton.background.states.getKey(
+            'hover'
+          ).properties.fill = am4core.color('rgba(35, 36, 51, 1)') // 마우스 오버시 색상
+          chart.zoomOutButton.background.states.getKey('down').properties.fill =
+            am4core.color('rgba(35, 36, 51, 1)') // 마우스 다운시 색상
+
+          console.log(chart.zoomOutButton.properties)
+          chart.zoomOutButton.valign = 'bottom'
+          chart.zoomOutButton.marginRight = 10
+          chart.zoomOutButton.marginBottom = 10
+          chart.zoomOutButton.cursorOverStyle = am4core.MouseCursorStyle.pointer // 커서 스타일
           const zoomImage = chart.zoomOutButton.createChild(am4core.Image)
           zoomImage.href = iconZoom
-          zoomImage.width = 40
-          zoomImage.height = 40
+          zoomImage.width = 16
+          zoomImage.height = 16
           zoomImage.interactionsEnabled = false
         }
 

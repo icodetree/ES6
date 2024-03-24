@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        display: flex;
+      }
+      .custom-select-wrapper {
+        position: relative;
+      }
+
+      .custom-select {
+        display: none; /* 기본 select 요소 숨기기 */
+      }
+      .custom-select-visible {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        /* 기타 스타일 */
+      }
+
+      .select-arrow {
+        transition: transform 0.3s ease;
+      }
+      .custom-select-options {
+        position: absolute;
+        z-index: 1;
+        opacity: 0;
+        visibility: hidden; /* 초기 상태에서 보이지 않도록 설정 */
+        transition: opacity 0.3s ease, visibility 0s 0.3s; /* visibility 속성을 사용해 페이드 아웃이 완료된 후에만 완전히 숨깁니다. */
+        transform: translateY(-20px);
+      }
+
+      .custom-select-options.show {
+        opacity: 1;
+        visibility: visible; /* 보여지는 상태 */
+        transform: translateY(0);
+        transition: opacity 0.3s ease, transform 0.3s ease; /* 페이드인과 동시에 위치 조정 */
+      }
+      .custom-select-visible .select-arrow {
+        /* 화살표가 위나 아래를 가리키도록 회전 */
+        transition: transform 0.3s ease;
+      }
+
+      .custom-select-visible.open .select-arrow {
+        transform: rotate(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="custom-select-wrapper">
+      <select class="custom-select">
+        <option value="value1">Option 1</option>
+        <option value="value2">Option 2</option>
+        <option value="value3">Option 3</option>
+      </select>
+    </div>
+
+    <div class="custom-select-wrapper">
+      <select class="custom-select">
+        <option value="value1">Option 1</option>
+        <option value="value2">Option 2</option>
+        <option value="value3">Option 3</option>
+      </select>
+    </div>
+
+    <script>
+      class CustomSelect {
+        constructor(selectElement, options = {}) {
+          this.selectElement = selectElement
+          this.options = { ...options } // 기본 옵션과 사용자 옵션 병합
+
+          this.customSelect = document.createElement('div')
+          this.customSelect.className = 'custom-select-visible'
+          this.customSelect.innerHTML = `${
+            this.selectElement.options[this.selectElement.selectedIndex]
+              .textContent
+          }<span class="select-arrow">&#9660;</span>`
+
+          this.selectElement.after(this.customSelect)
+
+          this.customSelect.addEventListener('click', event => {
+            // 이벤트 전파 중지 (하위 요소의 이벤트 리스너 실행 방지)
+            event.stopPropagation()
+            this.toggleOptions()
+          })
+
+          this.buildOptions()
+          this.isOpen = false
+        }
+
+        static instances = [] // 모든 CustomSelect 인스턴스 저장
+
+        static closeAll(exceptThis) {
+          CustomSelect.instances.forEach(instance => {
+            if (instance !== exceptThis) {
+              instance.toggleOptions(false)
+            }
+          })
+        }
+
+        buildOptions() {
+          const optionsContainer = document.createElement('div')
+          optionsContainer.className = 'custom-select-options'
+          Array.from(this.selectElement.options).forEach(option => {
+            const optionDiv = document.createElement('div')
+            optionDiv.className = 'custom-select-option'
+            optionDiv.textContent = option.textContent
+            optionDiv.addEventListener('click', () => {
+              this.selectElement.value = option.value
+              this.customSelect.childNodes[0].nodeValue =
+                option.textContent + ' '
+              this.toggleOptions(false) // 옵션 목록 숨김
+            })
+            optionsContainer.appendChild(optionDiv)
+          })
+          this.customSelect.after(optionsContainer)
+          this.optionsContainer = optionsContainer
+        }
+
+        toggleOptions(show) {
+          const shouldShow = show !== undefined ? show : !this.isOpen
+
+          if (shouldShow) {
+            this.optionsContainer.classList.add('show') // '.show' 클래스 추가로 옵션 리스트 표시
+            this.customSelect.classList.add('open')
+            this.isOpen = true
+            CustomSelect.instances.push(this) // 현재 인스턴스 목록에 추가
+          } else {
+            this.optionsContainer.classList.remove('show') // '.show' 클래스 제거로 옵션 리스트 숨김
+            this.customSelect.classList.remove('open')
+            this.isOpen = false
+          }
+        }
+
+        // 추가 기능
+        // ...
+      }
+
+      // 페이지 로딩 시 사용자 정의 셀렉트 초기화
+      function initializeCustomSelects() {
+        document.querySelectorAll('.custom-select').forEach(selectElement => {
+          new CustomSelect(selectElement)
+        })
+
+        // 외부 클릭 감지하여 셀렉트 닫기
+        document.addEventListener('click', e => {
+          CustomSelect.closeAll(null)
+        })
+      }
+
+      document.addEventListener('DOMContentLoaded', initializeCustomSelects)
+    </script>
+  </body>
+</html>
