@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>상품비교</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      html {
+        font-size: 10px;
+      }
+      li {
+        list-style: none;
+      }
+      input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+      }
+
+      .lineTooltip {
+        padding: 0.5rem;
+      }
+      .lineTooltip li {
+        position: relative;
+        margin: 0.3rem 0;
+      }
+      .lineTooltip li:not(:first-child) {
+        padding-left: 1.5rem;
+      }
+      .lineTooltip li span {
+        display: inline-block;
+        font-size: 1.3rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .lineTooltip li strong {
+        display: inline-block;
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 1);
+      }
+
+      .lineTooltip li:first-child {
+        font-family: pretendard;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .lineTooltip li::after {
+        content: "";
+        width: 1rem;
+        height: 1rem;
+        border-radius: 0.4rem;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        z-index: 1;
+        transform: translate3d(0, -50%, 0);
+      }
+
+      .lineTooltip li.series1::after {
+        background-color: #56bee3;
+      }
+      .lineTooltip li.series2::after {
+        background-color: #53c3a9;
+      }
+      .lineTooltip li.series3::after {
+        background-color: #f5df17;
+      }
+      .lineTooltip li.series4::after {
+        background-color: #6489e8;
+      }
+      .lineTooltip li.series5::after {
+        background-color: #a262c0;
+      }
+      .lineTooltip-msg {
+        position: relative;
+        padding: 0.5rem 0;
+        margin: 0.7rem 0 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .lineTooltip-msg::before {
+        content: "News";
+        display: inline-block;
+        color: #004096;
+        font-size: 1.2rem;
+        font-weight: 500;
+        height: 2rem;
+        padding: 0 0.5rem;
+        line-height: 2rem;
+        border-radius: 0.6rem;
+        background-color: rgba(255, 255, 255, 0.8);
+        margin-right: 0.6rem;
+      }
+      .lineTooltip-msg strong {
+        display: inline-block;
+        font-size: 1.4rem;
+        font-weight: 500;
+      }
+      .linechart-chkbox-top {
+        display: flex;
+      }
+      .linechart-chkbox .inner {
+        margin: 3rem 1rem;
+      }
+      .linechart-chkbox-bottom {
+        display: flex;
+      }
+      .linechart-chkbox-item {
+        display: flex;
+        align-items: center;
+        font-size: 1.5rem;
+        color: #232433;
+        margin-right: 1rem;
+      }
+      .linechart-chkbox-item button {
+        display: inline-block;
+        width: 1.6rem;
+        height: 1.6rem;
+        border-radius: 3rem;
+        overflow: hidden;
+        font-size: 1px;
+        text-indent: -999rem;
+        border: none;
+        cursor: pointer;
+        background: #d4d8e2 url("../images/ico_x_small.png") no-repeat center
+          center;
+        background-size: 0.8rem 0.8rem;
+        margin-left: 0.5rem;
+      }
+
+      .addbtn {
+        padding: 1rem;
+      }
+      /* 차트 컨테이너 스타일 */
+      #chartdiv {
+        width: 100%;
+        height: 50rem;
+      }
+      /* 버튼 스타일 */
+      .add-series-button {
+        margin: 2rem;
+        padding: 1rem 2rem;
+        font-size: 1.6rem;
+        background-color: #006af9;
+        border: none;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 0.6rem;
+      }
+      .chart-legend {
+        display: flex;
+        padding: 2rem 0 0 4rem;
+      }
+      .chart-legend input[type="checkbox"] {
+        margin-right: 0.5rem;
+      }
+
+      .chart-topic {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        font-size: 1.5rem;
+        margin: 4rem 0 0 4rem;
+      }
+
+      .chart-news-before {
+        color: #232433;
+        padding-left: 3rem;
+        line-height: 2;
+        background: url("../images/icon_star.svg") no-repeat left center;
+      }
+
+      .chart-news-after {
+        display: none;
+        align-items: center;
+      }
+
+      .chart-news.active .chart-news-before {
+        display: none;
+      }
+
+      .chart-news.active .chart-news-after {
+        display: flex;
+      }
+      .chart-news-after p {
+        color: #232433;
+        padding-left: 3rem;
+        line-height: 2;
+        background: url("../images/icon_star.svg") no-repeat left center;
+        margin-right: 1rem;
+      }
+      .chart-news-after .btn-view {
+        color: #71747c;
+        font-size: 1.5rem;
+        font-weight: 500;
+        padding-right: 2rem;
+        background: url("../images/icon_arrow_r.svg") no-repeat right center;
+        display: inline-block;
+        text-decoration: none;
+      }
+
+      .chart-download button {
+        width: 24.8rem;
+        height: 4.8rem;
+        line-height: 4.8rem;
+        border-radius: 0.6rem;
+        background-color: #f0f2f6;
+        font-size: 1.5rem;
+        font-weight: 500;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      .chart-download.active button.btn-down {
+        background-color: #006af9;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .chart-download-tooltip {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        top: 5rem;
+        right: 0;
+        width: 40rem;
+        height: 4.4rem;
+        border-radius: 0.6rem;
+        background-color: #5a56e1;
+        color: #fff;
+        font-size: 1.4rem;
+        padding: 0 1.6rem;
+      }
+      .chart-download-tooltip .btn-close {
+        width: 1.6rem;
+        height: 1.6rem;
+        text-indent: -9999rem;
+        overflow: hidden;
+        background: url("../images/icon_close.svg") no-repeat left center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 체크박스 추가 -->
+    <div id="chartLegend" class="chart-legend"></div>
+    <!-- 차트를 표시할 div -->
+    <div id="chartdiv"></div>
+
+    <script src="../lib/core.js"></script>
+    <script src="../lib/charts.js"></script>
+    <script src="../lib/animated.js"></script>
+    <script src="../lib/material.js"></script>
+    <script src="../lib/de_DE.js"></script>
+    <script src="../lib/germanyLow.js"></script>
+
+    <script>
+      am4core.options.commercialLicense = "AKD-73667548429";
+
+      const lineChartGradient = (id, data) => {
+        // 기본 설정
+        am4core.useTheme(am4themes_animated);
+
+        const chart = am4core.create(id, am4charts.XYChart);
+        const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+        const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+        let series = null;
+        let isNewsMsg = false;
+        let iconZoom = "../images/icon_zoom.svg";
+
+        // 날짜 데이터 추출
+        const dates = data[0].date;
+
+        // 시리즈 데이터 추출
+        const seriesData = data[1];
+
+        // 차트 데이터 생성
+        const chartData = dates.map((date, index) => {
+          const dataPoint = { date: new Date(date) };
+          Object.keys(seriesData).forEach((seriesKey) => {
+            const series = seriesData[seriesKey][0];
+            dataPoint[seriesKey] = series.value[index];
+          });
+          return dataPoint;
+        });
+
+        chart.data = chartData;
+
+        // 차트공통 스타일
+        function chartCommon() {
+          chart.padding(40, 0, 40, 0);
+
+          chart.zoomOutButton.icon.disabled = true; // 줌 기본아이콘 제거
+          chart.zoomOutButton.background.fill = am4core.color(
+            "rgba(35, 36, 51, 0.6)"
+          ); // 배경색
+          chart.zoomOutButton.background.states.getKey(
+            "hover"
+          ).properties.fill = am4core.color("rgba(35, 36, 51, 1)"); // 마우스 오버시 색상
+          chart.zoomOutButton.background.states.getKey("down").properties.fill =
+            am4core.color("rgba(35, 36, 51, 1)"); // 마우스 다운시 색상
+
+          chart.zoomOutButton.valign = "bottom";
+          chart.zoomOutButton.marginRight = 10;
+          chart.zoomOutButton.marginBottom = 10;
+          chart.zoomOutButton.cursorOverStyle =
+            am4core.MouseCursorStyle.pointer; // 커서 스타일
+
+          const zoomImage = chart.zoomOutButton.createChild(am4core.Image);
+          zoomImage.href = iconZoom;
+          zoomImage.width = 16;
+          zoomImage.height = 16;
+          zoomImage.interactionsEnabled = false;
+        }
+
+        // 날짜 형식
+        function setDateFormat() {
+          dateAxis.dateFormats.setKey("day", "yy.MM.dd");
+          dateAxis.periodChangeDateFormats.setKey("day", "yy.MM.dd");
+        }
+
+        // x축 설정
+        function setDateAxis() {
+          dateAxis.renderer.minGridDistance = 50; // 날짜 레이블 간격 조정
+          dateAxis.renderer.baseGrid.disabled = true;
+          dateAxis.renderer.grid.template.strokeOpacity = 0;
+          dateAxis.renderer.labels.template.fill = am4core.color("#71747c");
+          dateAxis.renderer.labels.template.fontSize = 14;
+
+          // x축라벨 위치
+          dateAxis.renderer.maxLabelPosition = 1;
+          dateAxis.renderer.labels.template.dx = 0;
+          dateAxis.renderer.labels.template.dy = 0;
+
+          dateAxis.startLocation = 0.2; // X축의 시작점을 약간 오른쪽으로 이동
+          dateAxis.endLocation = 0; // X축의 끝점을 약간 왼쪽으로 이동
+
+          // x축 하단 세로바
+          dateAxis.renderer.ticks.template.disabled = false;
+          dateAxis.renderer.ticks.template.strokeOpacity = 1;
+          dateAxis.renderer.ticks.template.stroke = am4core.color("#D4D8E2");
+          dateAxis.renderer.ticks.template.strokeWidth = 1;
+          dateAxis.renderer.ticks.template.length = 8;
+
+          dateAxis.renderer.line.strokeOpacity = 1;
+          dateAxis.renderer.line.strokeWidth = 1;
+          dateAxis.renderer.line.stroke = am4core.color("#D4D8E2");
+
+          dateAxis.tooltip.disabled = true; // 축툴팁 감추기
+        }
+
+        // y축 설정
+        function setValueAxis() {
+          valueAxis.renderer.baseGrid.disabled = true;
+          valueAxis.renderer.grid.template.strokeOpacity = 1;
+          valueAxis.renderer.grid.template.strokeDasharray = 3;
+          valueAxis.renderer.grid.template.stroke = am4core.color("#D4D8E2");
+          valueAxis.renderer.labels.template.fill = am4core.color("#71747c");
+          valueAxis.renderer.labels.template.fontSize = 14;
+
+          // y축라벨 위치 내부로 이동
+          valueAxis.renderer.inside = true;
+          valueAxis.renderer.maxLabelPosition = 0.99;
+          valueAxis.renderer.labels.template.dx = -10;
+          valueAxis.renderer.labels.template.dy = -15;
+
+          valueAxis.tooltip.disabled = true; // 축툴팁 감추기
+        }
+
+        // 커서 설정
+        function cursorHandler() {
+          chart.cursor = new am4charts.XYCursor();
+          chart.cursor.lineY.disabled = true;
+          chart.cursor.maxTooltipDistance = -1;
+
+          // 드래그하여 X축과 Y축 모두에서 줌 가능하게 설정
+          chart.cursor.behavior = "zoomXY";
+        }
+
+        // 시리즈 관리 객체
+        const seriesManager = {
+          seriesMap: {},
+          seriesCounter: 5, // 초기 시리즈 개수를 6개로 설정
+          maxSeries: 5,
+
+          addSeriesToChart: function (seriesKey, seriesInfo) {
+            if (!this.seriesMap[seriesKey]) {
+              series = chart.series.push(new am4charts.LineSeries());
+              series.dataFields.valueY = seriesKey;
+              series.dataFields.dateX = "date";
+              series.name = seriesInfo.name;
+
+              // 라인, 그라데이션 스타일
+              setLineGradientStyle(seriesKey, seriesInfo);
+
+              // 기본 블릿 스타일
+              setNormalBulletStyle(seriesKey, seriesInfo);
+
+              // 툴팁 스타일
+              setTooltipStyle();
+
+              // 각 시리즈에 공통 툴팁 설정
+              chart.series.each(function (series) {
+                series.adapter.add(
+                  "tooltipHTML",
+                  function (currentTooltip, target) {
+                    // 현재 데이터 포인트의 날짜를 얻습니다.
+                    const dataItem = target.tooltipDataItem;
+                    if (dataItem) {
+                      return createCommonTooltipHTML(dataItem.dateX, series);
+                    }
+                    return currentTooltip;
+                  }
+                );
+              });
+
+              // 시리즈를 맵에 저장
+              this.seriesMap[seriesKey] = series;
+            }
+          },
+
+          removeSeriesFromChart: function (seriesKey) {
+            if (this.seriesMap[seriesKey]) {
+              chart.series
+                .removeIndex(chart.series.indexOf(this.seriesMap[seriesKey]))
+                .dispose();
+              delete this.seriesMap[seriesKey];
+
+              if (this.seriesCounter > 5) {
+                this.seriesCounter--;
+              }
+            }
+          },
+
+          toggleSeries: function (seriesKey, isChecked, seriesInfo) {
+            if (isChecked) {
+              this.addSeriesToChart(seriesKey, seriesInfo);
+            } else {
+              this.removeSeriesFromChart(seriesKey);
+            }
+          },
+        };
+
+        // 각 시리즈별 툴팁 생성
+        const createCommonTooltipHTML = (date, targetSeries) => {
+          let tooltipHTML = "<div class='lineTooltip'><ul>";
+          tooltipHTML += "<li>{date}</li>"; // 날짜 행 추가
+
+          let specialMessage = "";
+
+          // 활성화된 시리즈의 데이터를 포함
+          // 활성화된 모든 시리즈의 데이터를 포함
+          chart.series.each(function (series, index) {
+            if (!series.hidden) {
+              const seriesName = series.name || "Unknown Series";
+              const valueKey = series.dataFields.valueY;
+
+              tooltipHTML += `<li class=${valueKey}><span>${seriesName}</span> : <strong>{${valueKey}}%</strong></li>`;
+            }
+          });
+
+          tooltipHTML += "</ul>";
+
+          // 특별한 날짜에 해당하는 메시지가 있을 경우 툴팁에 추가
+          if (specialMessage) {
+            tooltipHTML += `<article class=lineTooltip-msg><strong>${specialMessage}</strong></article>`;
+          }
+          tooltipHTML += "</div>";
+          return tooltipHTML;
+        };
+
+        // 툴팁 스타일
+        const setTooltipStyle = () => {
+          series.tooltip.getFillFromObject = false;
+          series.tooltip.background.fill = am4core.color(
+            "rgba(0, 64, 150, 0.95)"
+          );
+          // 툴팁 가이드 라인 설정
+          series.tooltip.label.minWidth = 120; // 툴팁의 최소 너비 설정
+          series.tooltip.label.minHeight = 50; // 툴팁의 최소 높이 설정
+          series.tooltip.label.fontSize = 13; // 툴팁 내 텍스트의 폰트 크기
+          series.tooltip.pointerOrientation = "horizontal"; // 툴팁 방향
+
+          // 가이드 라인 스타일 설정
+          series.tooltip.background.strokeWidth = 0; // 가이드 라인 두께
+          series.tooltip.background.strokeOpacity = 0; // 가이드 라인 투명도
+          series.tooltip.background.pointerLength = 6; // 화살표 크기
+        };
+
+        // 기본 블릿 만들기
+        const setNormalBulletStyle = (seriesKey, seriesInfo) => {
+          const bullet = series.bullets.push(new am4charts.CircleBullet());
+          const circle = bullet.createChild(am4core.Circle);
+          const circleHover = bullet.states.create("hover");
+
+          bullet.cursorOverStyle = am4core.MouseCursorStyle.pointer; // 커서 스타일
+          bullet.properties.scale = 0; // 기본블릿 스케일
+          circleHover.properties.scale = 1; // 기본블릿 마우스 오버 스케일
+
+          // 기본블릿 스타일
+          circle.width = 16;
+          circle.height = 16;
+          circle.strokeWidth = 10;
+          circle.strokeOpacity = 0.2;
+          circle.stroke = am4core.color(seriesInfo.color[0].line).lighten(0.2);
+          circle.fill = am4core.color(seriesInfo.color[0].line);
+        };
+
+        // 라인, 그라데이션
+        const setLineGradientStyle = (seriesKey, seriesInfo) => {
+          series.stroke = am4core.color(seriesInfo.color[0].line);
+          series.fillOpacity = 0; // 그라데이션 투명도 설정
+          series.strokeWidth = 2; // 라인두께
+          series.tensionX = 1; // 곡선 각도
+        };
+
+        // 체크박스 생성 함수
+        const createCheckbox = (seriesKey, index) => {
+          const checkboxId = `legend-checkbox-${seriesKey}`;
+          const input = document.createElement("input");
+          const seriesInfo = seriesData[seriesKey][0];
+
+          input.type = "checkbox";
+          input.id = checkboxId;
+
+          // 초기에 생성할 때 시리즈 카운터와 비교
+          input.checked = index <= seriesManager.seriesCounter;
+          input.onchange = () => {
+            if (input.checked) {
+              seriesManager.addSeriesToChart(seriesKey, seriesInfo);
+            } else {
+              seriesManager.removeSeriesFromChart(seriesKey);
+            }
+          };
+
+          const label = document.createElement("label");
+          const button = document.createElement("button");
+          const container = document.createElement("div");
+
+          label.htmlFor = checkboxId;
+          label.textContent = seriesInfo.name;
+
+          button.setAttribute("type", "button");
+          button.textContent = "닫기";
+
+          container.setAttribute("class", "linechart-chkbox-item");
+          container.appendChild(input);
+          container.appendChild(label);
+
+          // 닫기버튼 생성 및 이벤트 핸들러 추가
+          if (index >= 7) {
+            container.setAttribute("data-series-key", seriesKey);
+
+            button.onclick = () => {
+              seriesManager.removeSeriesFromChart(seriesKey);
+              if (container.parentNode) {
+                container.parentNode.removeChild(container);
+              }
+            };
+            container.appendChild(button);
+          }
+          document.getElementById("chartLegend").appendChild(container);
+        };
+
+        // 시리즈 번호 증가
+        const increaseGarph = () => {
+          // 현재 활성화된 시리즈 수를 카운트합니다.
+          let activeSeriesCount = Object.keys(seriesManager.seriesMap).length;
+          seriesManager.seriesCounter = Math.max(
+            seriesManager.seriesCounter,
+            activeSeriesCount
+          );
+
+          if (seriesManager.seriesCounter < seriesManager.maxSeries) {
+            seriesManager.seriesCounter++;
+            const seriesIndex = seriesManager.seriesCounter; // 시리즈 배열 인덱스 조정
+            const seriesKey = Object.keys(seriesData)[seriesIndex - 1]; // 시리즈 키
+            const seriesInfo = seriesData[seriesKey][0]; // 시리즈 정보 매핑에서 시리즈 정보 가져오기
+
+            seriesManager.toggleSeries(seriesKey, true, seriesInfo);
+
+            // createCheckbox 호출
+            createCheckbox(seriesKey, seriesManager.seriesCounter);
+          } else {
+            return false;
+          }
+        };
+
+        // 초기화
+        const initializeLegendAndSeries = () => {
+          for (let i = 1; i <= seriesManager.seriesCounter; i++) {
+            const seriesKey = Object.keys(seriesData)[i - 1];
+            const seriesInfo = seriesData[seriesKey][0];
+
+            seriesManager.addSeriesToChart(seriesKey, seriesInfo);
+            createCheckbox(seriesKey, i);
+          }
+
+          chartCommon();
+          setDateFormat();
+          cursorHandler();
+          setDateAxis();
+          setValueAxis();
+          increaseGarph();
+        };
+
+        initializeLegendAndSeries();
+      };
+    </script>
+
+    <script>
+      // 더미 데이터
+      data = [
+        {
+          date: [
+            "2023.10.01",
+            "2023.10.02",
+            "2023.10.03",
+            "2023.10.04",
+            "2023.10.05",
+            "2023.10.06",
+            "2023.10.07",
+            "2023.10.08",
+            "2023.10.09",
+            "2023.10.10",
+          ],
+        },
+        {
+          series1: [
+            {
+              name: "KODEX 반도체",
+              value: [
+                1.23, 7.56, 9.89, 41.23, 7.56, -3.89, -1.23, 7.56, 29.89, 3.89,
+              ],
+              color: [
+                {
+                  line: "#56BEE3",
+                },
+              ],
+            },
+          ],
+          series2: [
+            {
+              name: "KODEX 2차전지핵심소재10 Fn",
+              value: [
+                2.23, -4.56, 2.89, 32.23, -4.56, 2.89, -6.23, -4.56, -4.56,
+                22.89,
+              ],
+              color: [
+                {
+                  line: "#53C3A9",
+                },
+              ],
+            },
+          ],
+          series3: [
+            {
+              name: "KODEX 미국반도체MV",
+              value: [
+                5.23, 2.56, 6.89, 25.23, 3.56, -6.89, -5.23, 2.56, 2.56, 56.89,
+              ],
+              color: [
+                {
+                  line: "#F5DF17",
+                },
+              ],
+            },
+          ],
+          series4: [
+            {
+              name: "KODEX AI반도체핵심장비",
+              value: [
+                6.23, 7.56, 12.89, 5.56, 16.23, 2.89, -6.23, 5.56, 7.56, 62.89,
+              ],
+              color: [
+                {
+                  line: "#6489E8",
+                },
+              ],
+            },
+          ],
+          series5: [
+            {
+              name: "KODEX 미국S&P500TR",
+              value: [
+                21.23, 14.56, 12.89, 1.56, 1.23, 14.56, 3.89, -21.23, 14.56,
+                42.89,
+              ],
+              color: [
+                {
+                  line: "#A262C0",
+                },
+              ],
+            },
+          ],
+        },
+      ];
+      lineChartGradient("chartdiv", data);
+    </script>
+  </body>
+</html>
