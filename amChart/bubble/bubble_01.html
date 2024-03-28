@@ -13,9 +13,8 @@
         font-size: 10px;
       }
       #chartdiv {
-        width: 98%;
+        width: 50rem;
         height: 44.6rem;
-        border: 1px solid #ccc;
         padding: 0;
         margin: 1rem;
       }
@@ -62,204 +61,286 @@
     <script src="../lib/animated.js"></script>
 
     <script>
-      am4core.useTheme(am4themes_animated);
+      am4core.useTheme(am4themes_animated)
 
-      const chart = am4core.create("chartdiv", am4charts.XYChart);
-      const dateAxis = chart.xAxes.push(new am4charts.ValueAxis());
-      const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+      const chart = am4core.create('chartdiv', am4charts.XYChart)
+      const dateAxis = chart.xAxes.push(new am4charts.ValueAxis())
+      const valueAxis = chart.yAxes.push(new am4charts.ValueAxis())
 
-      let iconZoom = "../images/icon_zoom.svg";
+      let iconZoom = '../images/icon_zoom.svg'
+      let iconStar = '../images/icon_star_black.svg'
 
       // Add data
       chart.data = [
         {
-          category: "제안포트폴리오",
+          category: '제안포트폴리오',
           x: 2,
           y: 22,
           value: 11,
-          color: "#F6D52B",
+          color: '#F6D52B',
+          image: true
         },
-        { category: "국내주식", x: 11, y: 22, value: 11, color: "#478CF6" },
         {
-          category: "해외주식선진",
+          category: '국내주식',
+          x: 11,
+          y: 22,
+          value: 11,
+          color: '#478CF6',
+          image: false
+        },
+        {
+          category: '해외주식선진',
           x: 5,
           y: 18,
           value: 10,
-          color: "#FF8900",
+          color: '#FF8900',
+          image: false
         },
         {
-          category: "해외주식이머징",
+          category: '해외주식이머징',
           x: 8,
           y: 23,
           value: 8,
-          color: "#AADAAE",
+          color: '#AADAAE',
+          image: false
         },
-        { category: "국내채권", x: 17, y: 28, value: 10, color: "#5D9EC9" },
-        { category: "해외채권선진", x: 13, y: 24, value: 5, color: "#FE8FD6" },
         {
-          category: "해외채권이머징",
+          category: '국내채권',
+          x: 17,
+          y: 28,
+          value: 10,
+          color: '#5D9EC9',
+          image: false
+        },
+        {
+          category: '해외채권선진',
+          x: 13,
+          y: 24,
+          value: 5,
+          color: '#FE8FD6',
+          image: false
+        },
+        {
+          category: '해외채권이머징',
           x: 7,
           y: 25,
           value: 13,
-          color: "#FF423B",
+          color: '#FF423B',
+          image: false
         },
-        { category: "MMF", x: 14, y: 22, value: 9, color: "#93DAF6" },
-      ];
+        {
+          category: 'MMF',
+          x: 14,
+          y: 22,
+          value: 9,
+          color: '#93DAF6',
+          image: false
+        }
+      ]
 
       // 차트공통 스타일
       function chartCommon() {
-        chart.padding(40, -1, 40, 0);
-        chart.colors.step = 1;
+        chart.padding(50, 0, 40, 0)
+        chart.colors.step = 1
+      }
 
-        chart.zoomOutButton.icon.disabled = true; // 줌 기본아이콘 제거
+      // 차트공통 스타일
+      function zoomControll() {
+        chart.zoomOutButton.icon.disabled = true // 줌 기본아이콘 제거
         chart.zoomOutButton.background.fill = am4core.color(
-          "rgba(35, 36, 51, 0.6)"
-        ); // 배경색
-        chart.zoomOutButton.background.states.getKey("hover").properties.fill =
-          am4core.color("rgba(35, 36, 51, 1)"); // 마우스 오버시 색상
-        chart.zoomOutButton.background.states.getKey("down").properties.fill =
-          am4core.color("rgba(35, 36, 51, 1)"); // 마우스 다운시 색상
+          'rgba(35, 36, 51, 0.6)'
+        ) // 배경색
+        chart.zoomOutButton.background.states.getKey('hover').properties.fill =
+          am4core.color('rgba(35, 36, 51, 1)') // 마우스 오버시 색상
+        chart.zoomOutButton.background.states.getKey('down').properties.fill =
+          am4core.color('rgba(35, 36, 51, 1)') // 마우스 다운시 색상
 
-        console.log(chart.zoomOutButton.properties);
-        chart.zoomOutButton.valign = "bottom";
-        chart.zoomOutButton.marginRight = 10;
-        chart.zoomOutButton.marginBottom = 10;
-        chart.zoomOutButton.cursorOverStyle = am4core.MouseCursorStyle.pointer; // 커서 스타일
-        const zoomImage = chart.zoomOutButton.createChild(am4core.Image);
-        zoomImage.href = iconZoom;
-        zoomImage.width = 16;
-        zoomImage.height = 16;
-        zoomImage.interactionsEnabled = false;
+        chart.zoomOutButton.valign = 'bottom'
+        chart.zoomOutButton.marginRight = 10
+        chart.zoomOutButton.marginBottom = 10
+        chart.zoomOutButton.cursorOverStyle = am4core.MouseCursorStyle.pointer // 커서 스타일
+
+        const zoomImage = chart.zoomOutButton.createChild(am4core.Image)
+        zoomImage.href = iconZoom
+        zoomImage.width = 16
+        zoomImage.height = 16
+        zoomImage.interactionsEnabled = false
       }
 
       // 차트 제목
       function legendHandler() {
-        chart.legend = new am4charts.Legend();
-        chart.legend.useDefaultMarker = true;
+        chart.legend = new am4charts.Legend()
+        chart.legend.useDefaultMarker = true
 
-        chart.legend.fontSize = 12;
-        chart.legend.padding(0, 0, 10, 0);
-        chart.legend.dx = -10;
+        chart.legend.fontSize = 12
+        chart.legend.padding(0, 0, 0, 0)
+        chart.legend.dx = 0
 
         // 범례의 배경 모서리 둥글게 설정
-        chart.legend.labels.template.fill = am4core.color("#71747C");
-        chart.legend.background.fillOpacity = 0.5; // 배경색 투명도 설정 (선택사항)
+        chart.legend.labels.template.fill = am4core.color('#71747C')
+        chart.legend.background.fillOpacity = 0.5 // 배경색 투명도 설정 (선택사항)
 
-        chart.legend.markers.template.width = 12;
-        chart.legend.markers.template.height = 12;
+        chart.legend.markers.template.width = 12
+        chart.legend.markers.template.height = 12
       }
 
       // x축 설정
       function setDateAxis() {
-        dateAxis.renderer.minGridDistance = 150; // 날짜 레이블 간격 조정
-        dateAxis.renderer.grid.template.strokeOpacity = 1;
-        dateAxis.renderer.grid.template.strokeDasharray = 3;
-        dateAxis.renderer.grid.template.stroke = am4core.color("#D4D8E2");
-        dateAxis.renderer.labels.template.fill = am4core.color("#71747c");
-        dateAxis.renderer.labels.template.fontSize = 14;
+        dateAxis.renderer.minGridDistance = 100 // 날짜 레이블 간격 조정
+
+        dateAxis.renderer.grid.paddingLeft = 0
+
+        dateAxis.renderer.grid.template.strokeOpacity = 1
+        dateAxis.renderer.grid.template.strokeDasharray = 3
+        dateAxis.renderer.grid.template.stroke = am4core.color('#D4D8E2')
+        dateAxis.renderer.labels.template.fill = am4core.color('#71747c')
+        dateAxis.renderer.labels.template.fontSize = 14
 
         // x축라벨 위치
-        dateAxis.renderer.maxLabelPosition = 1;
-        dateAxis.renderer.labels.template.dx = 0;
-        dateAxis.renderer.labels.template.dy = 0;
+        dateAxis.renderer.maxLabelPosition = 1
+        dateAxis.renderer.labels.template.dx = 0
+        dateAxis.renderer.labels.template.dy = 0
 
-        dateAxis.startLocation = 0; // X축의 시작점을 약간 오른쪽으로 이동
-        dateAxis.endLocation = 0; // X축의 끝점을 약간 왼쪽으로 이동
+        dateAxis.startLocation = -0.3 // X축의 시작점을 약간 오른쪽으로 이동
+        dateAxis.endLocation = 0 // X축의 끝점을 약간 왼쪽으로 이동
 
-        dateAxis.renderer.line.strokeOpacity = 1;
-        dateAxis.renderer.line.strokeWidth = 1;
-        dateAxis.renderer.line.stroke = am4core.color("#D4D8E2");
+        // 수치 조절
+        dateAxis.renderer.minLabelPosition = 0
+        dateAxis.renderer.maxLabelPosition = 0.95
 
-        dateAxis.tooltip.disabled = true; // 축툴팁 감추기
+        dateAxis.renderer.line.strokeOpacity = 1
+        dateAxis.renderer.line.strokeWidth = 1
+        dateAxis.renderer.line.stroke = am4core.color('#D4D8E2')
+
+        dateAxis.tooltip.disabled = true // 축툴팁 감추기
+
+        dateAxis.title.text = '연평균 변동성(%)'
+        dateAxis.title.fontSize = 13
+        dateAxis.title.align = 'right'
+        dateAxis.title.fill = am4core.color('#71747C')
       }
 
       // y축 설정
       function setValueAxis() {
-        valueAxis.renderer.minGridDistance = 150; // 날짜 레이블 간격 조정
-        valueAxis.renderer.grid.template.strokeOpacity = 1;
-        valueAxis.renderer.grid.template.strokeDasharray = 3;
-        valueAxis.renderer.grid.template.stroke = am4core.color("#D4D8E2");
-        valueAxis.renderer.labels.template.fill = am4core.color("#71747c");
-        valueAxis.renderer.labels.template.fontSize = 14;
+        valueAxis.renderer.minGridDistance = 150 // 날짜 레이블 간격 조정
+        valueAxis.renderer.grid.template.strokeOpacity = 1
+        valueAxis.renderer.grid.template.strokeDasharray = 3
+        valueAxis.renderer.grid.template.stroke = am4core.color('#D4D8E2')
+        valueAxis.renderer.labels.template.fill = am4core.color('#71747c')
+        valueAxis.renderer.labels.template.fontSize = 14
 
-        // 시작선 흰색으로 감춤
-        valueAxis.renderer.line.strokeOpacity = 0;
-        valueAxis.renderer.line.strokeWidth = 0;
-        valueAxis.renderer.line.stroke = am4core.color("#fff");
+        // y축 라벨 위치 내부로 이동
+        // valueAxis.renderer.inside = true
+        // valueAxis.renderer.maxLabelPosition = 0.99
+        // valueAxis.renderer.labels.template.dx = -10
+        // valueAxis.renderer.labels.template.dy = -15
 
-        valueAxis.tooltip.disabled = true; // 축툴팁 감추기
+        // 수치 조절
+        valueAxis.renderer.minLabelPosition = 0.1
+        valueAxis.renderer.maxLabelPosition = 1
+
+        // 상단 텍스트
+        const topContainer = chart.chartContainer.createChild(am4core.Container)
+        topContainer.layout = 'absolute'
+        topContainer.toBack()
+        topContainer.width = am4core.percent(100)
+
+        const axisTitle = topContainer.createChild(am4core.Label)
+        axisTitle.text = '연평균 기대수익률(%)'
+        axisTitle.fontWeight = 500
+        axisTitle.align = 'left'
+        axisTitle.paddingLeft = 10
+        axisTitle.fontSize = 13
+        axisTitle.dx = 25
+        axisTitle.dy = -20
+        axisTitle.fill = am4core.color('#71747C')
       }
 
-      function createSeries(category, color) {
-        const series = chart.series.push(new am4charts.LineSeries());
-        series.dataFields.valueY = "y";
-        series.dataFields.valueX = "x";
-        series.fill = am4core.color(color); // 시리즈의 기본 색상 지정
-        series.name = category; // 범례에 표시될 이름
+      function createSeries(category, color, image) {
+        let series = chart.series.push(new am4charts.LineSeries())
+        series.dataFields.valueY = 'y'
+        series.dataFields.valueX = 'x'
+        series.fill = am4core.color(color) // 시리즈의 기본 색상 지정
+        series.name = category // 범례에 표시될 이름
 
         // 해당 카테고리의 데이터만 필터링하여 시리즈 데이터로 할당
         series.data = chart.data.filter(function (item) {
-          return item.category === category;
-        });
+          return item.category === category
+        })
 
-        const bullet = series.bullets.push(new am4charts.CircleBullet());
-        bullet.stroke = am4core.color("#ffffff");
-        bullet.strokeOpacity = 1;
-        bullet.strokeWidth = 1.5;
-        bullet.fill = am4core.color(color); // 카테고리별 색상
+        const bullet = series.bullets.push(new am4charts.CircleBullet())
+        bullet.stroke = am4core.color('#ffffff')
+        bullet.strokeOpacity = 1
+        bullet.strokeWidth = 1.5
+        bullet.fill = am4core.color(color) // 카테고리별 색상
 
         // CircleBullet의 크기를 조정하기 위한 adapter 추가
-        bullet.circle.adapter.add("radius", function (radius, target) {
-          var dataItem = target.dataItem;
+        bullet.circle.adapter.add('radius', function (radius, target) {
+          var dataItem = target.dataItem
           if (dataItem) {
             // 'value' 필드에 따라 크기 조정, 필요에 따라 계산식 조정
-            return 5 + dataItem.dataContext.value * 2; // 예: 기본 크기에 value * 2를 더함
+            return 5 + dataItem.dataContext.value * 2 // 예: 기본 크기에 value * 2를 더함
           }
-          return radius;
-        });
+          return radius
+        })
+
+        // 이미지 설정
+        if (image) {
+          let starBullet = series.bullets.push(new am4charts.Bullet())
+          starBullet.propertyFields.disabled = 'disabled' // 'disabled' 필드를 기반으로 블릿의 활성화/비활성화 결정
+          let starImg = starBullet.createChild(am4core.Image)
+          starImg.href = iconStar
+          starImg.width = 18
+          starImg.height = 18
+          starImg.horizontalCenter = 'middle'
+          starImg.verticalCenter = 'middle'
+          starImg.nonScaling = true
+          starImg.cursorOverStyle = am4core.MouseCursorStyle.pointer // 커서 스타일
+        }
 
         bullet.tooltipHTML = `
           <ul class='lineTooltip'>
             <li>{category}</li>
             <li><span>연평균 기대 수익률</span> <strong>{valueX}%</strong></li>
             <li><span>연평균 변동성</span> <strong>{valueY}%</strong></li>
-          </ul>`;
+          </ul>`
 
-        setTooltipStyle(series, color);
+        setTooltipStyle(series, color)
       }
 
       // 각 카테고리별로 시리즈 생성
       chart.data.forEach(function (item) {
-        createSeries(item.category, item.color);
-      });
+        createSeries(item.category, item.color, item.image)
+      })
 
       // 툴팁 스타일
       function setTooltipStyle(series, color) {
-        series.tooltip.background.cornerRadius = 8; // 툴팁 박스 모서리
-        series.tooltip.getFillFromObject = false;
+        series.tooltip.background.cornerRadius = 8 // 툴팁 박스 모서리
+        series.tooltip.getFillFromObject = false
         series.tooltip.background.fill = am4core.color(
-          "rgba(255, 255, 255, 0.8)"
-        );
-        series.tooltip.label.minWidth = 150; // 툴팁의 최소 너비 설정
-        series.tooltip.label.minHeight = 50; // 툴팁의 최소 높이 설정
-        series.tooltip.label.fontSize = 14; // 툴팁 내 텍스트의 폰트 크기
-        series.tooltip.pointerOrientation = "vertical"; // 툴팁 방향
-        series.tooltip.dy = -30; // 툴팁 좌표
+          'rgba(255, 255, 255, 0.8)'
+        )
+        series.tooltip.label.minWidth = 150 // 툴팁의 최소 너비 설정
+        series.tooltip.label.minHeight = 50 // 툴팁의 최소 높이 설정
+        series.tooltip.label.fontSize = 14 // 툴팁 내 텍스트의 폰트 크기
+        series.tooltip.pointerOrientation = 'vertical' // 툴팁 방향
+        series.tooltip.dy = -30 // 툴팁 좌표
 
         // 가이드 라인 스타일 설정
-        series.tooltip.background.strokeWidth = 1.5; // 가이드 라인 두께
-        series.tooltip.background.strokeOpacity = 1; // 가이드 라인 투명도
-        series.tooltip.background.pointerLength = 0; // 화살표 크기
-        series.tooltip.background.stroke = am4core.color(color);
+        series.tooltip.background.strokeWidth = 1.5 // 가이드 라인 두께
+        series.tooltip.background.strokeOpacity = 1 // 가이드 라인 투명도
+        series.tooltip.background.pointerLength = 0 // 화살표 크기
+        series.tooltip.background.stroke = am4core.color(color)
 
         // 툴팁의 배경 쉐도우 제거
-        series.tooltip.background.filters.clear();
+        series.tooltip.background.filters.clear()
       }
 
-      chartCommon();
-      legendHandler();
-      setDateAxis();
-      setValueAxis();
+      chartCommon()
+      zoomControll()
+      legendHandler()
+      setDateAxis()
+      setValueAxis()
     </script>
   </body>
 </html>
