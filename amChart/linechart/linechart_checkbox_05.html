@@ -297,6 +297,8 @@
     </style>
   </head>
   <body>
+    <button id="addSearch" class="add-series-button">조회</button>
+
     <!-- 시리즈 추가 버튼 -->
     <button id="addSeriesButton" class="add-series-button">상품 추가</button>
     <!-- 체크박스 추가 -->
@@ -798,6 +800,25 @@
         const addBtn = document.getElementById('addSeriesButton')
         addBtn.addEventListener('click', increaseGarph)
 
+        const addSearchBtn = document.getElementById('addSearch')
+        addSearchBtn.addEventListener('click', resetChart)
+
+        function resetChart() {
+          // 기존 시리즈 제거
+          chart.series.clear()
+
+          // 레전드(체크박스) 제거
+          const chartLegend = document.getElementById('chartLegend')
+          chartLegend.innerHTML = ''
+
+          // 시리즈 관리 객체 초기화
+          seriesManager.seriesMap = {}
+          seriesManager.seriesCounter = 6
+
+          // 초기 시리즈 및 레전드 생성
+          initializeLegendAndSeries()
+        }
+
         initializeLegendAndSeries()
       }
 
@@ -833,7 +854,7 @@
 
     <script>
       // 더미 데이터
-      data = [
+      data1 = [
         {
           date: [
             '2023.10.01',
@@ -1012,7 +1033,187 @@
           ]
         }
       ]
-      lineChartGradient('chartdiv', data)
+
+      newData = [
+        {
+          date: [
+            '2023.10.01',
+            '2023.10.02',
+            '2023.10.03',
+            '2023.10.04',
+            '2023.10.05',
+            '2023.10.06',
+            '2023.10.07',
+            '2023.10.08',
+            '2023.10.09',
+            '2023.10.10'
+          ]
+        },
+        {
+          series1: [
+            {
+              name: 'NAV',
+              value: [
+                1.23, 7.56, 9.89, 41.23, 7.56, -3.89, -1.23, 7.56, 29.89, 3.89
+              ],
+              specialDay: [
+                '',
+                '',
+                '금리인상',
+                '',
+                '',
+                '',
+                '상한가',
+                '',
+                '',
+                ''
+              ],
+              color: [
+                {
+                  line: 'rgba(240, 41, 90, 1)',
+                  start: 'rgba(240, 41, 90, 0.3)',
+                  end: 'rgba(240, 41, 90, 0)'
+                }
+              ]
+            }
+          ],
+          series2: [
+            {
+              name: '기초지수',
+              value: [
+                2.23, -4.56, 2.89, 32.23, -4.56, 2.89, -6.23, -4.56, -4.56,
+                22.89
+              ],
+              specialDay: ['', '', '', '', '', '', '', '', '', ''],
+              color: [
+                {
+                  line: 'rgba(38, 193, 248, 1)',
+                  start: 'rgba(72, 150, 255, 0.3)',
+                  end: 'rgba(72, 150, 255, 0)'
+                }
+              ]
+            }
+          ],
+          series3: [
+            {
+              name: '종가',
+              value: [
+                5.23, 2.56, 6.89, 25.23, 3.56, -6.89, -5.23, 2.56, 2.56, 56.89
+              ],
+              specialDay: ['', '', '', '', '', '', '', '', '', ''],
+              color: [
+                {
+                  line: 'rgba(29, 181, 174, 1)',
+                  start: 'rgba(29, 181, 174, 0.3)',
+                  end: 'rgba(29, 181, 174, 0)'
+                }
+              ]
+            }
+          ],
+          series4: [
+            {
+              name: 'KOSPI',
+              value: [
+                6.23, 7.56, 12.89, 5.56, 16.23, 2.89, -6.23, 5.56, 7.56, 62.89
+              ],
+              specialDay: ['', '', '', '', '', '', '', '', '', ''],
+              color: [
+                {
+                  line: 'rgba(90, 86, 225, 1)',
+                  start: 'rgba(90, 86, 225, 0.3)',
+                  end: 'rgba(90, 86, 225, 0)'
+                }
+              ]
+            }
+          ],
+          series5: [
+            {
+              name: 'NASDAQ',
+              value: [
+                21.23, 14.56, 12.89, 1.56, 1.23, 14.56, 3.89, -21.23, 14.56,
+                42.89
+              ],
+              specialDay: ['', '', '', '', '', '', '', '', '', ''],
+              color: [
+                {
+                  line: 'rgba(254, 203, 39, 1)',
+                  start: 'rgba(254, 203, 39, 0.3)',
+                  end: 'rgba(254, 203, 39, 0)'
+                }
+              ]
+            }
+          ],
+          series6: [
+            {
+              name: 'S&P500',
+              value: [
+                8.23, 2.56, -8.23, 0.89, -2.23, 11.56, 10.89, -4.23, 11.56,
+                10.89
+              ],
+              specialDay: ['', '', '', '', '', '', '', '', '', ''],
+              color: [
+                {
+                  line: 'rgba(254, 143, 214, 1)',
+                  start: 'rgba(254, 143, 214, 0.3)',
+                  end: 'rgba(254, 143, 214, 0)'
+                }
+              ]
+            }
+          ],
+          series7: [
+            {
+              name: 'KODEX 007 ',
+              value: [
+                -1.23, 18.56, 17.89, -1.23, 7.61, 1.56, 12.89, -1.23, 18.56,
+                7.89
+              ],
+              specialDay: ['', '', '', '', '', '', '', '', '', ''],
+              color: [
+                {
+                  line: 'rgba(24, 61, 255, 1)',
+                  start: 'rgba(24, 61, 255, 0.3)',
+                  end: 'rgba(24, 61, 255, 0)'
+                }
+              ]
+            }
+          ],
+          series8: [
+            {
+              name: 'KODEX 미국S&P바이오 008',
+              value: [
+                -4.23, 24.56, -7.89, -4.23, -12.23, 12.56, 17.89, -4.23, -32.56,
+                -17.89
+              ],
+              specialDay: ['', '', '', '', '', '', '', '', '', ''],
+              color: [
+                {
+                  line: 'rgba(139, 0, 255, 1)',
+                  start: 'rgba(139, 0, 255, 0.3)',
+                  end: 'rgba(139, 0, 255, 0)'
+                }
+              ]
+            }
+          ],
+          series9: [
+            {
+              name: 'KODEX 009',
+              value: [
+                -10.23, 44.56, 1.89, 0.23, 34.56, 3.56, 21.89, 10.23, 66.56,
+                11.89
+              ],
+              specialDay: ['', '', '', '', '', '', '', '', '', ''],
+              color: [
+                {
+                  line: 'rgba(65, 226, 55, 1)',
+                  start: 'rgba(65, 226, 55, 0.3)',
+                  end: 'rgba(65, 226, 55, 0)'
+                }
+              ]
+            }
+          ]
+        }
+      ]
+      lineChartGradient('chartdiv', data1)
     </script>
   </body>
 </html>
